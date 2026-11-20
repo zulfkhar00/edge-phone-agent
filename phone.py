@@ -15,7 +15,14 @@ from pathlib import Path
 
 import uiautomator2 as u2
 
-SERIAL = os.environ.get("PHONE_SERIAL", "192.168.1.150:5555")
+
+
+def current_serial() -> str:
+    """The phone this process drives: the engine sets PHONE_SERIAL (the live transport of the job's phone)."""
+    return os.environ.get("PHONE_SERIAL", "192.168.1.150:5555")
+
+
+SERIAL = current_serial()  # kept for the flow scripts; the helpers below take a serial and never read it
 GALLERY_DIR = "/storage/emulated/0/DCIM/flagd"
 SHOTS = Path(__file__).parent / "runs"
 
@@ -25,8 +32,8 @@ class Abort(Exception):
 
 
 class Phone:
-    def __init__(self, serial: str):
-        self.serial = serial
+    def __init__(self, serial: str | None = None):
+        self.serial = serial or current_serial()
         self.d = u2.connect(serial)
         self.h = self.d.window_size()[1]
 
@@ -109,7 +116,9 @@ class Phone:
 
     def fail(self, msg: str) -> None:
         SHOTS.mkdir(exist_ok=True)
-        shot = SHOTS / f"fail-{time.strftime('%m%d-%H%M%S')}.png"
+        # tagged with the phone id (set by the engine) so each phone's runner finds only its own screenshots
+        tag = os.environ.get("PHONE_ID", "")
+        shot = SHOTS / f"fail-{time.strftime('%m%d-%H%M%S')}{'-' + tag if tag else ''}.png"
         try:
             self.d.screenshot(str(shot))
         except Exception:

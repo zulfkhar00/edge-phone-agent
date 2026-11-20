@@ -66,8 +66,9 @@ class Viewer:
 
 
 class Mirror:
-    def __init__(self, serial: str, max_size: int = 1280, bit_rate: int = 2_500_000, max_fps: int = 30):
+    def __init__(self, serial: str, max_size: int = 1280, bit_rate: int = 2_500_000, max_fps: int = 30, port: int = PORT):
         self.serial = serial
+        self.port = port  # local forward port: one per phone, so several phones can be mirrored at once
         self.max_size, self.bit_rate, self.max_fps = max_size, bit_rate, max_fps
         self.viewers: dict[object, Viewer] = {}
         self.proc: asyncio.subprocess.Process | None = None
@@ -100,7 +101,7 @@ class Mirror:
             self.error = None
             scid = random.randrange(1, 0x7FFFFFFF)
             await self._adb("push", str(JAR), REMOTE, timeout=60)
-            await self._adb("forward", f"tcp:{PORT}", f"localabstract:scrcpy_{scid:08x}")
+            await self._adb("forward", f"tcp:{self.port}", f"localabstract:scrcpy_{scid:08x}")
             opts = (f"scid={scid:08x} log_level=warn tunnel_forward=true audio=false control=true "
                     f"max_size={self.max_size} video_bit_rate={self.bit_rate} max_fps={self.max_fps} "
                     "send_device_meta=false cleanup=true clipboard_autosync=false")
@@ -111,7 +112,7 @@ class Mirror:
             for _ in range(60):  # the server needs a moment; until then adb accepts and closes at once
                 await asyncio.sleep(0.15)
                 try:
-                    r, w = await asyncio.open_connection("127.0.0.1", PORT)
+                    r, w = await asyncio.open_connection("127.0.0.1", self.port)
                     if await r.read(1):  # the dummy byte
                         video = (r, w)
                         break
@@ -122,7 +123,7 @@ class Mirror:
                 self.error = "scrcpy server did not start"
                 await self.stop()
                 raise RuntimeError(self.error)
-            _, self.ctrl = await asyncio.open_connection("127.0.0.1", PORT)
+            _, self.ctrl = await asyncio.open_connection("127.0.0.1", self.port)
             codec = await video[0].readexactly(4)
             if codec != b"h264":
                 self.error = f"unexpected codec {codec!r}"
@@ -143,7 +144,7 @@ class Mirror:
         self.proc = None
         self.session = self.config = None
         try:
-            await self._adb("forward", "--remove", f"tcp:{PORT}", timeout=10)
+            await self._adb("forward", "--remove", f"tcp:{self.port}", timeout=10)
         except Exception:
             pass
 

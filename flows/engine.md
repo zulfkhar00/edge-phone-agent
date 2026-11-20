@@ -1,7 +1,7 @@
 # Content engine (job runner + dashboard)
 
 Start: `cd ~/content-engine && uv run python engine.py` → http://127.0.0.1:8080
-Settings: `config.toml` (phone serial, accounts + daily limits, stats offsets, email alerts).
+Settings: `config.toml` (phones, accounts + daily limits, stats offsets, email alerts).
 
 ## Plans
 Drop `mailbox/inbox/<name>/plan.json` (+ `videos/`). Imported once, turned into jobs in `engine.db`.
@@ -55,3 +55,10 @@ Every `[sync].every_min` (10) minutes the engine, over SSH to `[sync].host` (stu
 - pulls finished plans from `~/outbox/<name>/` into `mailbox/inbox/<name>/` (staged in `mailbox/incoming/` first) and
   deletes them on the server. The server writes `~/outbox/.<name>.part/` and renames it when complete.
 The engine starts both directions; the server never needs access to the engine machine.
+
+## Several phones
+`[[phones]]` in `config.toml` (see README "Several phones"). One runner task per phone; `jobs.phone_id` says which
+phone runs a job (NULL = jobs from before multi-phone: the first phone's). Per-phone state lives in the `state` table
+as `paused:<id>`, `touched:<id>`, `job_pgid:<id>`. Flow scripts get `PHONE_SERIAL` (the live transport) and `PHONE_ID`
+from the engine; failure screenshots are named `fail-<time>-<id>.png` so each runner links only its own. Daily limits
+stay per account, so two phones never share a limit; one account is never on two phones.

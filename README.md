@@ -42,10 +42,11 @@ Python 3.12, asyncio, `adb` + scrcpy. Everything is driven through the phone's U
 | `updater.py` | Self-update from `origin/deploy` (see "CI/CD") |
 | `access.py` | PIN gate for the remote dashboard |
 | `scrcpy_bridge.py`, `vendor/scrcpy-server-*.jar` | Live screen and touch input for the dashboard |
-| `adb_keeper.sh` | Keeps the phone reachable: reconnects, finds it by hardware serial on any network, updates `[phone].serial`, restarts the engine |
+| `adb_keeper.sh` | Keeps every phone reachable (one watcher each): reconnects, finds it by hardware serial on any network, updates its Wi-Fi address in `config.toml`, restarts the engine |
+| `phones.py` | The phone list: `[[phones]]` parsing and validation, which phone owns which account, USB-then-Wi-Fi transport discovery, helpers for `adb_keeper.sh` |
 | `web/dashboard.html` | The dashboard (single page) |
 | `flows/*.md` | How each app flow works and what broke before. Read the relevant one before changing an uploader or reader |
-| `tests/` | pytest: plan validation, self-update, access gate, outliers |
+| `tests/` | pytest: plan validation, self-update, access gate, outliers, multi-phone (fake adb, no phones needed) |
 | `*_chain.sh`, `build_viewer.py`, `publish_viewer.sh` | Old one-off tools from the Mac era; not used by the service |
 
 Local only (gitignored): `config.toml` (secrets), `engine.db` (jobs, alerts, state), `stats.db`, `research.db`,
@@ -80,15 +81,63 @@ may appear in plans. Details and validation rules: `flows/engine.md`, `plan_chec
 
 ## How the runner behaves
 
-- Loop every 5 s: sync (every 10 min) -> import plans -> schedule preflight -> plan-arrival check -> clean-up ->
-  heartbeat -> self-update check -> run the next due job.
+- Housekeeping loop every 5 s: sync (every 10 min) -> import plans -> schedule preflight -> plan-arrival check ->
+  clean-up -> heartbeat -> self-update check. Separately, **each phone has its own runner loop** (every 5 s) that
+  runs the next due job of that phone.
 - Fixed jobs (post > delete > stats) run at their time; research only fills gaps before the next fixed job.
 - A failed job retries once after 5 min, then alerts. A post that fails after tapping Share becomes `unverified` and
   is never re-posted automatically.
-- Dashboard "Take over" pauses the runner and hands you the phone. If nobody touches it for
+- Dashboard "Take over" pauses that phone's runner (the other phones carry on) and hands you the phone. If nobody touches it for
   `[dashboard].resume_after_min` (10) minutes, it resumes by itself.
 - Alerts go to the dashboard and by email (Gmail app password). healthchecks.io emails when the heartbeat stops
   (Pi off, offline, loop dead) or when a nightly run fails or never finishes.
+
+## Several phones
+
+Plug more phones into the Pi's USB hub; each one runs its own accounts and jobs in parallel.
+
+```toml
+# before                                   # after (config.toml)
+[phone]                                    [[phones]]
+serial = "192.168.1.150:5555"              id = "phone-1"                  # the old [phone] was "phone-1"
+hw_serial = "ZD222RWWGT"                   hw_serial = "ZD222RWWGT"
+                                           wifi_serial = "192.168.1.150:5555"   # the old `serial`
+                                           accounts = ["ig:@tinyloveshows", "tt:@nomoreawkwardness"]
+
+                                           [[phones]]
+                                           id = "phone-2"
+                                           label = "Pixel, right"
+                                           hw_serial = "<serial of the second phone>"
+                                           accounts = ["ig:@secondaccount"]
+```
+`[phone]` alone still works (one phone, id `phone-1`, owns every account). Use `[[phones]]` **instead of** `[phone]`
+(having both is refused). Rules, checked at start-up (the engine refuses to start on a bad setup): `hw_serial` is
+required and unique, ids are unique, and an account lives on one phone only. `usb_serial` (optional) is for a phone
+whose `adb devices` serial differs from `hw_serial`; `quotas = { posts_per_day = 2 }` overrides that phone's
+account limits. Keep the `[accounts.<app>.<handle>]` sections: they still hold each account's limits and `use`.
+
+How it works:
+- A plan's post / research / delete goes to the phone that owns the account (`jobs.phone_id`); an account no phone owns
+  raises an alert and its jobs are skipped, the rest of the plan imports. Each phone gets its own morning preflight.
+- Transport per phone: USB first (`usb_serial`, else `hw_serial`), then Wi-Fi (`wifi_serial`). A Wi-Fi address is only
+  trusted when the device behind it reports that phone's `hw_serial`, so a re-used IP never drives the wrong phone.
+- A phone unplugged mid-job fails that job (a post already tapped is `unverified`) and alerts; the other phones go on.
+  Take over, pause, auto-resume and the live screen are per phone too.
+- `/api/state` keeps its old top-level fields (= the first phone) and adds `phones: [...]` with each phone's status,
+  jobs, alerts, accounts, `heartbeat` / `heartbeat_age_s` / `alive` of its runner loop. Per-phone API:
+  `GET /api/phones`, `GET /api/phones/<id>/state`, `POST /api/phones/<id>/takeover|resume|input`,
+  `GET /api/phones/<id>/screen.png`, WebSocket `/api/phones/<id>/stream` (starts that phone's scrcpy session only
+  while someone watches). The old endpoints (`/api/takeover`, `/api/resume`, `/api/input`, `/api/screen.png`,
+  `/ws/screen`) act on the first phone, or on `?phone=<id>` / `"phone": "<id>"`.
+
+Plug in a second phone and check it:
+1. Enable USB debugging on it, plug it into the hub, tap "Allow" for this Pi's key.
+2. `adb devices` must list both phones as `device`. Get its serial: `adb -s <serial> shell getprop ro.serialno`.
+3. Add its `[[phones]]` entry with its accounts (log in to those accounts on that phone first), remove the old `[phone]`,
+   then `sudo systemctl restart content-engine adb-keeper` (the keeper starts one watcher per phone).
+4. Open the dashboard: both phones are listed. `curl 127.0.0.1:8080/api/phones` shows each phone's `serial`,
+   `transport` (usb / wifi) and `alive`; `tail logs/adb_keeper.log` lines are tagged `[phone-1]`, `[phone-2]`.
+5. Run each phone's morning check: the 09:30 preflight queues one per phone (see `jobs` where `kind='preflight'`).
 
 ## Setup (Raspberry Pi OS Lite 64-bit, Debian 13)
 

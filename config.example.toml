@@ -1,8 +1,27 @@
 # Content engine (noswipe.app) — box settings
 
-[phone]
+[phone]   # ONE phone. For several phones replace this section with the [[phones]] entries below.
 serial = "192.168.1.150:5555"     # later on the Pi: the USB serial (see `adb devices`)
 hw_serial = "ZD222RWWGT"        # the phone's own serial (adb shell getprop ro.serialno): adb_keeper.sh finds it by this on a new network
+
+# SEVERAL phones on the Pi's USB hub: one [[phones]] entry each, and no [phone] section (the engine refuses both).
+# Every phone runs its own jobs; an account lives on exactly one phone (the same account on two phones is refused at start-up).
+# The [accounts.*] sections below still hold each account's daily limits.
+#
+# [[phones]]
+# id = "phone-1"                          # short name: dashboard, logs, jobs table. The old [phone] is "phone-1".
+# label = "Moto G, left"                  # shown in the dashboard (optional)
+# hw_serial = "ZD222RWWGT"                # required: adb shell getprop ro.serialno. Wi-Fi devices must report it, or they are refused.
+# usb_serial = "ZD222RWWGT"               # optional: its serial on the cable, when `adb devices` shows another one than hw_serial
+# wifi_serial = "192.168.1.150:5555"      # optional Wi-Fi fallback; adb_keeper.sh keeps it current
+# accounts = ["ig:@tinyloveshows", "tt:@nomoreawkwardness"]   # ig = Instagram, tt = TikTok
+# quotas = { posts_per_day = 2 }          # optional: overrides the [accounts.*] limits of this phone's accounts
+#
+# [[phones]]
+# id = "phone-2"
+# label = "Pixel, right"
+# hw_serial = "REPLACE-WITH-ITS-SERIAL"
+# accounts = ["ig:@secondaccount"]
 
 [dashboard]
 host = "127.0.0.1"                 # local only; remote access goes through [access] below
