@@ -8,7 +8,7 @@ config.toml describes them as an array of tables:
     hw_serial = "ZD222RWWGT"          # the phone's own serial (adb shell getprop ro.serialno): required
     usb_serial = "ZD222RWWGT"         # optional: its serial on the cable, when that differs from hw_serial
     wifi_serial = "192.168.1.150:5555" # optional: Wi-Fi adb address, the fallback (adb_keeper.sh keeps it current)
-    accounts = ["ig:@tinyloveshows", "tt:@nomoreawkwardness"]   # each account lives on exactly one phone
+    accounts = ["ig:@tinyloveshows", "tt:@nomoreawkwardness", "x:@handle", "reddit:u/name"]   # each account lives on exactly one phone
     quotas = { posts_per_day = 2 }    # optional: overrides the [accounts.*] limits of this phone's accounts
 
 An old config with only [phone] keeps working: it is one phone with id "phone-1" that owns every account.
@@ -29,7 +29,13 @@ from pathlib import Path
 from typing import Awaitable, Callable
 
 LEGACY_ID = "phone-1"
-APPS = {"ig": "instagram", "instagram": "instagram", "tt": "tiktok", "tiktok": "tiktok"}
+APPS = {"ig": "instagram", "instagram": "instagram", "tt": "tiktok", "tiktok": "tiktok",
+        "x": "x", "twitter": "x", "reddit": "reddit", "rd": "reddit"}
+# Apps the engine can drive (post, stats, research). X and Reddit accounts can live on a phone (listed in the dashboard,
+# logged in by the owner through Take over) but have no flows: no job is ever created for them.
+AUTOMATED_APPS = frozenset({"instagram", "tiktok"})
+LISTED_ONLY_NOTE = ("Listed only: log in yourself with Take over on the phone. The engine has no posting flow for this app, "
+                    "and whether the login is still valid is not checked (unknown).")
 ID_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_-]{0,31}$")
 
 
@@ -58,11 +64,14 @@ class PhoneCfg:
 
 
 def parse_account(spec: str) -> tuple[str, str]:
-    """'ig:@name' / 'tt:name' / 'instagram:@name' -> ('instagram', 'name')."""
+    """'ig:@name' / 'tt:name' / 'instagram:@name' / 'x:@name' / 'reddit:u/name' -> ('instagram', 'name')."""
     app, sep, handle = str(spec).partition(":")
-    handle = handle.strip().lstrip("@")
+    handle = handle.strip()
+    if app.strip().lower() == "reddit" or app.strip().lower() == "rd":
+        handle = re.sub(r"^/?u/", "", handle, flags=re.I)
+    handle = handle.lstrip("@")
     if not sep or app.strip().lower() not in APPS or not handle:
-        raise ConfigError(f"bad account {spec!r}: expected \"ig:@handle\" or \"tt:@handle\"")
+        raise ConfigError(f"bad account {spec!r}: expected \"ig:@handle\", \"tt:@handle\", \"x:@handle\" or \"reddit:u/name\"")
     return APPS[app.strip().lower()], handle
 
 

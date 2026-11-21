@@ -22,8 +22,10 @@ import json
 import os
 import random
 import re
+import shutil
 import signal
 import smtplib
+import subprocess
 import sqlite3
 import sys
 import time
@@ -34,7 +36,9 @@ from email.message import EmailMessage
 from pathlib import Path
 
 import access
+import insights
 import phones as phonecfg
+import research_seeds
 import updater
 
 from aiohttp import WSMsgType, web
@@ -61,6 +65,7 @@ def wifi_addr(phone: phonecfg.PhoneCfg) -> str:
 
 DB = ROOT / "engine.db"
 LOGS = ROOT / "logs"
+THUMBS = ROOT / "thumbs"   # post thumbnails for the dashboard (made while the video still exists)
 INBOX = ROOT / CFG["mailbox"]["inbox"]
 SCHED = CFG["schedule"]
 FIXED = ("preflight", "post", "delete", "stats")  # jobs with a set time; research fills the gaps
@@ -378,6 +383,34 @@ def schedule_outliers() -> None:
     con.commit()
 
 
+def schedule_seed_research() -> None:
+    """Once a day (after [research_seeds].after) queue a few keyword research sessions per configured account, from the
+    seed list in research_seeds.py. Off unless [research_seeds].accounts is set. The jobs are ordinary research jobs, so
+    the per-account daily limits apply and they only run in gaps between fixed jobs."""
+    cfg = CFG.get("research_seeds") or {}
+    if not cfg.get("accounts"):
+        return
+    today = datetime.now().strftime("%Y-%m-%d")
+    if get_state("seeds_queued") == today or datetime.now().strftime("%H:%M") < str(cfg.get("after", "10:00")):
+        return
+    set_state("seeds_queued", today)
+    jobs, problems = research_seeds.seed_jobs(cfg, datetime.now().date(), CFG.get("accounts", {}))
+    for text in problems:
+        alert("config", text, every_min=24 * 60)
+    con = db()
+    for j in jobs:
+        ph = phonecfg.owner_of(PHONES, j["app"], j["account"])
+        if ph is None:
+            alert("config", f"[research_seeds] {j['app']} @{j['account']} is on no phone: its seed research was skipped", every_min=24 * 60)
+            continue
+        add_job(con, plan=f"seeds-{today}", kind="research", app=j["app"], account=j["account"], phone_id=ph.id,
+                run_at=at_time(today, j["not_before"]), not_after=at_time(today, j["not_after"]),
+                args={k: j[k] for k in ("keyword", "minutes", "max_likes", "max_comments")}, label=j["keyword"])
+    con.commit()
+    if jobs:
+        print(f"queued {len(jobs)} seed research sessions", flush=True)
+
+
 # ================================================================ disk clean-up
 _last_cleanup = 0.0
 
@@ -402,7 +435,7 @@ def cleanup() -> None:
                 freed += f.stat().st_size
                 f.unlink()
     now = time.time()
-    for folder, days in ((LOGS, 30), (ROOT / "runs", 14)):
+    for folder, days in ((LOGS, 30), (ROOT / "runs", 14), (THUMBS, 120)):
         for f in folder.glob("*"):
             if f.is_file() and now - f.stat().st_mtime > days * 86400 and f.name != "engine.out":
                 freed += f.stat().st_size
@@ -780,6 +813,8 @@ async def housekeeping() -> None:
             import_plans()
             schedule_preflight()
             schedule_outliers()
+            schedule_seed_research()
+            await asyncio.to_thread(make_thumbs)
             check_plan_arrived()
             orphan_jobs()
             cleanup()
@@ -842,7 +877,13 @@ def build_state(phone_id: str | None = None) -> dict:
         for name, lim in accts.items():
             ph = phonecfg.owner_of(PHONES, app, name)
             accounts.append({"app": app, "account": name, "limits": lim, "used": used_today(app, name),
-                             "phone_id": ph.id if ph else None})
+                             "phone_id": ph.id if ph else None, "automated": app in phonecfg.AUTOMATED_APPS})
+    for ph in PHONES:  # X / Reddit accounts: only listed on the phone, nothing runs for them
+        for app, name in sorted(ph.accounts or ()):
+            if app not in phonecfg.AUTOMATED_APPS:
+                accounts.append({"app": app, "account": name, "limits": {}, "phone_id": ph.id, "automated": False,
+                                 "login": "unknown", "note": phonecfg.LISTED_ONLY_NOTE,
+                                 "used": {"likes": 0, "comments": 0, "posts": 0, "research_minutes": 0}})
     views = []
     for r in RUNNERS:
         v = phone_summary(r, now)
@@ -950,6 +991,69 @@ async def api_results(_req):
     return web.json_response({"posts": posts, "research": research})
 
 
+def qint(req, name: str, default: int, lo: int, hi: int) -> int:
+    try:
+        return max(lo, min(hi, int(req.query.get(name, default))))
+    except ValueError:
+        return default
+
+
+async def api_insights_stats(req):
+    """Post stats tab: account cards with deltas vs the prior window, best posts, series, A/B. ?days=7|30 &app= &account="""
+    days = qint(req, "days", 7, 1, 90)
+    posts = insights.load_posts(db(), ROOT / "stats.db")
+    return web.json_response(insights.stats_report(posts, time.time(), days, req.query.get("app") or None,
+                                                   req.query.get("account") or None))
+
+
+async def api_insights_research(req):
+    """Research tab: keywords, rising themes, formats that work, promotion ideas. ?days=7|14|30|all &app="""
+    raw = req.query.get("days", "14")
+    days = None if raw == "all" else qint(req, "days", 14, 1, 365)
+    return web.json_response(insights.research_report(insights.load_research(ROOT / "research.db"), time.time(), days,
+                                                      req.query.get("app") or None))
+
+
+async def api_trends(req):
+    """Trend export for the video generator (README 'Trend export'). ?limit=10 &days=14 &app="""
+    return web.json_response(insights.trends(insights.load_research(ROOT / "research.db"), time.time(),
+                                             qint(req, "days", 14, 2, 90), req.query.get("app") or None,
+                                             qint(req, "limit", 10, 1, 50)))
+
+
+async def post_thumb(req):
+    """First-second frame of a post's video, made while the video still existed (make_thumbs)."""
+    f = THUMBS / f"{int(req.match_info['id'])}.jpg"
+    if not f.exists():
+        raise web.HTTPNotFound()
+    return web.FileResponse(f, headers={"Cache-Control": "max-age=86400"})
+
+
+def make_thumbs(limit: int = 3) -> None:
+    """A small JPEG per post job whose video is still on disk (clean-up deletes videos once a plan is done). ffmpeg, best effort."""
+    ffmpeg = shutil.which("ffmpeg")
+    if not ffmpeg:
+        return
+    THUMBS.mkdir(exist_ok=True)
+    made = 0
+    for j in db().execute("select id, args from jobs where kind='post' order by id desc limit 200").fetchall():
+        out = THUMBS / f"{j['id']}.jpg"
+        video = Path(json.loads(j["args"] or "{}").get("video", ""))
+        if out.exists() or not video.is_file():
+            continue
+        try:
+            for seek in (["-ss", "1"], []):  # a clip shorter than 1 s has no frame at 1 s: retry from the start
+                subprocess.run([ffmpeg, "-v", "error", "-y", *seek, "-i", str(video), "-frames:v", "1", "-vf", "scale=180:-2",
+                                "-q:v", "5", str(out)], capture_output=True, timeout=30)
+                if out.exists():
+                    break
+        except subprocess.TimeoutExpired:
+            pass
+        made += 1
+        if made >= limit:
+            return
+
+
 async def shot(req):
     f = ROOT / "runs" / Path(req.match_info["name"]).name
     if not f.exists():
@@ -1042,6 +1146,8 @@ def startup_checks() -> None:
         alert("config", f"account {app} @{name} is in [accounts.*] but on no phone: its jobs will be skipped", every_min=0)
     for p in PHONES:
         for app, name in sorted(p.accounts or ()):
+            if app not in phonecfg.AUTOMATED_APPS:
+                continue  # X / Reddit: listed only, no [accounts.*] section needed
             if name not in {n.casefold() for n in CFG.get("accounts", {}).get(app, {})}:
                 alert("config", f"phone {p.id} lists {app} @{name} but there is no [accounts.{app}.{name}] section: plans for it are rejected",
                       every_min=0, phone_id=p.id)
@@ -1086,6 +1192,10 @@ def routes() -> list:
         web.get("/", page),
         web.get("/api/state", api_state),
         web.get("/api/results", api_results),
+        web.get("/api/insights/stats", api_insights_stats),
+        web.get("/api/insights/research", api_insights_research),
+        web.get("/api/trends", api_trends),
+        web.get(r"/api/post/{id:\d+}/thumb.jpg", post_thumb),
         # per phone
         web.get("/api/phones", api_phones),
         web.get("/api/phones/{phone}/state", api_phone_state),

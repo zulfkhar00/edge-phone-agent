@@ -175,6 +175,115 @@ dialog .bar { display: flex; justify-content: space-between; align-items: center
   .screen { max-width: 220px; }
   .what .e { flex-direction: column; gap: 2px; } .what .e .trunc { white-space: normal; }
 }
+
+/* insights (post stats, research) */
+.filters { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; margin: -4px 0 16px; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: var(--r-sm); background: var(--panel); overflow: hidden; }
+.seg button { border: 0; border-radius: 0; background: none; padding: 5px 12px; color: var(--muted); }
+.seg button + button { border-left: 1px solid var(--line); }
+.seg button.on { background: var(--accent-soft); color: var(--accent); }
+.fl { display: inline-flex; align-items: center; gap: 6px; color: var(--muted); font-size: 12px; font-weight: 600; }
+.sect { margin-top: 26px; }
+.sect > h3 { display: flex; align-items: baseline; gap: 8px; }
+.sect > h3 .hint { font-weight: 450; text-transform: none; letter-spacing: 0; color: var(--faint); font-size: 12px; }
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 14px; }
+.acard { padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+.acard .head { display: flex; align-items: center; gap: 8px; font-weight: 650; min-width: 0; }
+.acard .head .trunc { flex: 1; }
+.tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px 12px; }
+.tile .tl { font-size: 11px; color: var(--muted); font-weight: 600; }
+.tile .tv { font-size: 20px; font-weight: 700; letter-spacing: -.02em; font-variant-numeric: tabular-nums; line-height: 1.2; }
+.tile .tv.dim { color: var(--faint); font-weight: 600; }
+.dl { display: inline-block; font-size: 11px; font-weight: 650; padding: 0 6px; border-radius: 99px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.dl.up { background: var(--ok-bg); color: var(--ok); } .dl.down { background: var(--bad-bg); color: var(--bad); }
+.dl.flat, .dl.na { background: var(--soft); color: var(--faint); }
+.note { font-size: 12px; color: var(--muted); background: var(--soft); border-radius: var(--r-sm); padding: 6px 10px; }
+.note.warn { background: var(--warn-bg); color: var(--warn); } .note.bad { background: var(--bad-bg); color: var(--bad); }
+.plist { padding: 4px 16px; }
+.prow { display: grid; grid-template-columns: 22px 38px minmax(0, 1fr) auto auto; gap: 12px; align-items: center; padding: 10px 0; border-top: 1px solid var(--line); }
+.prow:first-child { border-top: 0; }
+.prow .rk { color: var(--faint); font-weight: 700; font-variant-numeric: tabular-nums; text-align: center; }
+.th { position: relative; display: block; width: 38px; height: 64px; border-radius: var(--r-xs); background: linear-gradient(160deg, #dfe6f7, #c3cde6); overflow: hidden; flex: none; }
+.th::after { content: ""; position: absolute; left: 50%; top: 50%; margin: -6px 0 0 -4px; border-left: 11px solid rgba(255,255,255,.85); border-top: 7px solid transparent; border-bottom: 7px solid transparent; }
+.th img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; }
+.pmain { min-width: 0; }
+.pmain .pc { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; font-weight: 550; }
+.pmain .pm { display: flex; flex-wrap: wrap; gap: 4px 8px; align-items: center; margin-top: 2px; font-size: 12px; color: var(--muted); }
+.pnum { text-align: right; font-variant-numeric: tabular-nums; min-width: 48px; }
+.pmain .pm .trunc { max-width: 150px; }
+.pnum b { display: block; font-size: 16px; letter-spacing: -.01em; }
+.pnum span { font-size: 12px; color: var(--muted); }
+.spark { display: block; }
+.spark polyline { fill: none; stroke: var(--accent); stroke-width: 1.8; stroke-linejoin: round; stroke-linecap: round; }
+.spark circle { fill: var(--accent); }
+.spark .base { stroke: var(--line); stroke-width: 1; }
+.sp-wrap { text-align: center; color: var(--faint); font-size: 10px; }
+.chip { font-size: 11px; font-weight: 650; padding: 1px 7px; border-radius: 99px; background: var(--soft); color: var(--muted); white-space: nowrap; }
+.chip.bad { background: var(--bad-bg); color: var(--bad); } .chip.ok { background: var(--ok-bg); color: var(--ok); } .chip.warn { background: var(--warn-bg); color: var(--warn); }
+.chip.acc { background: var(--accent-soft); color: var(--accent); }
+.scard { padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+.scard .head { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.scard .head b { font-size: 16px; }
+.parts { display: flex; align-items: flex-end; gap: 6px; height: 54px; }
+.parts .pt { flex: 1; min-width: 14px; max-width: 40px; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; height: 100%; font-size: 10px; color: var(--faint); }
+.parts .pt i { display: block; width: 100%; background: var(--accent); border-radius: 3px 3px 0 0; min-height: 2px; opacity: .85; }
+.parts .pt i.na { background: var(--line); }
+.ab { display: grid; gap: 6px; }
+.abrow { display: grid; grid-template-columns: 18px minmax(0, 1fr) auto; gap: 8px; align-items: center; font-size: 12px; }
+.abrow .bar { height: 10px; border-radius: 99px; background: var(--soft); overflow: hidden; }
+.abrow .bar i { display: block; height: 100%; background: #8ea4ee; border-radius: 99px; }
+.abrow.win .bar i { background: var(--accent); }
+.abrow b { font-variant-numeric: tabular-nums; }
+.pairs { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px; }
+.pair { padding: 10px 12px; font-size: 13px; display: flex; flex-direction: column; gap: 4px; }
+.pair .vs { display: grid; grid-template-columns: 1fr auto 1fr; gap: 6px; align-items: center; }
+.pair .vs div { font-variant-numeric: tabular-nums; } .pair .vs .r { text-align: right; }
+.pair .vs .w { font-weight: 700; color: var(--accent); }
+.kpis { display: flex; flex-wrap: wrap; gap: 8px 22px; margin-bottom: 4px; }
+.kpis .tile .tv { font-size: 22px; }
+.ideas { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; }
+.idea { padding: 16px; display: flex; flex-direction: column; gap: 8px; }
+.idea .hk { font-size: 16px; font-weight: 650; line-height: 1.3; letter-spacing: -.01em; }
+.idea .hk::before { content: "\201C"; color: var(--faint); } .idea .hk::after { content: "\201D"; color: var(--faint); }
+.idea .ev { font-size: 12px; color: var(--muted); }
+.idea .ag { font-size: 13px; }
+.idea .rowx { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.fmts { padding: 8px 16px; }
+.frow { display: grid; grid-template-columns: 150px minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 9px 0; border-top: 1px solid var(--line); }
+.frow:first-child { border-top: 0; }
+.frow .fn { font-weight: 600; } .frow .fn small { display: block; color: var(--faint); font-weight: 450; font-size: 11px; }
+.frow .bar { height: 12px; background: var(--soft); border-radius: 99px; overflow: hidden; }
+.frow .bar i { display: block; height: 100%; background: var(--accent); border-radius: 99px; }
+.frow .bar i.low { background: #b9c3dc; }
+.frow .ex { grid-column: 2 / -1; font-size: 12px; color: var(--muted); margin-top: -4px; }
+.themes { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 10px; }
+.theme { padding: 10px 12px; display: flex; flex-direction: column; gap: 4px; }
+.theme .tn { font-weight: 650; overflow-wrap: anywhere; }
+.theme .tm { font-size: 12px; color: var(--muted); display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.kwlist { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 14px; }
+.kw { padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; }
+.kw .kt { display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
+.kw .kt b { font-size: 15px; }
+.kw ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.kw li { font-size: 13px; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; }
+.kw li span { overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.kw li em { font-style: normal; color: var(--muted); font-variant-numeric: tabular-nums; }
+.kw .lbl { font-size: 11px; color: var(--faint); font-weight: 650; text-transform: uppercase; letter-spacing: .05em; }
+.acct.listed { gap: 4px; }
+.acct.listed .why { font-size: 12px; color: var(--muted); }
+.pill.unk { background: var(--soft); color: var(--muted); }
+@media (max-width: 600px) {
+  .cards, .ideas, .kwlist { grid-template-columns: 1fr; }
+  .tiles { grid-template-columns: repeat(3, 1fr); gap: 10px 8px; }
+  .tile .tv { font-size: 17px; }
+  .prow { grid-template-columns: 38px minmax(0, 1fr) auto; gap: 10px; }
+  .prow .rk { display: none; } .prow .sp-wrap { grid-column: 2 / -1; display: flex; align-items: center; gap: 8px; text-align: left; }
+  .plist { padding: 2px 12px; }
+  .frow { grid-template-columns: minmax(0, 1fr) auto; } .frow .bar { grid-column: 1 / -1; order: 3; } .frow .ex { grid-column: 1 / -1; }
+  .filters { gap: 8px; }
+  .pairs, .themes { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 380px) { .themes, .pairs { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
@@ -235,8 +344,16 @@ dialog .bar { display: flex; justify-content: space-between; align-items: center
     </div>
   </section>
 
-  <section id="view-stats" hidden><div class="card pad scroll-x" id="results"></div></section>
-  <section id="view-research" hidden><div class="card pad scroll-x" id="research"></div></section>
+  <section id="view-stats" hidden>
+    <div class="page-head"><h2>Post stats</h2><span class="summary" id="statsSummary"></span></div>
+    <div class="filters" id="statsFilters"></div>
+    <div id="statsBody"><div class="empty">Loading…</div></div>
+  </section>
+  <section id="view-research" hidden>
+    <div class="page-head"><h2>Research</h2><span class="summary" id="researchSummary"></span></div>
+    <div class="filters" id="researchFilters"></div>
+    <div id="researchBody"><div class="empty">Loading…</div></div>
+  </section>
 </main>
 
 <dialog id="logDlg"><div class="bar"><b id="logTitle">Log</b><button onclick="logDlg.close()">Close</button></div><pre id="logText"></pre></dialog>
@@ -284,8 +401,11 @@ const BUSY = new Set();                       // "id:action" buttons currently i
 const OPEN = {};                              // details sections the viewer opened/closed
 const KIND = {post: "Post", stats: "Stats", research: "Research", delete: "Delete", preflight: "Preflight"};
 const STATUS = {idle: "Idle", running: "Running", offline: "Offline", error: "Screen error", manual: "Taken over"};
-const appName = a => a === "tiktok" ? "TikTok" : a === "instagram" ? "Instagram" : a;
-const appTag = a => `<span class="app">${a === "tiktok" ? "TT" : a === "instagram" ? "IG" : esc(a)}</span>`;
+const appName = a => ({tiktok: "TikTok", instagram: "Instagram", x: "X", reddit: "Reddit"})[a] || a;
+const appTag = a => `<span class="app">${({tiktok: "TT", instagram: "IG", x: "X", reddit: "RD"})[a] || esc(a)}</span>`;
+const listed = a => a.automated === false;   // X / Reddit: on the phone, logged in by the owner, nothing runs for them
+const listedRow = a => `<div class="acct listed"><div class="who">${appTag(a.app)}<span class="trunc">${a.app === "reddit" ? "u/" : "@"}${esc(a.account)}</span>` +
+  `<span class="pill unk" title="${esc(a.note || "")}">Login: unknown</span></div><div class="why">Owner logs in with Take over. Not automated: no posting, no checks.</div></div>`;
 const paused = () => !!(CUR && CUR.paused);
 const phoneQ = () => CUR && CUR.id !== "main" ? "?phone=" + encodeURIComponent(CUR.id) : "";
 const withPhone = o => CUR && CUR.id !== "main" ? {...o, phone: CUR.id} : o;
@@ -314,8 +434,10 @@ const quotas = a => `<div class="qs">${meter("Posts", a.used.posts, a.limits.pos
 
 // ---------------------------------------------------------------- overview
 function phoneCard(p, now) {
-  const accts = p.accounts.slice(0, 2).map(a => `<div class="acct"><div class="who">${appTag(a.app)}<span class="trunc">@${esc(a.account)}</span></div>${quotas(a)}</div>`).join("") +
-    (p.accounts.length > 2 ? `<div class="more">+${p.accounts.length - 2} more account${p.accounts.length > 3 ? "s" : ""}</div>` : "") +
+  const auto = p.accounts.filter(a => !listed(a)), extra = p.accounts.filter(listed);
+  const accts = auto.slice(0, 2).map(a => `<div class="acct"><div class="who">${appTag(a.app)}<span class="trunc">@${esc(a.account)}</span></div>${quotas(a)}</div>`).join("") +
+    (auto.length > 2 ? `<div class="more">+${auto.length - 2} more account${auto.length > 3 ? "s" : ""}</div>` : "") +
+    extra.slice(0, 2).map(listedRow).join("") + (extra.length > 2 ? `<div class="more">+${extra.length - 2} more listed</div>` : "") +
     (!p.accounts.length ? `<div class="muted">No accounts configured</div>` : "");
   const nx = waiting(p).find(j => j.kind !== "preflight") || waiting(p)[0];
   const next = nx ? `<span class="next trunc" title="${esc(jobText(nx).t + " " + jobText(nx).d)}">Next: <b>${esc(jobText(nx).t)}</b> · ${when(nx.run_at, now)} · ${rel(nx.run_at, now)}</span>` : `<span class="next">Nothing scheduled</span>`;
@@ -392,7 +514,7 @@ function renderPhone() {
   tb.className = p.paused ? "primary" : "takeover"; tb.disabled = BUSY.has("take");
   $("#veil").style.display = p.paused ? "none" : "";
 
-  $("#quotaCard").innerHTML = `<h3>Today's quota</h3>` + (p.accounts.length ? p.accounts.map(a =>
+  $("#quotaCard").innerHTML = `<h3>Today's quota</h3>` + (p.accounts.length ? p.accounts.map(a => listed(a) ? listedRow(a) :
     `<div class="quota-row"><div class="who" style="display:flex;gap:6px;align-items:center;font-weight:600;min-width:0">${appTag(a.app)}<span class="trunc">@${esc(a.account)}</span></div>${quotas(a)}</div>`).join("") : `<div class="muted">No accounts configured.</div>`);
 
   const rc = $("#runningCard");
@@ -442,7 +564,7 @@ function applyRoute() {
   const view = route.name === "phone" ? "phone" : route.name;
   for (const v of ["phones", "phone", "stats", "research"]) $("#view-" + v).hidden = v !== view;
   document.querySelectorAll("[data-nav]").forEach(a => a.classList.toggle("on", a.dataset.nav === (view === "phone" ? "phones" : view)));
-  if (route.name === "stats" || route.name === "research") loadResults();
+  if (route.name === "stats" || route.name === "research") loadInsights(route.name);
   if (S) render();
 }
 function render() {
@@ -486,33 +608,192 @@ $("#bellBtn").onclick = () => {
   if (!p.hidden) post("/api/alerts/seen");
 };
 
-// ---------------------------------------------------------------- results
-async function loadResults() {
-  const R = await fetch("/api/results").then(r => r.json());
-  $("#results").innerHTML = R.posts.length ? R.posts.map(p => {
-    const snaps = p.snapshots;
-    const tt = p.app === "tiktok";
-    const rowsHtml = snaps.map(s => {
-      const d = s.data, L = d.live || d, D = d.detailed || {};
-      return tt ? `<tr><td>${esc(s.label)}</td><td class="num">${n(L.views)}</td><td class="num">${n(L.likes)}</td><td class="num">${n(L.comments)}</td>
-          <td class="num">${n(L.saves)}</td><td class="num">${n(L.shares)}</td><td class="num">${D.average_watch_time_s ?? "–"}${D.average_watch_time_s != null ? "s" : ""}</td>
-          <td class="num">${D.watched_full_video_pct ?? "–"}${D.watched_full_video_pct != null ? "%" : ""}</td></tr>`
-        : `<tr><td>${esc(s.label)}</td><td class="num">${n(d.views)}</td><td class="num">${n(d.viewers)}</td><td class="num">${d.average_watch_time_s ?? "–"}${d.average_watch_time_s != null ? "s" : ""}</td>
-          <td class="num">${d.skip_rate_pct ?? "–"}${d.skip_rate_pct != null ? "%" : ""}</td><td class="num">${d.like_rate_pct ?? "–"}</td><td class="num">${d.share_rate_pct ?? "–"}</td><td class="num">${n(d.follows)}</td></tr>`;
-    }).join("");
-    const head = tt ? `<tr><th>At</th><th class="num">Views</th><th class="num">Likes</th><th class="num">Comments</th><th class="num">Saves</th><th class="num">Shares</th><th class="num">Avg watch</th><th class="num">Full watch</th></tr>`
-                    : `<tr><th>At</th><th class="num">Views</th><th class="num">Viewers</th><th class="num">Avg watch</th><th class="num">Skip rate</th><th class="num">Like %</th><th class="num">Share %</th><th class="num">Follows</th></tr>`;
-    return `<div style="margin-bottom:22px"><b>${esc(p.label)}</b> · ${tt ? "TikTok" : "Instagram"} @${esc(p.account)} · posted ${dayhm(p.posted_at)}
-      ${p.status === "unverified" ? '<span class="st unverified">unverified</span>' : ""}
-      <div class="muted">${esc(p.caption)}</div>
-      ${snaps.length ? `<table>${head}${rowsHtml}</table>` : `<div class="muted">no snapshots yet</div>`}</div>`;
-  }).join("") : `<div class="empty">No posts yet.</div>`;
-  $("#research").innerHTML = R.research.length ? `<table><tr><th>Seen</th><th>App</th><th>Keyword</th><th>Creator</th><th>Caption</th><th class="num">Likes</th><th class="num">Comments</th><th>We</th></tr>` +
-    R.research.map(v => `<tr><td>${esc(v.seen_at.slice(5, 16))}</td><td>${v.app === "tiktok" ? "TT" : "IG"}</td><td>${esc(v.keyword)}</td><td>${esc(v.creator)}</td>
-      <td class="cap">${esc((v.caption || "").slice(0, 90))}</td><td class="num">${n(v.likes)}</td><td class="num">${n(v.comments)}</td>
-      <td>${v.liked ? "liked " : ""}${v.commented ? `commented: <i>${esc(v.commented)}</i>` : ""}</td></tr>`).join("") + `</table>`
-    : `<div class="empty">No research yet.</div>`;
+// ---------------------------------------------------------------- insights (post stats + research)
+const F = {stats: {days: 7, app: "", account: ""}, research: {days: 14, app: ""}};
+let insightSeq = 0;
+const kfmt = v => v == null ? "–" : v >= 1e6 ? (v / 1e6).toFixed(1).replace(/\.0$/, "") + "M" : v >= 1e4 ? Math.round(v / 1e3) + "k" :
+  v >= 1e3 ? (v / 1e3).toFixed(1).replace(/\.0$/, "") + "k" : String(Math.round(v));
+const secs = v => v == null ? "–" : v.toFixed(1).replace(/\.0$/, "") + "s";
+const pc = v => v == null ? "–" : Math.round(v) + "%";
+const acctLabel = (app, a) => (app === "reddit" ? "u/" : "@") + a;
+
+function dchip(d, mode, lower, unit = "") {  // change vs the prior period; lower = a drop is good (skip rate)
+  const none = t => `<span class="dl na" title="${t}">–</span>`;
+  if (!d || d.value == null || d.prev == null) return none("No data in the prior period");
+  const v = mode === "pct" ? d.pct : d.diff;
+  if (v == null) return `<span class="dl na" title="Nothing in the prior period">new</span>`;
+  const z = Math.abs(v) < (mode === "pct" ? 0.5 : 0.05), good = lower ? v < 0 : v > 0;
+  const txt = mode === "pct" ? Math.abs(v).toFixed(0) + "%" : Math.abs(v).toFixed(1).replace(/\.0$/, "") + unit;
+  return `<span class="dl ${z ? "flat" : good ? "up" : "down"}" title="Prior ${F.stats.days} days: ${d.prev}">${z ? "±0" : (v > 0 ? "▲ " : "▼ ") + txt}</span>`;
 }
+const tile = (label, val, chip, dim) => `<div class="tile"><div class="tl">${label}</div><div class="tv${dim ? " dim" : ""}">${val}</div>${chip || ""}</div>`;
+
+function spark(pts, w = 84, h = 26) {  // [{label, views}] -> inline SVG, baseline at 0 so growth reads honestly
+  pts = (pts || []).filter(p => p.views != null);
+  if (!pts.length) return `<span class="faint" style="font-size:11px">no snapshots</span>`;
+  const max = Math.max(...pts.map(p => p.views));
+  const x = i => pts.length === 1 ? w / 2 : 3 + i * (w - 6) / (pts.length - 1);
+  const y = v => h - 3 - (max ? v / max : 0) * (h - 8);
+  const line = pts.map((p, i) => `${x(i).toFixed(1)},${y(p.views).toFixed(1)}`).join(" ");
+  const tip = pts.map(p => `${p.label}: ${n(p.views)}`).join(" · ");
+  return `<svg class="spark" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" role="img" aria-label="Views over time. ${esc(tip)}"><title>${esc(tip)}</title>` +
+    `<line class="base" x1="0" x2="${w}" y1="${h - 3}" y2="${h - 3}"/>${pts.length > 1 ? `<polyline points="${line}"/>` : ""}` +
+    `<circle cx="${x(pts.length - 1).toFixed(1)}" cy="${y(pts[pts.length - 1].views).toFixed(1)}" r="2.5"/></svg>`;
+}
+const thumb = p => `<span class="th">${p.thumb ? `<img src="${esc(p.thumb)}" alt="" loading="lazy" onerror="this.remove()">` : ""}</span>`;
+const stateChip = p => p.state === "unverified" ? `<span class="chip bad" title="The Share tap was not confirmed: check the profile">unverified</span>`
+  : p.state === "no_stats" ? `<span class="chip warn" title="First stats are read 1 h after posting">awaiting stats</span>` : "";
+const dayShort = t => t ? new Date(t * 1000).toLocaleDateString([], {month: "short", day: "numeric"}) : "";
+
+function postRow(p, rank) {
+  const ok = p.state === "ok";
+  const sub = ok ? `avg watch ${secs(p.avg_watch_s)}${p.skip_pct != null ? " · skip " + pc(p.skip_pct) : ""}${p.follows ? " · +" + p.follows + " follows" : ""}` : "";
+  return `<div class="prow"><span class="rk">${rank ?? ""}</span>${thumb(p)}
+    <div class="pmain"><div class="pc" title="${esc(p.caption)}">${esc(p.caption_short || p.label)}</div>
+      <div class="pm">${appTag(p.app)}<span class="trunc">@${esc(p.account)}</span><span>${esc(p.label)}</span><span>${dayShort(p.posted_at)}</span>${stateChip(p)}</div>${sub ? `<div class="pm">${esc(sub)}</div>` : ""}</div>
+    <div class="pnum">${ok ? `<b>${kfmt(p.views)}</b><span>views</span>` : `<span class="faint">no views</span>`}</div>
+    <div class="sp-wrap">${spark(p.spark)}${p.spark.length ? `<div>${esc(p.spark[0].label)} → ${esc(p.spark[p.spark.length - 1].label)}</div>` : ""}</div></div>`;
+}
+
+function accountCard(c) {
+  const s = c.summary, d = c.deltas, tt = c.app === "tiktok";
+  const note = c.state === "empty" ? `<div class="note">No posts in this window${c.prior.posts ? ` (${c.prior.posts} in the period before)` : ""}.</div>`
+    : c.state === "unverified" ? `<div class="note bad">Every post here is unverified: the Share tap was not confirmed. Check the profile before trusting these numbers.</div>`
+    : c.state === "awaiting_stats" ? `<div class="note warn">Posted, but no stats have been read yet (the first read is 1 h after posting).</div>`
+    : (s.unverified || s.awaiting_stats ? `<div class="note warn">${[s.unverified && s.unverified + " unverified", s.awaiting_stats && s.awaiting_stats + " awaiting stats"].filter(Boolean).join(", ")}: left out of the averages.</div>` : "");
+  return `<div class="card acard"><div class="head">${appTag(c.app)}<span class="trunc">@${esc(c.account)}</span><span class="chip">${s.posts} post${s.posts === 1 ? "" : "s"}</span></div>
+    <div class="tiles">
+      ${tile("Posts", s.posts, dchip(d.posts, "pct"))}
+      ${tile("Total views", kfmt(s.views_total), dchip(d.views_total, "pct"), s.views_total == null)}
+      ${tile("Median views", kfmt(s.views_median), dchip(d.views_median, "pct"), s.views_median == null)}
+      ${tile("Avg watch", secs(s.avg_watch_s), dchip(d.avg_watch_s, "abs", false, "s"), s.avg_watch_s == null)}
+      ${tile("Skip rate", tt ? `<span title="TikTok does not report a skip rate">n/a</span>` : pc(s.skip_pct), tt ? "" : dchip(d.skip_pct, "abs", true, " pt"), tt || s.skip_pct == null)}
+      ${tile("Follows", s.follows == null ? "–" : s.follows, dchip(d.follows, "abs"), s.follows == null)}
+    </div>${note}</div>`;
+}
+
+function seriesCard(s) {
+  const mx = Math.max(1, ...s.parts.map(p => p.views_total || 0));
+  const bars = s.parts.map(p => `<div class="pt" title="Part ${p.part ?? "?"}: ${p.views_total == null ? "no stats" : n(p.views_total) + " views"}"><i class="${p.views_total == null ? "na" : ""}" style="height:${p.views_total ? Math.max(6, p.views_total / mx * 100) : 6}%"></i>${p.part ?? "·"}</div>`).join("");
+  const ab = s.ab, hi = ab && Math.max(ab.a.views_avg || 0, ab.b.views_avg || 0, 1);
+  const row = (k) => `<div class="abrow${ab.winner === k ? " win" : ""}"><b>${k.toUpperCase()}</b><div class="bar"><i style="width:${(ab[k].views_avg || 0) / hi * 100}%"></i></div><span><b>${kfmt(ab[k].views_avg)}</b> avg · ${ab[k].posts} post${ab[k].posts === 1 ? "" : "s"}</span></div>`;
+  const verdict = !ab ? "" : ab.winner === "tie" ? `<span class="chip">A and B tie</span>` : ab.winner ? `<span class="chip ok">${ab.winner.toUpperCase()} wins by ${ab.lift_pct == null ? "a lot" : Math.round(ab.lift_pct) + "%"}</span>` : `<span class="chip warn">not enough stats</span>`;
+  return `<div class="card scard"><div class="head"><b>${esc(s.series)}</b>${s.apps.map(appTag).join("")}<span class="muted">${s.summary.posts} posts</span><span class="spacer"></span>${verdict}</div>
+    <div class="tiles"><div class="tile"><div class="tl">Total views</div><div class="tv">${kfmt(s.summary.views_total)}</div></div>
+      <div class="tile"><div class="tl">Avg per post</div><div class="tv">${kfmt(s.summary.views_avg)}</div></div>
+      <div class="tile"><div class="tl">Avg watch</div><div class="tv${s.summary.avg_watch_s == null ? " dim" : ""}">${secs(s.summary.avg_watch_s)}</div></div></div>
+    <div><div class="tl muted" style="font-size:11px;font-weight:600;margin-bottom:4px">Views by part</div><div class="parts">${bars}</div></div>
+    ${ab ? `<div class="ab"><div class="tl muted" style="font-size:11px;font-weight:600">A vs B (average views per post)</div>${row("a")}${row("b")}</div>` : ""}</div>`;
+}
+
+function pairCard(p) {
+  const side = (k, x) => `<div class="${k === "b" ? "r " : ""}${p.winner === k ? "w" : ""}" title="${esc(x.label)}">${k.toUpperCase()} ${x.state === "ok" ? kfmt(x.views) : "<span class=faint>n/a</span>"}</div>`;
+  const mid = p.winner === "tie" ? "tie" : p.winner ? "+" + (p.lift_pct == null ? "∞" : Math.round(p.lift_pct) + "%") : "?";
+  return `<div class="card pair"><div class="muted" style="font-size:12px">${esc(p.series)} · part ${p.part ?? "?"} · ${appTag(p.a.app)} @${esc(p.a.account)}</div>
+    <div class="vs">${side("a", p.a)}<span class="chip ${p.winner && p.winner !== "tie" ? "ok" : ""}">${mid}</span>${side("b", p.b)}</div></div>`;
+}
+
+function seg(view, key, opts, cur) {
+  return `<span class="seg" role="group">${opts.map(([v, l]) => `<button data-f="${view}" data-k="${key}" data-v="${esc(v)}" class="${String(cur) === String(v) ? "on" : ""}">${esc(l)}</button>`).join("")}</span>`;
+}
+function renderStatsView(R) {
+  const f = F.stats;
+  const accts = R.accounts || [];
+  $("#statsFilters").innerHTML = `${seg("stats", "days", [[7, "7 days"], [30, "30 days"]], f.days)}
+    ${seg("stats", "app", [["", "All apps"], ...R.apps.map(a => [a, appName(a)])], f.app)}
+    ${accts.length > 1 ? `<label class="fl">Account <select data-f="stats" data-k="account"><option value="">All</option>${accts.map(a => `<option ${a === f.account ? "selected" : ""}>${esc(a)}</option>`).join("")}</select></label>` : ""}`;
+  const t = R.totals.current;
+  $("#statsSummary").textContent = R.empty_reason ? "" : `${t.posts} post${t.posts === 1 ? "" : "s"} · ${kfmt(t.views_total)} views · last ${R.days} days vs the ${R.days} before`;
+  const emptyMsg = {no_posts: "No posts yet. Stats show up here once a post has its first read, 1 h after it goes out.",
+    none_in_window: `No posts in the last ${R.days} days${f.app || f.account ? " for this filter" : ""}.`}[R.empty_reason];
+  const noStats = R.empty_reason === "no_stats" ? `<div class="note warn" style="margin-bottom:14px">Posts went out in this window, but none has been read yet (or all are unverified). Numbers appear after the first stats snapshot.</div>` : "";
+  if (emptyMsg) { $("#statsBody").innerHTML = `<div class="card pad empty">${emptyMsg}</div>`; return; }
+  $("#statsBody").innerHTML = `${noStats}
+    <div class="cards">${R.cards.map(accountCard).join("")}</div>
+    <div class="sect"><h3>Best posts <span class="hint">by views, ${R.days} days · sparkline = views from the 1 h to the latest snapshot</span></h3>
+      <div class="card plist">${R.best.length ? R.best.map(p => postRow(p, p.rank)).join("") : `<div class="empty">No post has stats yet.</div>`}</div></div>
+    <div class="sect"><h3>Series <span class="hint">posts sharing a name (whites-1-a, whites-2-b → “whites”); parts and A/B variants compared</span></h3>
+      ${R.series.length ? `<div class="cards">${R.series.map(seriesCard).join("")}</div>` : `<div class="card pad empty">No series in this window. A series needs two or more posts labelled like <code>name-1-a</code>.</div>`}</div>
+    ${R.ab_pairs.length ? `<div class="sect"><h3>A vs B, part by part <span class="hint">same part, both variants; a gap under 5% counts as a tie</span></h3><div class="pairs">${R.ab_pairs.map(pairCard).join("")}</div></div>` : ""}
+    <div class="sect"><h3>All posts <span class="hint">${R.posts.length}, newest first</span></h3>
+      <div class="card plist">${R.posts.map(p => postRow(p)).join("")}</div></div>`;
+}
+
+// ---- research
+function ideaCard(i) {
+  const e = i.evidence;
+  return `<div class="card idea"><div class="rowx"><span class="chip acc">${esc(i.format_label)}</span>${i.theme ? `<span class="chip">${esc(i.theme)}</span>` : ""}<span class="chip ok" title="Median likes of this format vs all videos seen">${i.lift}× typical</span></div>
+    <div class="hk">${esc(i.hook)}</div>
+    <div class="ev">Top video: ${appTag(e.app)} @${esc(e.creator)} · ${kfmt(e.likes)} likes · ${kfmt(e.comments)} comments</div>
+    <div class="ag">${esc(i.angle)}</div>
+    <div class="rowx"><span class="chip" title="How the best videos of this format end">CTA: ${esc(i.cta_label)}</span></div></div>`;
+}
+function formatRows(fs) {
+  const mx = Math.max(1, ...fs.map(f => f.median_likes || 0));
+  return fs.map(f => `<div class="frow"><div class="fn">${esc(f.label)}<small>${f.posts} videos · ${f.share_pct}%</small></div>
+    <div class="bar" title="Median likes ${kfmt(f.median_likes)}"><i class="${(f.lift || 0) < 1 ? "low" : ""}" style="width:${(f.median_likes || 0) / mx * 100}%"></i></div>
+    <div style="text-align:right;font-variant-numeric:tabular-nums"><b>${kfmt(f.median_likes)}</b> <span class="dl ${(f.lift || 0) >= 1.2 ? "up" : (f.lift || 0) < 0.85 ? "down" : "flat"}">${f.lift == null ? "–" : f.lift + "×"}</span></div>
+    ${f.best && f.best.caption ? `<div class="ex">Best: “${esc(f.best.caption)}” · @${esc(f.best.creator)} · ${kfmt(f.best.likes)}</div>` : ""}</div>`).join("");
+}
+function themeCard(t) {
+  return `<div class="card theme"><div class="tn">${t.kind === "hashtag" ? "#" : ""}${esc(t.theme)}</div>
+    <div class="tm"><span class="dl up">▲ ${t.recent} vs ${t.prior}</span>${t.new ? `<span class="chip acc">new</span>` : ""}<span>${kfmt(t.median_likes)} likes</span></div>
+    ${spark(t.daily.map((v, i) => ({label: i === 13 ? "today" : (13 - i) + "d ago", views: v})), 150, 26)}</div>`;
+}
+function keywordCard(k) {
+  return `<div class="card kw"><div class="kt"><b>${esc(k.keyword)}</b>${k.apps.map(appTag).join("")}<span class="muted">${k.posts_seen} seen</span></div>
+    <div class="rowx" style="display:flex;gap:6px;flex-wrap:wrap"><span class="chip">median ${kfmt(k.median_likes)} likes</span><span class="chip">${kfmt(k.median_comments)} comments</span><span class="chip acc">${esc(FMT_LABEL[k.top_format] || k.top_format)}</span></div>
+    <div><div class="lbl">Top creators</div><div>${k.top_creators.map(c => `@${esc(c.creator)} <span class="muted">×${c.posts}</span>`).join(" · ")}</div></div>
+    <div><div class="lbl">Top captions</div><ul>${k.top_captions.map(c => `<li><span title="${esc(c.caption)}">${esc(c.caption)}</span><em>${kfmt(c.likes)}</em></li>`).join("")}</ul></div></div>`;
+}
+let FMT_LABEL = {};
+function renderResearchView(R) {
+  const f = F.research;
+  FMT_LABEL = Object.fromEntries((R.formats || []).map(x => [x.id, x.label]));
+  $("#researchFilters").innerHTML = `${seg("research", "days", [[7, "7 days"], [14, "14 days"], [30, "30 days"], ["all", "All time"]], f.days)}
+    ${seg("research", "app", [["", "All apps"], ...R.apps.map(a => [a, appName(a)])], f.app)}`;
+  const t = R.totals;
+  $("#researchSummary").textContent = R.empty_reason ? "" : `${t.videos} videos · ${t.keywords} keywords · ${t.creators} creators`;
+  if (R.empty_reason) {
+    $("#researchBody").innerHTML = `<div class="card pad empty">${R.empty_reason === "no_research" ? "No research yet. Research sessions search a keyword, watch videos and log what they see; the insights build up here." : "Nothing seen in this window. Try a longer one."}</div>`;
+    return;
+  }
+  $("#researchBody").innerHTML = `
+    <div class="kpis">${tile("Videos seen", n(t.videos))}${tile("Keywords", t.keywords)}${tile("Creators", t.creators)}${tile("Median likes", kfmt(t.median_likes))}${tile("Median comments", kfmt(t.median_comments))}${tile("We liked / commented", `${t.we_liked} / ${t.we_commented}`)}</div>
+    <div class="sect"><h3>Promotion ideas <span class="hint">each backed by a real top video; angles are written for an AI dating assistant</span></h3>
+      ${R.ideas.length ? `<div class="ideas">${R.ideas.map(ideaCard).join("")}</div>` : `<div class="card pad empty">Not enough videos per format yet (needs 2+ of a format that beats the typical video).</div>`}</div>
+    <div class="sect"><h3>Formats that work <span class="hint">captions grouped by pattern; bar = median likes, chip = vs the typical video</span></h3>
+      <div class="card fmts">${formatRows(R.formats)}</div></div>
+    <div class="sect"><h3>Rising themes <span class="hint">hashtags and phrases seen more in the last ${R.rising_days} days than the ${R.rising_days} before · sparkline = sightings per day, 14 days</span></h3>
+      ${R.rising.length ? `<div class="themes">${R.rising.map(themeCard).join("")}</div>` : `<div class="card pad empty">Nothing rising yet: a theme needs 2+ sightings in the recent window and more than before.</div>`}</div>
+    <div class="sect"><h3>Keywords <span class="hint">by median likes · <a href="/api/trends" target="_blank" rel="noopener">trend export (JSON) for the video generator</a></span></h3>
+      <div class="kwlist">${R.keywords.map(keywordCard).join("")}</div></div>`;
+}
+
+async function loadInsights(which) {
+  const seq = ++insightSeq, body = $(which === "stats" ? "#statsBody" : "#researchBody");
+  const qs = new URLSearchParams(Object.entries(F[which]).filter(([, v]) => v !== "" && v != null));
+  try {
+    const R = await fetch(`/api/insights/${which}?${qs}`).then(r => { if (!r.ok) throw new Error(r.status); return r.json(); });
+    if (seq !== insightSeq) return;
+    (which === "stats" ? renderStatsView : renderResearchView)(R);
+  } catch (e) {
+    if (seq === insightSeq) body.innerHTML = `<div class="card pad empty">Could not load this view (${esc(e.message || e)}). Retrying…</div>`;
+  }
+}
+document.addEventListener("click", e => {
+  const b = e.target.closest("button[data-f]");
+  if (!b) return;
+  F[b.dataset.f][b.dataset.k] = b.dataset.k === "days" && b.dataset.v !== "all" ? Number(b.dataset.v) : b.dataset.v;
+  loadInsights(b.dataset.f);
+});
+document.addEventListener("change", e => {
+  const s = e.target.closest("select[data-f]");
+  if (!s) return;
+  F[s.dataset.f][s.dataset.k] = s.value;
+  loadInsights(s.dataset.f);
+});
+setInterval(() => { if (route.name === "stats" || route.name === "research") loadInsights(route.name); }, 60000);
 
 // ---------------------------------------------------------------- live screen (scrcpy -> WebCodecs)
 const cv = $("#cv"), ctx = cv.getContext("2d"), msg = $("#screenMsg");

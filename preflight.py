@@ -81,6 +81,8 @@ def check_phone(problems: list[str], info: dict) -> bool:
 
 def check_accounts(problems: list[str], info: dict) -> None:
     for app, accts in CFG.get("accounts", {}).items():
+        if app not in PKGS:  # X / Reddit: no flow to verify the login
+            continue
         for handle, lim in accts.items():
             if lim.get("use") != "noswipe" or not this_phone().owns(app, handle):  # only this phone's accounts
                 continue
