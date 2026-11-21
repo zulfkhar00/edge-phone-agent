@@ -1,0 +1,1088 @@
+{
+ "now_dt": 0,
+ "phones": [
+  {
+   "id": "moto-1",
+   "name": "Phone 1",
+   "phone_ok": true,
+   "paused": false,
+   "pausing": false,
+   "running": null,
+   "tail": [],
+   "jobs": [
+    {
+     "id": 1,
+     "kind": "preflight",
+     "app": "-",
+     "account": "-",
+     "status": "done",
+     "label": "",
+     "args": {},
+     "attempts": 1,
+     "run_at_dt": -30600,
+     "error": null,
+     "shot": null,
+     "started_at_dt": -30580
+    },
+    {
+     "id": 2,
+     "kind": "research",
+     "app": "tiktok",
+     "account": "nomoreawkwardness",
+     "status": "done",
+     "label": "",
+     "args": {
+      "keyword": "dating advice",
+      "minutes": 20
+     },
+     "attempts": 1,
+     "run_at_dt": -28800,
+     "error": null,
+     "shot": null,
+     "started_at_dt": -28780
+    },
+    {
+     "id": 3,
+     "kind": "post",
+     "app": "tiktok",
+     "account": "nomoreawkwardness",
+     "status": "done",
+     "label": "video-01",
+     "args": {
+      "caption": "Texting her back after 3 days of silence #dating #texting #relationships #firstdate",
+      "visibility": "public"
+     },
+     "attempts": 1,
+     "run_at_dt": -21600,
+     "error": null,
+     "shot": null,
+     "started_at_dt": -21580
+    },
+    {
+     "id": 4,
+     "kind": "post",
+     "app": "instagram",
+     "account": "noswipe.app",
+     "status": "done",
+     "label": "video-01",
+     "args": {
+      "caption": "POV: you matched and have nothing to say",
+      "audience": "public"
+     },
+     "attempts": 1,
+     "run_at_dt": -19200,
+     "error": null,
+     "shot": null,
+     "started_at_dt": -19180
+    },
+    {
+     "id": 5,
+     "kind": "stats",
+     "app": "tiktok",
+     "account": "nomoreawkwardness",
+     "status": "failed",
+     "label": "1h",
+     "args": {
+      "caption": "Texting her back after 3 days of silence"
+     },
+     "attempts": 2,
+     "run_at_dt": -18000,
+     "error": "stats: could not find the post in the profile grid (looked at 12 videos)",
+     "shot": "stats-1h-tt.png",
+     "started_at_dt": -17980
+    },
+    {
+     "id": 6,
+     "kind": "stats",
+     "app": "instagram",
+     "account": "noswipe.app",
+     "status": "failed",
+     "label": "1h",
+     "args": {
+      "caption": "POV: you matched and have nothing to say"
+     },
+     "attempts": 2,
+     "run_at_dt": -15600,
+     "error": "stats: Insights screen never loaded (timeout 45 s)",
+     "shot": "stats-1h-ig.png",
+     "started_at_dt": -15580
+    },
+    {
+     "id": 7,
+     "kind": "research",
+     "app": "instagram",
+     "account": "noswipe.app",
+     "status": "done",
+     "label": "",
+     "args": {
+      "keyword": "first date ideas",
+      "minutes": 15
+     },
+     "attempts": 1,
+     "run_at_dt": -10800,
+     "error": null,
+     "shot": null,
+     "started_at_dt": -10780
+    },
+    {
+     "id": 8,
+     "kind": "post",
+     "app": "tiktok",
+     "account": "nomoreawkwardness",
+     "status": "unverified",
+     "label": "video-02",
+     "args": {
+      "caption": "3 openers that actually get replies",
+      "visibility": "public"
+     },
+     "attempts": 1,
+     "run_at_dt": -7200,
+     "error": "post button tapped, but the video did not show up in the profile within 3 min",
+     "shot": "post-02.png",
+     "started_at_dt": -7180
+    },
+    {
+     "id": 9,
+     "kind": "stats",
+     "app": "tiktok",
+     "account": "nomoreawkwardness",
+     "status": "skipped",
+     "label": "3h",
+     "args": {
+      "caption": "Texting her back after 3 days of silence"
+     },
+     "attempts": 1,
+     "run_at_dt": -3600,
+     "error": "skipped by you",
+     "shot": null,
+     "started_at_dt": -3580
+    },
+    {
+     "id": 10,
+     "kind": "research",
+     "app": "tiktok",
+     "account": "nomoreawkwardness",
+     "status": "waiting",
+     "label": "",
+     "args": {
+      "keyword": "how to ask her out",
+      "minutes": 25
+     },
+     "attempts": 1,
+     "run_at_dt": -300,
+     "error": null,
+     "shot": null,
+     "not_after_dt": 7200
+    },
+    {
+     "id": 11,
+     "kind": "post",
+     "app": "instagram",
+     "account": "noswipe.app",
+     "status": "waiting",
+     "label": "video-02",
+     "args": {
+      "caption": "Why your dates fizzle after the second coffee",
+      "audience": "public"
+     },
+     "attempts": 1,
+     "run_at_dt": -240,
+     "error": null,
+     "shot": null
+    },
+    {
+     "id": 12,
+     "kind": "post",
+     "app": "tiktok",
+     "account": "nomoreawkwardness",
+     "status": "waiting",
+     "label": "video-03",
+     "args": {
+      "caption": "Swipe less, meet more: how NoSwipe books the date - a very long caption that keeps going so that it has to be cut off somewhere in the table #noswipe #dating #ai",
+      "visibility": "public"
+     },
+     "attempts": 1,
+     "run_at_dt": 5100,
+     "error": null,
+     "shot": null
+    },
+    {
+     "id": 13,
+     "kind": "stats",
+     "app": "tiktok",
+     "account": "nomoreawkwardness",
+     "status": "waiting",
+     "label": "6h",
+     "args": {
+      "caption": "Texting her back after 3 days of silence"
+     },
+     "attempts": 1,
+     "run_at_dt": 7200,
+     "error": null,
+     "shot": null
+    },
+    {
+     "id": 14,
+     "kind": "post",
+     "app": "instagram",
+     "account": "noswipe.app",
+     "status": "waiting",
+     "label": "video-03",
+     "args": {
+      "caption": "What I wish I knew before my first first-date in a new city",
+      "audience": "public"
+     },
+     "attempts": 1,
+     "run_at_dt": 14400,
+     "error": null,
+     "shot": null
+    },
+    {
+     "id": 15,
+     "kind": "research",
+     "app": "instagram",
+     "account": "noswipe.app",
+     "status": "waiting",
+     "label": "",
+     "args": {
+      "keyword": "dating app burnout",
+      "minutes": 20
+     },
+     "attempts": 1,
+     "run_at_dt": 21600,
+     "error": null,
+     "shot": null
+    },
+    {
+     "id": 16,
+     "kind": "stats",
+     "app": "instagram",
+     "account": "noswipe.app",
+     "status": "waiting",
+     "label": "6h",
+     "args": {
+      "caption": "POV: you matched and have nothing to say"
+     },
+     "attempts": 1,
+     "run_at_dt": 32400,
+     "error": null,
+     "shot": null
+    }
+   ],
+   "alerts": [
+    {
+     "id": 0,
+     "at_dt": -300,
+     "kind": "job",
+     "text": "stats failed: Insights screen never loaded",
+     "emailed": true,
+     "seen": false
+    },
+    {
+     "id": 1,
+     "at_dt": -3120,
+     "kind": "phone",
+     "text": "phone dropped off adb, reconnected over Wi-Fi",
+     "emailed": false,
+     "seen": false
+    },
+    {
+     "id": 2,
+     "at_dt": -5940,
+     "kind": "post",
+     "text": "post unverified: video-02 on TikTok",
+     "emailed": false,
+     "seen": false
+    },
+    {
+     "id": 3,
+     "at_dt": -8760,
+     "kind": "sync",
+     "text": "could not push feedback to the render server",
+     "emailed": true,
+     "seen": false
+    },
+    {
+     "id": 4,
+     "at_dt": -11580,
+     "kind": "job",
+     "text": "stats failed: Insights screen never loaded",
+     "emailed": false,
+     "seen": true
+    },
+    {
+     "id": 5,
+     "at_dt": -14400,
+     "kind": "phone",
+     "text": "phone dropped off adb, reconnected over Wi-Fi",
+     "emailed": false,
+     "seen": true
+    },
+    {
+     "id": 6,
+     "at_dt": -17220,
+     "kind": "post",
+     "text": "post unverified: video-02 on TikTok",
+     "emailed": true,
+     "seen": true
+    },
+    {
+     "id": 7,
+     "at_dt": -20040,
+     "kind": "sync",
+     "text": "could not push feedback to the render server",
+     "emailed": false,
+     "seen": true
+    },
+    {
+     "id": 8,
+     "at_dt": -22860,
+     "kind": "job",
+     "text": "stats failed: Insights screen never loaded",
+     "emailed": false,
+     "seen": true
+    },
+    {
+     "id": 9,
+     "at_dt": -25680,
+     "kind": "phone",
+     "text": "phone dropped off adb, reconnected over Wi-Fi",
+     "emailed": true,
+     "seen": true
+    },
+    {
+     "id": 10,
+     "at_dt": -28500,
+     "kind": "post",
+     "text": "post unverified: video-02 on TikTok",
+     "emailed": false,
+     "seen": true
+    },
+    {
+     "id": 11,
+     "at_dt": -31320,
+     "kind": "sync",
+     "text": "could not push feedback to the render server",
+     "emailed": false,
+     "seen": true
+    },
+    {
+     "id": 12,
+     "at_dt": -34140,
+     "kind": "job",
+     "text": "stats failed: Insights screen never loaded",
+     "emailed": true,
+     "seen": true
+    },
+    {
+     "id": 13,
+     "at_dt": -36960,
+     "kind": "phone",
+     "text": "phone dropped off adb, reconnected over Wi-Fi",
+     "emailed": false,
+     "seen": true
+    },
+    {
+     "id": 14,
+     "at_dt": -39780,
+     "kind": "post",
+     "text": "post unverified: video-02 on TikTok",
+     "emailed": false,
+     "seen": true
+    },
+    {
+     "id": 15,
+     "at_dt": -42600,
+     "kind": "sync",
+     "text": "could not push feedback to the render server",
+     "emailed": true,
+     "seen": true
+    },
+    {
+     "id": 16,
+     "at_dt": -45420,
+     "kind": "job",
+     "text": "stats failed: Insights screen never loaded",
+     "emailed": false,
+     "seen": true
+    },
+    {
+     "id": 17,
+     "at_dt": -48240,
+     "kind": "phone",
+     "text": "phone dropped off adb, reconnected over Wi-Fi",
+     "emailed": false,
+     "seen": true
+    },
+    {
+     "id": 18,
+     "at_dt": -51060,
+     "kind": "post",
+     "text": "post unverified: video-02 on TikTok",
+     "emailed": true,
+     "seen": true
+    },
+    {
+     "id": 19,
+     "at_dt": -53880,
+     "kind": "sync",
+     "text": "could not push feedback to the render server",
+     "emailed": false,
+     "seen": true
+    },
+    {
+     "id": 20,
+     "at_dt": -56700,
+     "kind": "job",
+     "text": "stats failed: Insights screen never loaded",
+     "emailed": false,
+     "seen": true
+    },
+    {
+     "id": 21,
+     "at_dt": -59520,
+     "kind": "phone",
+     "text": "phone dropped off adb, reconnected over Wi-Fi",
+     "emailed": true,
+     "seen": true
+    },
+    {
+     "id": 22,
+     "at_dt": -62340,
+     "kind": "post",
+     "text": "post unverified: video-02 on TikTok",
+     "emailed": false,
+     "seen": true
+    },
+    {
+     "id": 23,
+     "at_dt": -65160,
+     "kind": "sync",
+     "text": "could not push feedback to the render server",
+     "emailed": false,
+     "seen": true
+    },
+    {
+     "id": 24,
+     "at_dt": -67980,
+     "kind": "job",
+     "text": "stats failed: Insights screen never loaded",
+     "emailed": true,
+     "seen": true
+    },
+    {
+     "id": 25,
+     "at_dt": -70800,
+     "kind": "phone",
+     "text": "phone dropped off adb, reconnected over Wi-Fi",
+     "emailed": false,
+     "seen": true
+    },
+    {
+     "id": 26,
+     "at_dt": -73620,
+     "kind": "post",
+     "text": "post unverified: video-02 on TikTok",
+     "emailed": false,
+     "seen": true
+    },
+    {
+     "id": 27,
+     "at_dt": -76440,
+     "kind": "sync",
+     "text": "could not push feedback to the render server",
+     "emailed": true,
+     "seen": true
+    },
+    {
+     "id": 28,
+     "at_dt": -79260,
+     "kind": "job",
+     "text": "stats failed: Insights screen never loaded",
+     "emailed": false,
+     "seen": true
+    },
+    {
+     "id": 29,
+     "at_dt": -82080,
+     "kind": "phone",
+     "text": "phone dropped off adb, reconnected over Wi-Fi",
+     "emailed": false,
+     "seen": true
+    }
+   ],
+   "accounts": [
+    {
+     "app": "tiktok",
+     "account": "nomoreawkwardness",
+     "limits": {
+      "posts_per_day": 3,
+      "likes_per_day": 20,
+      "comments_per_day": 5,
+      "research_minutes_per_day": 60
+     },
+     "used": {
+      "posts": 1,
+      "likes": 8,
+      "comments": 2,
+      "research_minutes": 20
+     }
+    },
+    {
+     "app": "instagram",
+     "account": "noswipe.app",
+     "limits": {
+      "posts_per_day": 3,
+      "likes_per_day": 20,
+      "comments_per_day": 5,
+      "research_minutes_per_day": 60
+     },
+     "used": {
+      "posts": 1,
+      "likes": 5,
+      "comments": 0,
+      "research_minutes": 15
+     }
+    }
+   ],
+   "mirror_error": null
+  },
+  {
+   "id": "moto-2",
+   "name": "Phone 2",
+   "phone_ok": true,
+   "paused": false,
+   "pausing": false,
+   "running": {
+    "id": 900,
+    "kind": "research",
+    "app": "tiktok",
+    "account": "tinyloveshows",
+    "status": "running",
+    "label": "",
+    "args": {
+     "keyword": "dating advice",
+     "minutes": 20
+    },
+    "started_at_dt": -360,
+    "run_at_dt": -360,
+    "attempts": 1
+   },
+   "tail": [
+    "open tiktok",
+    "search: dating advice",
+    "watch 12 s",
+    "like"
+   ],
+   "jobs": [
+    {
+     "id": 200,
+     "kind": "post",
+     "app": "tiktok",
+     "account": "tinyloveshows",
+     "status": "waiting",
+     "label": "video-01",
+     "args": {
+      "caption": "3 openers that actually get replies",
+      "visibility": "public"
+     },
+     "attempts": 1,
+     "run_at_dt": 6600,
+     "error": null,
+     "shot": null
+    },
+    {
+     "id": 201,
+     "kind": "post",
+     "app": "tiktok",
+     "account": "tinyloveshows",
+     "status": "waiting",
+     "label": "video-02",
+     "args": {
+      "caption": "Why your dates fizzle after the second coffee",
+      "visibility": "public"
+     },
+     "attempts": 1,
+     "run_at_dt": 12000,
+     "error": null,
+     "shot": null
+    },
+    {
+     "id": 202,
+     "kind": "post",
+     "app": "tiktok",
+     "account": "tinyloveshows",
+     "status": "waiting",
+     "label": "video-03",
+     "args": {
+      "caption": "Swipe less, meet more: how NoSwipe books the date",
+      "visibility": "public"
+     },
+     "attempts": 1,
+     "run_at_dt": 17400,
+     "error": null,
+     "shot": null
+    },
+    {
+     "id": 250,
+     "kind": "stats",
+     "app": "tiktok",
+     "account": "tinyloveshows",
+     "status": "done",
+     "label": "1h",
+     "args": {
+      "caption": "3 openers that actually get replies"
+     },
+     "attempts": 1,
+     "run_at_dt": -7200,
+     "error": null,
+     "shot": null,
+     "started_at_dt": -7180
+    }
+   ],
+   "alerts": [
+    {
+     "id": 0,
+     "at_dt": -300,
+     "kind": "job",
+     "text": "stats failed: Insights screen never loaded",
+     "emailed": true,
+     "seen": false
+    },
+    {
+     "id": 1,
+     "at_dt": -3120,
+     "kind": "phone",
+     "text": "phone dropped off adb, reconnected over Wi-Fi",
+     "emailed": false,
+     "seen": false
+    }
+   ],
+   "accounts": [
+    {
+     "app": "tiktok",
+     "account": "tinyloveshows",
+     "limits": {
+      "posts_per_day": 3,
+      "likes_per_day": 20,
+      "comments_per_day": 5,
+      "research_minutes_per_day": 60
+     },
+     "used": {
+      "posts": 2,
+      "likes": 14,
+      "comments": 3,
+      "research_minutes": 35
+     }
+    },
+    {
+     "app": "instagram",
+     "account": "tinyloveshows",
+     "limits": {
+      "posts_per_day": 3,
+      "likes_per_day": 20,
+      "comments_per_day": 5,
+      "research_minutes_per_day": 60
+     },
+     "used": {
+      "posts": 2,
+      "likes": 9,
+      "comments": 1,
+      "research_minutes": 20
+     }
+    }
+   ],
+   "mirror_error": null
+  },
+  {
+   "id": "pixel-3",
+   "name": "Phone 3",
+   "phone_ok": true,
+   "paused": false,
+   "pausing": false,
+   "running": null,
+   "tail": [],
+   "jobs": [
+    {
+     "id": 300,
+     "kind": "post",
+     "app": "tiktok",
+     "account": "demo_account_1",
+     "status": "waiting",
+     "label": "video-01",
+     "args": {
+      "caption": "Why your dates fizzle after the second coffee",
+      "visibility": "public"
+     },
+     "attempts": 1,
+     "run_at_dt": 7200,
+     "error": null,
+     "shot": null
+    },
+    {
+     "id": 301,
+     "kind": "post",
+     "app": "tiktok",
+     "account": "demo_account_1",
+     "status": "waiting",
+     "label": "video-02",
+     "args": {
+      "caption": "Swipe less, meet more: how NoSwipe books the date",
+      "visibility": "public"
+     },
+     "attempts": 1,
+     "run_at_dt": 12600,
+     "error": null,
+     "shot": null
+    },
+    {
+     "id": 350,
+     "kind": "stats",
+     "app": "tiktok",
+     "account": "demo_account_1",
+     "status": "done",
+     "label": "1h",
+     "args": {
+      "caption": "Why your dates fizzle after the second coffee"
+     },
+     "attempts": 1,
+     "run_at_dt": -7200,
+     "error": null,
+     "shot": null,
+     "started_at_dt": -7180
+    }
+   ],
+   "alerts": [],
+   "accounts": [
+    {
+     "app": "tiktok",
+     "account": "demo_account_1",
+     "limits": {
+      "posts_per_day": 2,
+      "likes_per_day": 20,
+      "comments_per_day": 5,
+      "research_minutes_per_day": 45
+     },
+     "used": {
+      "posts": 0,
+      "likes": 0,
+      "comments": 0,
+      "research_minutes": 0
+     }
+    }
+   ],
+   "mirror_error": null
+  },
+  {
+   "id": "pixel-4",
+   "name": "Phone 4",
+   "phone_ok": false,
+   "paused": false,
+   "pausing": false,
+   "running": null,
+   "tail": [],
+   "jobs": [
+    {
+     "id": 400,
+     "kind": "post",
+     "app": "tiktok",
+     "account": "demo_account_2",
+     "status": "waiting",
+     "label": "video-01",
+     "args": {
+      "caption": "Swipe less, meet more: how NoSwipe books the date",
+      "visibility": "public"
+     },
+     "attempts": 1,
+     "run_at_dt": 7800,
+     "error": null,
+     "shot": null
+    },
+    {
+     "id": 401,
+     "kind": "post",
+     "app": "tiktok",
+     "account": "demo_account_2",
+     "status": "waiting",
+     "label": "video-02",
+     "args": {
+      "caption": "What I wish I knew before my first first-date in a new city",
+      "visibility": "public"
+     },
+     "attempts": 1,
+     "run_at_dt": 13200,
+     "error": null,
+     "shot": null
+    },
+    {
+     "id": 450,
+     "kind": "stats",
+     "app": "tiktok",
+     "account": "demo_account_2",
+     "status": "done",
+     "label": "1h",
+     "args": {
+      "caption": "Swipe less, meet more: how NoSwipe books the date"
+     },
+     "attempts": 1,
+     "run_at_dt": -7200,
+     "error": null,
+     "shot": null,
+     "started_at_dt": -7180
+    },
+    {
+     "id": 777,
+     "kind": "stats",
+     "app": "instagram",
+     "account": "demo_account_2",
+     "status": "failed",
+     "label": "1h",
+     "args": {
+      "caption": "x"
+     },
+     "attempts": 1,
+     "run_at_dt": -3600,
+     "error": "phone offline",
+     "shot": "x.png",
+     "started_at_dt": -3580
+    }
+   ],
+   "alerts": [
+    {
+     "id": 0,
+     "at_dt": -300,
+     "kind": "job",
+     "text": "stats failed: Insights screen never loaded",
+     "emailed": true,
+     "seen": false
+    },
+    {
+     "id": 1,
+     "at_dt": -3120,
+     "kind": "phone",
+     "text": "phone dropped off adb, reconnected over Wi-Fi",
+     "emailed": false,
+     "seen": false
+    },
+    {
+     "id": 2,
+     "at_dt": -5940,
+     "kind": "post",
+     "text": "post unverified: video-02 on TikTok",
+     "emailed": false,
+     "seen": false
+    },
+    {
+     "id": 3,
+     "at_dt": -8760,
+     "kind": "sync",
+     "text": "could not push feedback to the render server",
+     "emailed": true,
+     "seen": false
+    }
+   ],
+   "accounts": [
+    {
+     "app": "instagram",
+     "account": "demo_account_2",
+     "limits": {
+      "posts_per_day": 2,
+      "likes_per_day": 20,
+      "comments_per_day": 5,
+      "research_minutes_per_day": 45
+     },
+     "used": {
+      "posts": 1,
+      "likes": 3,
+      "comments": 0,
+      "research_minutes": 10
+     }
+    }
+   ],
+   "mirror_error": null
+  },
+  {
+   "id": "galaxy-5",
+   "name": "Phone 5",
+   "phone_ok": true,
+   "paused": true,
+   "pausing": false,
+   "running": null,
+   "tail": [],
+   "jobs": [
+    {
+     "id": 500,
+     "kind": "post",
+     "app": "tiktok",
+     "account": "demo_account_3",
+     "status": "waiting",
+     "label": "video-01",
+     "args": {
+      "caption": "What I wish I knew before my first first-date in a new city",
+      "visibility": "public"
+     },
+     "attempts": 1,
+     "run_at_dt": 8400,
+     "error": null,
+     "shot": null
+    },
+    {
+     "id": 501,
+     "kind": "post",
+     "app": "tiktok",
+     "account": "demo_account_3",
+     "status": "waiting",
+     "label": "video-02",
+     "args": {
+      "caption": "Texting her back after 3 days of silence",
+      "visibility": "public"
+     },
+     "attempts": 1,
+     "run_at_dt": 13800,
+     "error": null,
+     "shot": null
+    },
+    {
+     "id": 550,
+     "kind": "stats",
+     "app": "tiktok",
+     "account": "demo_account_3",
+     "status": "done",
+     "label": "1h",
+     "args": {
+      "caption": "What I wish I knew before my first first-date in a new city"
+     },
+     "attempts": 1,
+     "run_at_dt": -7200,
+     "error": null,
+     "shot": null,
+     "started_at_dt": -7180
+    }
+   ],
+   "alerts": [],
+   "accounts": [
+    {
+     "app": "instagram",
+     "account": "demo_account_3",
+     "limits": {
+      "posts_per_day": 2,
+      "likes_per_day": 20,
+      "comments_per_day": 5,
+      "research_minutes_per_day": 60
+     },
+     "used": {
+      "posts": 2,
+      "likes": 12,
+      "comments": 4,
+      "research_minutes": 50
+     }
+    }
+   ],
+   "mirror_error": null
+  },
+  {
+   "id": "moto-6",
+   "name": "Phone 6",
+   "phone_ok": true,
+   "paused": false,
+   "pausing": false,
+   "running": null,
+   "tail": [],
+   "jobs": [
+    {
+     "id": 600,
+     "kind": "post",
+     "app": "tiktok",
+     "account": "demo_account_4",
+     "status": "waiting",
+     "label": "video-01",
+     "args": {
+      "caption": "Texting her back after 3 days of silence",
+      "visibility": "public"
+     },
+     "attempts": 1,
+     "run_at_dt": 9000,
+     "error": null,
+     "shot": null
+    },
+    {
+     "id": 650,
+     "kind": "stats",
+     "app": "tiktok",
+     "account": "demo_account_4",
+     "status": "done",
+     "label": "1h",
+     "args": {
+      "caption": "Texting her back after 3 days of silence"
+     },
+     "attempts": 1,
+     "run_at_dt": -7200,
+     "error": null,
+     "shot": null,
+     "started_at_dt": -7180
+    }
+   ],
+   "alerts": [
+    {
+     "id": 0,
+     "at_dt": -300,
+     "kind": "job",
+     "text": "stats failed: Insights screen never loaded",
+     "emailed": true,
+     "seen": false
+    }
+   ],
+   "accounts": [
+    {
+     "app": "tiktok",
+     "account": "demo_account_4",
+     "limits": {
+      "posts_per_day": 3,
+      "likes_per_day": 20,
+      "comments_per_day": 5,
+      "research_minutes_per_day": 60
+     },
+     "used": {
+      "posts": 3,
+      "likes": 20,
+      "comments": 5,
+      "research_minutes": 60
+     }
+    },
+    {
+     "app": "instagram",
+     "account": "demo_account_4",
+     "limits": {
+      "posts_per_day": 3,
+      "likes_per_day": 20,
+      "comments_per_day": 5,
+      "research_minutes_per_day": 60
+     },
+     "used": {
+      "posts": 3,
+      "likes": 20,
+      "comments": 5,
+      "research_minutes": 60
+     }
+    },
+    {
+     "app": "tiktok",
+     "account": "demo_account_5",
+     "limits": {
+      "posts_per_day": 3,
+      "likes_per_day": 20,
+      "comments_per_day": 5,
+      "research_minutes_per_day": 60
+     },
+     "used": {
+      "posts": 1,
+      "likes": 7,
+      "comments": 0,
+      "research_minutes": 12
+     }
+    }
+   ],
+   "mirror_error": null
+  }
+ ]
+}
