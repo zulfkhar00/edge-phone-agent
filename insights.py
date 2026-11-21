@@ -270,8 +270,8 @@ def series_groups(posts: list[dict]) -> tuple[list[dict], list[dict]]:
 def stats_report(posts: list[dict], now: float, days: int = 7, app: str | None = None, account: str | None = None,
                  best_n: int = 10) -> dict:
     """Everything the Post stats tab shows, for the last `days` days vs the `days` before them."""
-    allp = [enrich_post(p) for p in posts]
-    allp = [p for p in allp if (not app or p["app"] == app) and (not account or p["account"] == account)]
+    everything = [enrich_post(p) for p in posts]
+    allp = [p for p in everything if (not app or p["app"] == app) and (not account or p["account"] == account)]
     cur = [p for p in allp if p["posted_at"] is not None and now - days * DAY <= p["posted_at"] <= now]
     prev = [p for p in allp if p["posted_at"] is not None and now - 2 * days * DAY <= p["posted_at"] < now - days * DAY]
     keys = sorted({(p["app"], p["account"]) for p in cur + prev})
@@ -283,7 +283,7 @@ def stats_report(posts: list[dict], now: float, days: int = 7, app: str | None =
     reason = ("no_posts" if not allp else "none_in_window" if not cur else
               "no_stats" if not any(p["state"] == "ok" for p in cur) else None)
     return {"days": days, "now": now, "filters": {"app": app, "account": account},
-            "apps": sorted({p["app"] for p in allp}), "accounts": sorted({p["account"] for p in allp}),
+            "apps": sorted({p["app"] for p in everything}), "accounts": sorted({p["account"] for p in everything}),
             "empty_reason": reason, "totals": {"current": window_summary(cur), "prior": window_summary(prev)},
             "cards": cards, "best": best, "posts": sorted(cur, key=lambda p: -(p["posted_at"] or 0)),
             "series": series, "ab_pairs": pairs}
