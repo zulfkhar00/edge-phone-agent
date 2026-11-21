@@ -44,7 +44,10 @@ Python 3.12, asyncio, `adb` + scrcpy. Everything is driven through the phone's U
 | `scrcpy_bridge.py`, `vendor/scrcpy-server-*.jar` | Live screen and touch input for the dashboard |
 | `adb_keeper.sh` | Keeps every phone reachable (one watcher each): reconnects, finds it by hardware serial on any network, updates its Wi-Fi address in `config.toml`, restarts the engine |
 | `phones.py` | The phone list: `[[phones]]` parsing and validation, which phone owns which account, USB-then-Wi-Fi transport discovery, helpers for `adb_keeper.sh` |
+| `insights.py` | Pure aggregations behind the dashboard's Post stats and Research tabs and `/api/trends` (deltas, series, A/B, formats, rising themes) |
+| `research_seeds.py` | Seed keywords for the engine's own daily research sessions (opt-in, `[research_seeds]`) |
 | `web/dashboard.html` | The dashboard (single page) |
+| `web/mock_server.py`, `web/fixtures/` | Serves the dashboard with sample data and no phone: `python3 web/mock_server.py multi 8099` (the insights tabs run the real `insights.py` over `fixtures/insights.json`) |
 | `flows/*.md` | How each app flow works and what broke before. Read the relevant one before changing an uploader or reader |
 | `tests/` | pytest: plan validation, self-update, access gate, outliers, multi-phone (fake adb, no phones needed) |
 | `*_chain.sh`, `build_viewer.py`, `publish_viewer.sh` | Old one-off tools from the Mac era; not used by the service |
@@ -91,6 +94,75 @@ may appear in plans. Details and validation rules: `flows/engine.md`, `plan_chec
   `[dashboard].resume_after_min` (10) minutes, it resumes by itself.
 - Alerts go to the dashboard and by email (Gmail app password). healthchecks.io emails when the heartbeat stops
   (Pi off, offline, loop dead) or when a nightly run fails or never finishes.
+
+## Stats, research and trend export
+
+The **Post stats** tab (`GET /api/insights/stats?days=7|30&app=&account=`) shows, per account, posts / total and median
+views / average watch / skip rate / follows for the last N days with the change vs the N days before, a ranked best-posts
+list with a thumbnail and a 1 h to 48 h views sparkline per post, series grouping (a label like `whites-2-b` is series
+`whites`, part 2, variant b) with per-series totals, and an A vs B comparison (a gap under 5% is a tie). Posts the engine
+marked `unverified` and posts with no snapshot yet are shown as such and left out of the averages. TikTok has no skip rate.
+Thumbnails are cut from the video with ffmpeg while it is still on disk (`thumbs/`, `GET /api/post/<job id>/thumb.jpg`).
+
+The **Research** tab (`GET /api/insights/research?days=7|14|30|all&app=`) aggregates `research.db`: per keyword (videos
+seen, median likes/comments, top creators and captions), rising hashtags and phrases (more sightings in the last 7 days
+than the 7 before), "formats that work" (captions clustered by pattern: POV, part N, A/B choice, storytime, tips,
+openers, relatable, question; engagement vs the typical video) and promotion ideas (the best video per winning format:
+hook, CTA style, and an angle written for an AI dating assistant). Rule-based, no LLM, nothing leaves the Pi.
+
+**Seed research** (off by default): engine-queued keyword sessions, so research does not depend on the nightly plan only.
+Add to `config.toml`:
+
+```toml
+[research_seeds]
+accounts = ["instagram:nomoreawkwardness", "tiktok:nomoreawkwardness"]   # must be in [accounts.*]
+per_account_per_day = 3     # keyword sessions queued per account per day (rotating through the list)
+minutes = 10
+max_likes = 3
+max_comments = 0
+after = "10:00"
+before = "22:00"
+# keywords = [...]          # optional; default list in research_seeds.py (dating app burnout, AI dating assistant,
+                            # hinge/tinder tips, bumble, first date ideas, situationship, talking stage, meet cute, rizz,
+                            # dating in your 20s / 30s, ...)
+```
+They are ordinary research jobs: they only fill gaps between fixed jobs and the account's `research_minutes_per_day`,
+`likes_per_day` and `comments_per_day` still cap them. Both apps' flows (`research.py`) support TikTok and Instagram.
+
+### Trend export
+
+`GET /api/trends?limit=10&days=14&app=tiktok|instagram` returns the top trends as JSON for the video generator (read-only;
+the engine never pushes it anywhere). Same auth as the rest of the dashboard (the remote port needs the PIN cookie).
+
+```json
+{"generated_at": "2026-11-21T11:07:35-08:00", "window_days": 14, "filters": {"app": null},
+ "source": {"videos": 143, "keywords": 12}, "product": "NoSwipe (an AI that swipes, chats and books the dates for you; you just show up)",
+ "trends": [{"rank": 1, "theme": "situationship", "kind": "keyword", "score": 100.0, "trending": "rising",
+             "posts_seen": 12, "creators": 7, "recent": 6, "prior": 3, "median_likes": 3900,
+             "top_format": "explainer", "top_format_label": "Tips / explainer", "hook_example": "How to leave a situationship with dignity",
+             "example_posts": [{"app": "tiktok", "creator": "pixelpanda", "caption": "...", "likes": 44000, "comments": 900, "shares": 300, "keyword": "situationship"}],
+             "suggested_angle": "The talking stage that never ends: ..."}],
+ "formats": [{"id": "series", "label": "Part N series", "posts": 11, "median_likes": 7400, "lift": 1.68}]}
+```
+`kind` is `keyword` (a research keyword), `hashtag` or `phrase` (two words). `score` is 0-100 relative to the best theme in
+the response: `log10(1 + mean engagement of the theme's top 5 videos) x (1 + min(recent, 10) / 10) x 1.25 if rising`, where
+a video's engagement is `likes + 3 x comments + 5 x shares`. A theme needs 2+ videos from 2+ creators; themes covering the
+same videos under another spelling are merged. `trending` is `rising` when more of its videos were seen in the last half of
+the window than the half before. An empty research database gives `"trends": []`.
+
+## X and Reddit accounts
+
+An X (Twitter) or Reddit account can be listed on a phone so it shows in the dashboard:
+
+```toml
+[[phones]]
+id = "phone-1"
+accounts = ["ig:@tinyloveshows", "x:@noswipe_app", "reddit:u/noswipe_team"]
+```
+They need no `[accounts.*]` section. **Nothing runs for them**: there are no X/Reddit posting, research or stats flows
+(those need live screen mapping first), plans naming them are rejected by `plan_check.py`, and the preflight skips them.
+The owner logs in by hand with **Take over** on that phone. The dashboard shows them as "Login: unknown", because no flow
+verifies the login.
 
 ## Several phones
 

@@ -15,6 +15,7 @@ hw_serial = "ZD222RWWGT"        # the phone's own serial (adb shell getprop ro.s
 # usb_serial = "ZD222RWWGT"               # optional: its serial on the cable, when `adb devices` shows another one than hw_serial
 # wifi_serial = "192.168.1.150:5555"      # optional Wi-Fi fallback; adb_keeper.sh keeps it current
 # accounts = ["ig:@tinyloveshows", "tt:@nomoreawkwardness"]   # ig = Instagram, tt = TikTok
+#             also "x:@handle" and "reddit:u/name": listed in the dashboard only (login by hand via Take over, nothing automated)
 # quotas = { posts_per_day = 2 }          # optional: overrides the [accounts.*] limits of this phone's accounts
 #
 # [[phones]]
@@ -70,6 +71,14 @@ posts_per_day = 4
 likes_per_day = 20
 comments_per_day = 5
 research_minutes_per_day = 60
+
+# Engine-queued keyword research (off unless accounts is set). See README "Stats, research and trend export".
+# [research_seeds]
+# accounts = ["instagram:nomoreawkwardness", "tiktok:nomoreawkwardness"]
+# per_account_per_day = 3
+# minutes = 10
+# max_likes = 3
+# max_comments = 0
 
 # Email alerts to yourself. Fill in a Gmail app password (https://myaccount.google.com/apppasswords) to turn on;
 # while it is empty, alerts only show on the dashboard.
