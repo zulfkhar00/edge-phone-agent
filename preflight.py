@@ -28,22 +28,37 @@ import tomllib
 from datetime import datetime
 from pathlib import Path
 
+import phones as phonecfg
+
 ROOT = Path(__file__).parent
-CFG = tomllib.loads((ROOT / "config.toml").read_text())
+CFG = tomllib.loads(Path(os.environ.get("ENGINE_CONFIG") or ROOT / "config.toml").read_text())
 PKGS = {"tiktok": "com.zhiliaoapp.musically", "instagram": "com.instagram.android"}
 
 
+PHONES = phonecfg.load_phones(CFG)
+
+
+def this_phone() -> phonecfg.PhoneCfg:
+    """The phone this check is for: the engine passes PHONE_ID (the first phone when run by hand)."""
+    pid = os.environ.get("PHONE_ID")
+    return next((p for p in PHONES if p.id == pid), PHONES[0])
+
+
+def serial() -> str:
+    """The engine passes the live transport in PHONE_SERIAL."""
+    return os.environ.get("PHONE_SERIAL") or this_phone().usb or this_phone().wifi_serial
+
+
 def adb(*args: str, timeout: int = 20) -> str:
-    serial = os.environ.get("PHONE_SERIAL") or CFG["phone"]["serial"]  # the engine passes the live transport
     try:
-        return subprocess.run(["adb", "-s", serial, *args], capture_output=True, text=True, timeout=timeout).stdout.strip()
+        return subprocess.run(["adb", "-s", serial(), *args], capture_output=True, text=True, timeout=timeout).stdout.strip()
     except subprocess.TimeoutExpired:
         return ""
 
 
 def check_phone(problems: list[str], info: dict) -> bool:
     if adb("get-state") != "device":
-        problems.append(f"phone {os.environ.get('PHONE_SERIAL') or CFG['phone']['serial']} is not connected over adb")
+        problems.append(f"phone {this_phone().id} ({serial()}) is not connected over adb")
         return False
     adb("shell", "input", "keyevent", "KEYCODE_WAKEUP")
     bat = adb("shell", "dumpsys", "battery")
@@ -67,7 +82,7 @@ def check_phone(problems: list[str], info: dict) -> bool:
 def check_accounts(problems: list[str], info: dict) -> None:
     for app, accts in CFG.get("accounts", {}).items():
         for handle, lim in accts.items():
-            if lim.get("use") != "noswipe":
+            if lim.get("use") != "noswipe" or not this_phone().owns(app, handle):  # only this phone's accounts
                 continue
             r = subprocess.run([sys.executable, "accounts.py", app, handle], cwd=ROOT, capture_output=True, text=True,
                                timeout=240)
@@ -118,11 +133,15 @@ def check_plan(problems: list[str], info: dict) -> None:
         return
     today = datetime.now().strftime("%Y-%m-%d")
     con = sqlite3.connect(ROOT / "engine.db")
-    n = con.execute("select count(*) from jobs j join plans p on p.name = j.plan where p.day=? and j.kind='post'",
-                    (today,)).fetchone()[0]
+    me = this_phone()
+    n = con.execute("select count(*) from jobs j join plans p on p.name = j.plan where p.day=? and j.kind='post' "
+                    "and (j.phone_id=? or (j.phone_id is null and ?))",
+                    (today, me.id, me is PHONES[0])).fetchone()[0]
     info["posts_today"] = n
-    if n == 0:
-        problems.append(f"no posts planned for {today} (did the nightly plan arrive?)")
+    posting = any(lim.get("use") == "noswipe" and me.owns(app, name)
+                  for app, accts in CFG.get("accounts", {}).items() for name, lim in accts.items())
+    if n == 0 and posting:  # a phone whose accounts are research-only has nothing to post
+        problems.append(f"no posts planned for {today} on phone {me.id} (did the nightly plan arrive?)")
 
 
 def main() -> None:
