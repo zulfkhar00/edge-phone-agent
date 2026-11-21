@@ -842,7 +842,13 @@ def build_state(phone_id: str | None = None) -> dict:
         for name, lim in accts.items():
             ph = phonecfg.owner_of(PHONES, app, name)
             accounts.append({"app": app, "account": name, "limits": lim, "used": used_today(app, name),
-                             "phone_id": ph.id if ph else None})
+                             "phone_id": ph.id if ph else None, "automated": app in phonecfg.AUTOMATED_APPS})
+    for ph in PHONES:  # X / Reddit accounts: only listed on the phone, nothing runs for them
+        for app, name in sorted(ph.accounts or ()):
+            if app not in phonecfg.AUTOMATED_APPS:
+                accounts.append({"app": app, "account": name, "limits": {}, "phone_id": ph.id, "automated": False,
+                                 "login": "unknown", "note": phonecfg.LISTED_ONLY_NOTE,
+                                 "used": {"likes": 0, "comments": 0, "posts": 0, "research_minutes": 0}})
     views = []
     for r in RUNNERS:
         v = phone_summary(r, now)
@@ -1042,6 +1048,8 @@ def startup_checks() -> None:
         alert("config", f"account {app} @{name} is in [accounts.*] but on no phone: its jobs will be skipped", every_min=0)
     for p in PHONES:
         for app, name in sorted(p.accounts or ()):
+            if app not in phonecfg.AUTOMATED_APPS:
+                continue  # X / Reddit: listed only, no [accounts.*] section needed
             if name not in {n.casefold() for n in CFG.get("accounts", {}).get(app, {})}:
                 alert("config", f"phone {p.id} lists {app} @{name} but there is no [accounts.{app}.{name}] section: plans for it are rejected",
                       every_min=0, phone_id=p.id)

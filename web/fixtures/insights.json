@@ -1,0 +1,4371 @@
+{
+"posts": [
+{
+"id": 101,
+"app": "instagram",
+"account": "noswipe.app",
+"label": "whites-1-a",
+"caption": "POV: you matched and have nothing to say. #dating #hinge",
+"posted_at_dt": -540000,
+"status": "done",
+"phone_id": "moto-1",
+"snapshots": [
+{
+"label": "1h",
+"taken_at_dt": -536400,
+"data": {
+"views": 2148,
+"viewers": 1718,
+"average_watch_time_s": 7.8,
+"skip_rate_pct": 41,
+"follows": 2,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+},
+{
+"label": "3h",
+"taken_at_dt": -529200,
+"data": {
+"views": 5603,
+"viewers": 4482,
+"average_watch_time_s": 7.8,
+"skip_rate_pct": 41,
+"follows": 6,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+},
+{
+"label": "6h",
+"taken_at_dt": -518400,
+"data": {
+"views": 9299,
+"viewers": 7439,
+"average_watch_time_s": 7.8,
+"skip_rate_pct": 41,
+"follows": 11,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+},
+{
+"label": "12h",
+"taken_at_dt": -496800,
+"data": {
+"views": 13225,
+"viewers": 10580,
+"average_watch_time_s": 7.8,
+"skip_rate_pct": 41,
+"follows": 15,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+},
+{
+"label": "24h",
+"taken_at_dt": -453600,
+"data": {
+"views": 16183,
+"viewers": 12946,
+"average_watch_time_s": 7.8,
+"skip_rate_pct": 41,
+"follows": 19,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+},
+{
+"label": "48h",
+"taken_at_dt": -367200,
+"data": {
+"views": 18830,
+"viewers": 15064,
+"average_watch_time_s": 7.8,
+"skip_rate_pct": 41,
+"follows": 22,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+}
+]
+},
+{
+"id": 102,
+"app": "instagram",
+"account": "noswipe.app",
+"label": "whites-1-b",
+"caption": "You matched and froze. Here is what to send instead. #dating #tinder",
+"posted_at_dt": -532800,
+"status": "done",
+"phone_id": "moto-1",
+"snapshots": [
+{
+"label": "1h",
+"taken_at_dt": -529200,
+"data": {
+"views": 1131,
+"viewers": 904,
+"average_watch_time_s": 6.1,
+"skip_rate_pct": 55,
+"follows": 1,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+},
+{
+"label": "3h",
+"taken_at_dt": -522000,
+"data": {
+"views": 2762,
+"viewers": 2209,
+"average_watch_time_s": 6.1,
+"skip_rate_pct": 55,
+"follows": 2,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+},
+{
+"label": "6h",
+"taken_at_dt": -511200,
+"data": {
+"views": 4601,
+"viewers": 3680,
+"average_watch_time_s": 6.1,
+"skip_rate_pct": 55,
+"follows": 4,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+},
+{
+"label": "12h",
+"taken_at_dt": -489600,
+"data": {
+"views": 6484,
+"viewers": 5187,
+"average_watch_time_s": 6.1,
+"skip_rate_pct": 55,
+"follows": 6,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+},
+{
+"label": "24h",
+"taken_at_dt": -446400,
+"data": {
+"views": 7950,
+"viewers": 6360,
+"average_watch_time_s": 6.1,
+"skip_rate_pct": 55,
+"follows": 8,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+},
+{
+"label": "48h",
+"taken_at_dt": -360000,
+"data": {
+"views": 9105,
+"viewers": 7284,
+"average_watch_time_s": 6.1,
+"skip_rate_pct": 55,
+"follows": 9,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+}
+]
+},
+{
+"id": 103,
+"app": "instagram",
+"account": "noswipe.app",
+"label": "whites-2-a",
+"caption": "Part 2: the reply that got a coffee date. #dating #firstdate",
+"posted_at_dt": -360000,
+"status": "done",
+"phone_id": "moto-1",
+"snapshots": [
+{
+"label": "1h",
+"taken_at_dt": -356400,
+"data": {
+"views": 3032,
+"viewers": 2425,
+"average_watch_time_s": 9.2,
+"skip_rate_pct": 33,
+"follows": 4,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+},
+{
+"label": "3h",
+"taken_at_dt": -349200,
+"data": {
+"views": 7270,
+"viewers": 5816,
+"average_watch_time_s": 9.2,
+"skip_rate_pct": 33,
+"follows": 12,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+},
+{
+"label": "6h",
+"taken_at_dt": -338400,
+"data": {
+"views": 12844,
+"viewers": 10275,
+"average_watch_time_s": 9.2,
+"skip_rate_pct": 33,
+"follows": 20,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+},
+{
+"label": "12h",
+"taken_at_dt": -316800,
+"data": {
+"views": 17684,
+"viewers": 14147,
+"average_watch_time_s": 9.2,
+"skip_rate_pct": 33,
+"follows": 29,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+},
+{
+"label": "24h",
+"taken_at_dt": -273600,
+"data": {
+"views": 22106,
+"viewers": 17684,
+"average_watch_time_s": 9.2,
+"skip_rate_pct": 33,
+"follows": 36,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+},
+{
+"label": "48h",
+"taken_at_dt": -187200,
+"data": {
+"views": 24181,
+"viewers": 19344,
+"average_watch_time_s": 9.2,
+"skip_rate_pct": 33,
+"follows": 41,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+}
+]
+},
+{
+"id": 104,
+"app": "instagram",
+"account": "noswipe.app",
+"label": "whites-2-b",
+"caption": "The reply that got a coffee date, no tricks. #dating #firstdate",
+"posted_at_dt": -352800,
+"status": "done",
+"phone_id": "moto-1",
+"snapshots": [
+{
+"label": "1h",
+"taken_at_dt": -349200,
+"data": {
+"views": 3294,
+"viewers": 2635,
+"average_watch_time_s": 9.6,
+"skip_rate_pct": 31,
+"follows": 4,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+},
+{
+"label": "3h",
+"taken_at_dt": -342000,
+"data": {
+"views": 8071,
+"viewers": 6456,
+"average_watch_time_s": 9.6,
+"skip_rate_pct": 31,
+"follows": 11,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+},
+{
+"label": "6h",
+"taken_at_dt": -331200,
+"data": {
+"views": 13596,
+"viewers": 10876,
+"average_watch_time_s": 9.6,
+"skip_rate_pct": 31,
+"follows": 19,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+},
+{
+"label": "12h",
+"taken_at_dt": -309600,
+"data": {
+"views": 19184,
+"viewers": 15347,
+"average_watch_time_s": 9.6,
+"skip_rate_pct": 31,
+"follows": 27,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+},
+{
+"label": "24h",
+"taken_at_dt": -266400,
+"data": {
+"views": 22874,
+"viewers": 18299,
+"average_watch_time_s": 9.6,
+"skip_rate_pct": 31,
+"follows": 34,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+},
+{
+"label": "48h",
+"taken_at_dt": -180000,
+"data": {
+"views": 26038,
+"viewers": 20830,
+"average_watch_time_s": 9.6,
+"skip_rate_pct": 31,
+"follows": 38,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+}
+]
+},
+{
+"id": 105,
+"app": "instagram",
+"account": "noswipe.app",
+"label": "whites-3-a",
+"caption": "Part 3: what happens after the first message. #dating",
+"posted_at_dt": -180000,
+"status": "done",
+"phone_id": "moto-1",
+"snapshots": [
+{
+"label": "1h",
+"taken_at_dt": -176400,
+"data": {
+"views": 731,
+"viewers": 584,
+"average_watch_time_s": 5.4,
+"skip_rate_pct": 60,
+"follows": 0,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+},
+{
+"label": "3h",
+"taken_at_dt": -169200,
+"data": {
+"views": 1773,
+"viewers": 1418,
+"average_watch_time_s": 5.4,
+"skip_rate_pct": 60,
+"follows": 1,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+},
+{
+"label": "6h",
+"taken_at_dt": -158400,
+"data": {
+"views": 3160,
+"viewers": 2528,
+"average_watch_time_s": 5.4,
+"skip_rate_pct": 60,
+"follows": 2,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+},
+{
+"label": "12h",
+"taken_at_dt": -136800,
+"data": {
+"views": 4345,
+"viewers": 3476,
+"average_watch_time_s": 5.4,
+"skip_rate_pct": 60,
+"follows": 2,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+},
+{
+"label": "24h",
+"taken_at_dt": -93600,
+"data": {
+"views": 5338,
+"viewers": 4270,
+"average_watch_time_s": 5.4,
+"skip_rate_pct": 60,
+"follows": 3,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+},
+{
+"label": "48h",
+"taken_at_dt": -7200,
+"data": {
+"views": 6254,
+"viewers": 5003,
+"average_watch_time_s": 5.4,
+"skip_rate_pct": 60,
+"follows": 4,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+}
+]
+},
+{
+"id": 106,
+"app": "instagram",
+"account": "tinyloveshows",
+"label": "table-1-a",
+"caption": "Season 1 ep 1. They never said a word. #lovestory",
+"posted_at_dt": -612000,
+"status": "done",
+"phone_id": "moto-1",
+"snapshots": [
+{
+"label": "1h",
+"taken_at_dt": -608400,
+"data": {
+"views": 628,
+"viewers": 502,
+"average_watch_time_s": 11.2,
+"skip_rate_pct": 28,
+"follows": 2,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+},
+{
+"label": "3h",
+"taken_at_dt": -601200,
+"data": {
+"views": 1675,
+"viewers": 1340,
+"average_watch_time_s": 11.2,
+"skip_rate_pct": 28,
+"follows": 5,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+},
+{
+"label": "6h",
+"taken_at_dt": -590400,
+"data": {
+"views": 2689,
+"viewers": 2151,
+"average_watch_time_s": 11.2,
+"skip_rate_pct": 28,
+"follows": 9,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+},
+{
+"label": "12h",
+"taken_at_dt": -568800,
+"data": {
+"views": 3904,
+"viewers": 3123,
+"average_watch_time_s": 11.2,
+"skip_rate_pct": 28,
+"follows": 12,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+},
+{
+"label": "24h",
+"taken_at_dt": -525600,
+"data": {
+"views": 4798,
+"viewers": 3838,
+"average_watch_time_s": 11.2,
+"skip_rate_pct": 28,
+"follows": 16,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+},
+{
+"label": "48h",
+"taken_at_dt": -439200,
+"data": {
+"views": 5393,
+"viewers": 4314,
+"average_watch_time_s": 11.2,
+"skip_rate_pct": 28,
+"follows": 18,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+}
+]
+},
+{
+"id": 107,
+"app": "instagram",
+"account": "tinyloveshows",
+"label": "table-1-b",
+"caption": "Season 1 ep 1, the quiet version. #lovestory",
+"posted_at_dt": -604800,
+"status": "done",
+"phone_id": "moto-1",
+"snapshots": [
+{
+"label": "1h",
+"taken_at_dt": -601200,
+"data": {
+"views": 362,
+"viewers": 289,
+"average_watch_time_s": 9.8,
+"skip_rate_pct": 36,
+"follows": 0,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+},
+{
+"label": "3h",
+"taken_at_dt": -594000,
+"data": {
+"views": 895,
+"viewers": 716,
+"average_watch_time_s": 9.8,
+"skip_rate_pct": 36,
+"follows": 2,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+},
+{
+"label": "6h",
+"taken_at_dt": -583200,
+"data": {
+"views": 1595,
+"viewers": 1276,
+"average_watch_time_s": 9.8,
+"skip_rate_pct": 36,
+"follows": 3,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+},
+{
+"label": "12h",
+"taken_at_dt": -561600,
+"data": {
+"views": 2184,
+"viewers": 1747,
+"average_watch_time_s": 9.8,
+"skip_rate_pct": 36,
+"follows": 5,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+},
+{
+"label": "24h",
+"taken_at_dt": -518400,
+"data": {
+"views": 2852,
+"viewers": 2281,
+"average_watch_time_s": 9.8,
+"skip_rate_pct": 36,
+"follows": 6,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+},
+{
+"label": "48h",
+"taken_at_dt": -432000,
+"data": {
+"views": 3027,
+"viewers": 2421,
+"average_watch_time_s": 9.8,
+"skip_rate_pct": 36,
+"follows": 7,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+}
+]
+},
+{
+"id": 108,
+"app": "instagram",
+"account": "tinyloveshows",
+"label": "table-2-a",
+"caption": "Season 1 ep 2. The seat across from her. #lovestory",
+"posted_at_dt": -432000,
+"status": "done",
+"phone_id": "moto-1",
+"snapshots": [
+{
+"label": "1h",
+"taken_at_dt": -428400,
+"data": {
+"views": 971,
+"viewers": 776,
+"average_watch_time_s": 12.4,
+"skip_rate_pct": 25,
+"follows": 3,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+},
+{
+"label": "3h",
+"taken_at_dt": -421200,
+"data": {
+"views": 2413,
+"viewers": 1930,
+"average_watch_time_s": 12.4,
+"skip_rate_pct": 25,
+"follows": 7,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+},
+{
+"label": "6h",
+"taken_at_dt": -410400,
+"data": {
+"views": 3979,
+"viewers": 3183,
+"average_watch_time_s": 12.4,
+"skip_rate_pct": 25,
+"follows": 13,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+},
+{
+"label": "12h",
+"taken_at_dt": -388800,
+"data": {
+"views": 5734,
+"viewers": 4587,
+"average_watch_time_s": 12.4,
+"skip_rate_pct": 25,
+"follows": 18,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+},
+{
+"label": "24h",
+"taken_at_dt": -345600,
+"data": {
+"views": 7065,
+"viewers": 5652,
+"average_watch_time_s": 12.4,
+"skip_rate_pct": 25,
+"follows": 23,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+},
+{
+"label": "48h",
+"taken_at_dt": -259200,
+"data": {
+"views": 7943,
+"viewers": 6354,
+"average_watch_time_s": 12.4,
+"skip_rate_pct": 25,
+"follows": 26,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+}
+]
+},
+{
+"id": 109,
+"app": "instagram",
+"account": "tinyloveshows",
+"label": "table-2-b",
+"caption": "Season 1 ep 2, the other ending. #lovestory",
+"posted_at_dt": -424800,
+"status": "done",
+"phone_id": "moto-1",
+"snapshots": [
+{
+"label": "1h",
+"taken_at_dt": -421200,
+"data": {
+"views": 872,
+"viewers": 697,
+"average_watch_time_s": 12.0,
+"skip_rate_pct": 26,
+"follows": 2,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+},
+{
+"label": "3h",
+"taken_at_dt": -414000,
+"data": {
+"views": 2245,
+"viewers": 1796,
+"average_watch_time_s": 12.0,
+"skip_rate_pct": 26,
+"follows": 6,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+},
+{
+"label": "6h",
+"taken_at_dt": -403200,
+"data": {
+"views": 3848,
+"viewers": 3078,
+"average_watch_time_s": 12.0,
+"skip_rate_pct": 26,
+"follows": 11,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+},
+{
+"label": "12h",
+"taken_at_dt": -381600,
+"data": {
+"views": 5270,
+"viewers": 4216,
+"average_watch_time_s": 12.0,
+"skip_rate_pct": 26,
+"follows": 16,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+},
+{
+"label": "24h",
+"taken_at_dt": -338400,
+"data": {
+"views": 6978,
+"viewers": 5582,
+"average_watch_time_s": 12.0,
+"skip_rate_pct": 26,
+"follows": 20,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+},
+{
+"label": "48h",
+"taken_at_dt": -252000,
+"data": {
+"views": 7732,
+"viewers": 6185,
+"average_watch_time_s": 12.0,
+"skip_rate_pct": 26,
+"follows": 23,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+}
+]
+},
+{
+"id": 110,
+"app": "instagram",
+"account": "tinyloveshows",
+"label": "table-3-a",
+"caption": "Season 1 ep 3. Same cafe, new day. #lovestory",
+"posted_at_dt": -108000,
+"status": "done",
+"phone_id": "moto-1",
+"snapshots": [
+{
+"label": "1h",
+"taken_at_dt": -104400,
+"data": {
+"views": 107,
+"viewers": 85,
+"average_watch_time_s": 4.1,
+"skip_rate_pct": 52,
+"follows": 0,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+},
+{
+"label": "3h",
+"taken_at_dt": -97200,
+"data": {
+"views": 267,
+"viewers": 213,
+"average_watch_time_s": 4.1,
+"skip_rate_pct": 52,
+"follows": 0,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+},
+{
+"label": "6h",
+"taken_at_dt": -86400,
+"data": {
+"views": 448,
+"viewers": 358,
+"average_watch_time_s": 4.1,
+"skip_rate_pct": 52,
+"follows": 0,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+},
+{
+"label": "12h",
+"taken_at_dt": -64800,
+"data": {
+"views": 642,
+"viewers": 513,
+"average_watch_time_s": 4.1,
+"skip_rate_pct": 52,
+"follows": 0,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+},
+{
+"label": "24h",
+"taken_at_dt": -21600,
+"data": {
+"views": 842,
+"viewers": 673,
+"average_watch_time_s": 4.1,
+"skip_rate_pct": 52,
+"follows": 0,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+}
+]
+},
+{
+"id": 111,
+"app": "tiktok",
+"account": "nomoreawkwardness",
+"label": "bag-1-a",
+"caption": "Texting her back after 3 days of silence #dating #texting",
+"posted_at_dt": -576000,
+"status": "done",
+"phone_id": "moto-1",
+"snapshots": [
+{
+"label": "1h",
+"taken_at_dt": -572400,
+"data": {
+"live": {
+"views": 4899,
+"likes": 293,
+"comments": 19,
+"saves": 48,
+"shares": 39
+}
+}
+},
+{
+"label": "3h",
+"taken_at_dt": -565200,
+"data": {
+"live": {
+"views": 11892,
+"likes": 713,
+"comments": 47,
+"saves": 118,
+"shares": 95
+}
+}
+},
+{
+"label": "6h",
+"taken_at_dt": -554400,
+"data": {
+"live": {
+"views": 19929,
+"likes": 1195,
+"comments": 79,
+"saves": 199,
+"shares": 159
+}
+}
+},
+{
+"label": "12h",
+"taken_at_dt": -532800,
+"data": {
+"live": {
+"views": 30181,
+"likes": 1810,
+"comments": 120,
+"saves": 301,
+"shares": 241
+}
+}
+},
+{
+"label": "24h",
+"taken_at_dt": -489600,
+"data": {
+"live": {
+"views": 38541,
+"likes": 2312,
+"comments": 154,
+"saves": 385,
+"shares": 308
+},
+"detailed": {
+"post_views": 38541,
+"average_watch_time_s": 8.4,
+"watched_full_video_pct": 38.5,
+"new_followers": 57
+}
+}
+},
+{
+"label": "48h",
+"taken_at_dt": -403200,
+"data": {
+"live": {
+"views": 41186,
+"likes": 2471,
+"comments": 164,
+"saves": 411,
+"shares": 329
+},
+"detailed": {
+"post_views": 41186,
+"average_watch_time_s": 8.4,
+"watched_full_video_pct": 38.5,
+"new_followers": 64
+}
+}
+}
+]
+},
+{
+"id": 112,
+"app": "tiktok",
+"account": "nomoreawkwardness",
+"label": "bag-1-b",
+"caption": "Texted back after 3 days. Worst idea? #dating #texting",
+"posted_at_dt": -568800,
+"status": "done",
+"phone_id": "moto-1",
+"snapshots": [
+{
+"label": "1h",
+"taken_at_dt": -565200,
+"data": {
+"live": {
+"views": 1534,
+"likes": 92,
+"comments": 6,
+"saves": 15,
+"shares": 12
+}
+}
+},
+{
+"label": "3h",
+"taken_at_dt": -558000,
+"data": {
+"live": {
+"views": 3855,
+"likes": 231,
+"comments": 15,
+"saves": 38,
+"shares": 30
+}
+}
+},
+{
+"label": "6h",
+"taken_at_dt": -547200,
+"data": {
+"live": {
+"views": 6527,
+"likes": 391,
+"comments": 26,
+"saves": 65,
+"shares": 52
+}
+}
+},
+{
+"label": "12h",
+"taken_at_dt": -525600,
+"data": {
+"live": {
+"views": 9011,
+"likes": 540,
+"comments": 36,
+"saves": 90,
+"shares": 72
+}
+}
+},
+{
+"label": "24h",
+"taken_at_dt": -482400,
+"data": {
+"live": {
+"views": 11620,
+"likes": 697,
+"comments": 46,
+"saves": 116,
+"shares": 92
+},
+"detailed": {
+"post_views": 11620,
+"average_watch_time_s": 6.7,
+"watched_full_video_pct": 38.5,
+"new_followers": 10
+}
+}
+},
+{
+"label": "48h",
+"taken_at_dt": -396000,
+"data": {
+"live": {
+"views": 12857,
+"likes": 771,
+"comments": 51,
+"saves": 128,
+"shares": 102
+},
+"detailed": {
+"post_views": 12857,
+"average_watch_time_s": 6.7,
+"watched_full_video_pct": 38.5,
+"new_followers": 12
+}
+}
+}
+]
+},
+{
+"id": 113,
+"app": "tiktok",
+"account": "nomoreawkwardness",
+"label": "bag-2-a",
+"caption": "Which opener works better, A or B? #dating #rizz",
+"posted_at_dt": -288000,
+"status": "done",
+"phone_id": "moto-1",
+"snapshots": [
+{
+"label": "1h",
+"taken_at_dt": -284400,
+"data": {
+"live": {
+"views": 1890,
+"likes": 113,
+"comments": 7,
+"saves": 18,
+"shares": 15
+}
+}
+},
+{
+"label": "3h",
+"taken_at_dt": -277200,
+"data": {
+"live": {
+"views": 4560,
+"likes": 273,
+"comments": 18,
+"saves": 45,
+"shares": 36
+}
+}
+},
+{
+"label": "6h",
+"taken_at_dt": -266400,
+"data": {
+"live": {
+"views": 7594,
+"likes": 455,
+"comments": 30,
+"saves": 75,
+"shares": 60
+}
+}
+},
+{
+"label": "12h",
+"taken_at_dt": -244800,
+"data": {
+"live": {
+"views": 11095,
+"likes": 665,
+"comments": 44,
+"saves": 110,
+"shares": 88
+}
+}
+},
+{
+"label": "24h",
+"taken_at_dt": -201600,
+"data": {
+"live": {
+"views": 14519,
+"likes": 871,
+"comments": 58,
+"saves": 145,
+"shares": 116
+},
+"detailed": {
+"post_views": 14519,
+"average_watch_time_s": 7.9,
+"watched_full_video_pct": 38.5,
+"new_followers": 17
+}
+}
+},
+{
+"label": "48h",
+"taken_at_dt": -115200,
+"data": {
+"live": {
+"views": 15408,
+"likes": 924,
+"comments": 61,
+"saves": 154,
+"shares": 123
+},
+"detailed": {
+"post_views": 15408,
+"average_watch_time_s": 7.9,
+"watched_full_video_pct": 38.5,
+"new_followers": 19
+}
+}
+}
+]
+},
+{
+"id": 114,
+"app": "tiktok",
+"account": "nomoreawkwardness",
+"label": "bag-2-b",
+"caption": "Opener B actually worked. #dating #rizz",
+"posted_at_dt": -280800,
+"status": "done",
+"phone_id": "moto-1",
+"snapshots": [
+{
+"label": "1h",
+"taken_at_dt": -277200,
+"data": {
+"live": {
+"views": 2672,
+"likes": 160,
+"comments": 10,
+"saves": 26,
+"shares": 21
+}
+}
+},
+{
+"label": "3h",
+"taken_at_dt": -270000,
+"data": {
+"live": {
+"views": 6527,
+"likes": 391,
+"comments": 26,
+"saves": 65,
+"shares": 52
+}
+}
+},
+{
+"label": "6h",
+"taken_at_dt": -259200,
+"data": {
+"live": {
+"views": 10699,
+"likes": 641,
+"comments": 42,
+"saves": 106,
+"shares": 85
+}
+}
+},
+{
+"label": "12h",
+"taken_at_dt": -237600,
+"data": {
+"live": {
+"views": 15359,
+"likes": 921,
+"comments": 61,
+"saves": 153,
+"shares": 122
+}
+}
+},
+{
+"label": "24h",
+"taken_at_dt": -194400,
+"data": {
+"live": {
+"views": 20389,
+"likes": 1223,
+"comments": 81,
+"saves": 203,
+"shares": 163
+},
+"detailed": {
+"post_views": 20389,
+"average_watch_time_s": 8.8,
+"watched_full_video_pct": 38.5,
+"new_followers": 29
+}
+}
+},
+{
+"label": "48h",
+"taken_at_dt": -108000,
+"data": {
+"live": {
+"views": 22589,
+"likes": 1355,
+"comments": 90,
+"saves": 225,
+"shares": 180
+},
+"detailed": {
+"post_views": 22589,
+"average_watch_time_s": 8.8,
+"watched_full_video_pct": 38.5,
+"new_followers": 33
+}
+}
+}
+]
+},
+{
+"id": 115,
+"app": "tiktok",
+"account": "nomoreawkwardness",
+"label": "bag-3",
+"caption": "Why the talking stage never ends #dating #situationship",
+"posted_at_dt": -144000,
+"status": "done",
+"phone_id": "moto-1",
+"snapshots": [
+{
+"label": "1h",
+"taken_at_dt": -140400,
+"data": {
+"live": {
+"views": 392,
+"likes": 23,
+"comments": 1,
+"saves": 3,
+"shares": 3
+}
+}
+},
+{
+"label": "3h",
+"taken_at_dt": -133200,
+"data": {
+"live": {
+"views": 1004,
+"likes": 60,
+"comments": 4,
+"saves": 10,
+"shares": 8
+}
+}
+},
+{
+"label": "6h",
+"taken_at_dt": -122400,
+"data": {
+"live": {
+"views": 1673,
+"likes": 100,
+"comments": 6,
+"saves": 16,
+"shares": 13
+}
+}
+},
+{
+"label": "12h",
+"taken_at_dt": -100800,
+"data": {
+"live": {
+"views": 2451,
+"likes": 147,
+"comments": 9,
+"saves": 24,
+"shares": 19
+}
+}
+},
+{
+"label": "24h",
+"taken_at_dt": -57600,
+"data": {
+"live": {
+"views": 3078,
+"likes": 184,
+"comments": 12,
+"saves": 30,
+"shares": 24
+},
+"detailed": {
+"post_views": 3078,
+"average_watch_time_s": 5.0,
+"watched_full_video_pct": 38.5,
+"new_followers": 1
+}
+}
+}
+]
+},
+{
+"id": 116,
+"app": "instagram",
+"account": "noswipe.app",
+"label": "solo-clip",
+"caption": "One quiet minute at the cafe. #firstdate",
+"posted_at_dt": -72000,
+"status": "done",
+"phone_id": "moto-1",
+"snapshots": []
+},
+{
+"id": 117,
+"app": "instagram",
+"account": "noswipe.app",
+"label": "whites-4-a",
+"caption": "Part 4: she left on read, then this. #dating",
+"posted_at_dt": -43200,
+"status": "unverified",
+"phone_id": "moto-1",
+"snapshots": []
+},
+{
+"id": 118,
+"app": "instagram",
+"account": "noswipe.app",
+"label": "whites-4-b",
+"caption": "Part 4, the soft version. #dating",
+"posted_at_dt": -39600,
+"status": "done",
+"phone_id": "moto-1",
+"snapshots": []
+},
+{
+"id": 119,
+"app": "instagram",
+"account": "noswipe.app",
+"label": "whites-0-a",
+"caption": "POV: first date nerves. #dating #firstdate",
+"posted_at_dt": -936000,
+"status": "done",
+"phone_id": "moto-1",
+"snapshots": [
+{
+"label": "1h",
+"taken_at_dt": -932400,
+"data": {
+"views": 1334,
+"viewers": 1067,
+"average_watch_time_s": 7.0,
+"skip_rate_pct": 44,
+"follows": 1,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+},
+{
+"label": "3h",
+"taken_at_dt": -925200,
+"data": {
+"views": 3491,
+"viewers": 2792,
+"average_watch_time_s": 7.0,
+"skip_rate_pct": 44,
+"follows": 4,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+},
+{
+"label": "6h",
+"taken_at_dt": -914400,
+"data": {
+"views": 5806,
+"viewers": 4644,
+"average_watch_time_s": 7.0,
+"skip_rate_pct": 44,
+"follows": 7,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+},
+{
+"label": "12h",
+"taken_at_dt": -892800,
+"data": {
+"views": 8122,
+"viewers": 6497,
+"average_watch_time_s": 7.0,
+"skip_rate_pct": 44,
+"follows": 10,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+},
+{
+"label": "24h",
+"taken_at_dt": -849600,
+"data": {
+"views": 10388,
+"viewers": 8310,
+"average_watch_time_s": 7.0,
+"skip_rate_pct": 44,
+"follows": 12,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+},
+{
+"label": "48h",
+"taken_at_dt": -763200,
+"data": {
+"views": 11191,
+"viewers": 8952,
+"average_watch_time_s": 7.0,
+"skip_rate_pct": 44,
+"follows": 14,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+}
+]
+},
+{
+"id": 120,
+"app": "instagram",
+"account": "noswipe.app",
+"label": "whites-0-b",
+"caption": "First date nerves, solved. #dating",
+"posted_at_dt": -928800,
+"status": "done",
+"phone_id": "moto-1",
+"snapshots": [
+{
+"label": "1h",
+"taken_at_dt": -925200,
+"data": {
+"views": 1045,
+"viewers": 836,
+"average_watch_time_s": 6.5,
+"skip_rate_pct": 47,
+"follows": 1,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+},
+{
+"label": "3h",
+"taken_at_dt": -918000,
+"data": {
+"views": 2586,
+"viewers": 2068,
+"average_watch_time_s": 6.5,
+"skip_rate_pct": 47,
+"follows": 3,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+},
+{
+"label": "6h",
+"taken_at_dt": -907200,
+"data": {
+"views": 4532,
+"viewers": 3625,
+"average_watch_time_s": 6.5,
+"skip_rate_pct": 47,
+"follows": 5,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+},
+{
+"label": "12h",
+"taken_at_dt": -885600,
+"data": {
+"views": 6164,
+"viewers": 4931,
+"average_watch_time_s": 6.5,
+"skip_rate_pct": 47,
+"follows": 7,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+},
+{
+"label": "24h",
+"taken_at_dt": -842400,
+"data": {
+"views": 7647,
+"viewers": 6117,
+"average_watch_time_s": 6.5,
+"skip_rate_pct": 47,
+"follows": 9,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+},
+{
+"label": "48h",
+"taken_at_dt": -756000,
+"data": {
+"views": 9014,
+"viewers": 7211,
+"average_watch_time_s": 6.5,
+"skip_rate_pct": 47,
+"follows": 10,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+}
+]
+},
+{
+"id": 121,
+"app": "instagram",
+"account": "tinyloveshows",
+"label": "table-0-a",
+"caption": "Prologue. A table for two. #lovestory",
+"posted_at_dt": -1080000,
+"status": "done",
+"phone_id": "moto-1",
+"snapshots": [
+{
+"label": "1h",
+"taken_at_dt": -1076400,
+"data": {
+"views": 502,
+"viewers": 401,
+"average_watch_time_s": 10.1,
+"skip_rate_pct": 30,
+"follows": 1,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+},
+{
+"label": "3h",
+"taken_at_dt": -1069200,
+"data": {
+"views": 1228,
+"viewers": 982,
+"average_watch_time_s": 10.1,
+"skip_rate_pct": 30,
+"follows": 3,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+},
+{
+"label": "6h",
+"taken_at_dt": -1058400,
+"data": {
+"views": 2105,
+"viewers": 1684,
+"average_watch_time_s": 10.1,
+"skip_rate_pct": 30,
+"follows": 5,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+},
+{
+"label": "12h",
+"taken_at_dt": -1036800,
+"data": {
+"views": 2846,
+"viewers": 2276,
+"average_watch_time_s": 10.1,
+"skip_rate_pct": 30,
+"follows": 7,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+},
+{
+"label": "24h",
+"taken_at_dt": -993600,
+"data": {
+"views": 3618,
+"viewers": 2894,
+"average_watch_time_s": 10.1,
+"skip_rate_pct": 30,
+"follows": 9,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+},
+{
+"label": "48h",
+"taken_at_dt": -907200,
+"data": {
+"views": 4031,
+"viewers": 3224,
+"average_watch_time_s": 10.1,
+"skip_rate_pct": 30,
+"follows": 11,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+}
+]
+},
+{
+"id": 122,
+"app": "instagram",
+"account": "tinyloveshows",
+"label": "table-0-b",
+"caption": "Prologue, the other table. #lovestory",
+"posted_at_dt": -1072800,
+"status": "done",
+"phone_id": "moto-1",
+"snapshots": [
+{
+"label": "1h",
+"taken_at_dt": -1069200,
+"data": {
+"views": 464,
+"viewers": 371,
+"average_watch_time_s": 9.7,
+"skip_rate_pct": 33,
+"follows": 1,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+},
+{
+"label": "3h",
+"taken_at_dt": -1062000,
+"data": {
+"views": 1139,
+"viewers": 911,
+"average_watch_time_s": 9.7,
+"skip_rate_pct": 33,
+"follows": 2,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+},
+{
+"label": "6h",
+"taken_at_dt": -1051200,
+"data": {
+"views": 1882,
+"viewers": 1505,
+"average_watch_time_s": 9.7,
+"skip_rate_pct": 33,
+"follows": 4,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+},
+{
+"label": "12h",
+"taken_at_dt": -1029600,
+"data": {
+"views": 2771,
+"viewers": 2216,
+"average_watch_time_s": 9.7,
+"skip_rate_pct": 33,
+"follows": 6,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+},
+{
+"label": "24h",
+"taken_at_dt": -986400,
+"data": {
+"views": 3622,
+"viewers": 2897,
+"average_watch_time_s": 9.7,
+"skip_rate_pct": 33,
+"follows": 8,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+},
+{
+"label": "48h",
+"taken_at_dt": -900000,
+"data": {
+"views": 4050,
+"viewers": 3240,
+"average_watch_time_s": 9.7,
+"skip_rate_pct": 33,
+"follows": 9,
+"like_rate_pct": 3.1,
+"share_rate_pct": 0.8
+}
+}
+]
+},
+{
+"id": 123,
+"app": "tiktok",
+"account": "nomoreawkwardness",
+"label": "bag-0-a",
+"caption": "How to reply to a dry text #dating #texting",
+"posted_at_dt": -1008000,
+"status": "done",
+"phone_id": "moto-1",
+"snapshots": [
+{
+"label": "1h",
+"taken_at_dt": -1004400,
+"data": {
+"live": {
+"views": 1199,
+"likes": 71,
+"comments": 4,
+"saves": 11,
+"shares": 9
+}
+}
+},
+{
+"label": "3h",
+"taken_at_dt": -997200,
+"data": {
+"live": {
+"views": 2935,
+"likes": 176,
+"comments": 11,
+"saves": 29,
+"shares": 23
+}
+}
+},
+{
+"label": "6h",
+"taken_at_dt": -986400,
+"data": {
+"live": {
+"views": 4802,
+"likes": 288,
+"comments": 19,
+"saves": 48,
+"shares": 38
+}
+}
+},
+{
+"label": "12h",
+"taken_at_dt": -964800,
+"data": {
+"live": {
+"views": 7315,
+"likes": 438,
+"comments": 29,
+"saves": 73,
+"shares": 58
+}
+}
+},
+{
+"label": "24h",
+"taken_at_dt": -921600,
+"data": {
+"live": {
+"views": 8838,
+"likes": 530,
+"comments": 35,
+"saves": 88,
+"shares": 70
+},
+"detailed": {
+"post_views": 8838,
+"average_watch_time_s": 6.9,
+"watched_full_video_pct": 38.5,
+"new_followers": 11
+}
+}
+},
+{
+"label": "48h",
+"taken_at_dt": -835200,
+"data": {
+"live": {
+"views": 9979,
+"likes": 598,
+"comments": 39,
+"saves": 99,
+"shares": 79
+},
+"detailed": {
+"post_views": 9979,
+"average_watch_time_s": 6.9,
+"watched_full_video_pct": 38.5,
+"new_followers": 13
+}
+}
+}
+]
+},
+{
+"id": 124,
+"app": "tiktok",
+"account": "nomoreawkwardness",
+"label": "bag-0-b",
+"caption": "Dry text? Do this. #dating",
+"posted_at_dt": -1004400,
+"status": "done",
+"phone_id": "moto-1",
+"snapshots": [
+{
+"label": "1h",
+"taken_at_dt": -1000800,
+"data": {
+"live": {
+"views": 1385,
+"likes": 83,
+"comments": 5,
+"saves": 13,
+"shares": 11
+}
+}
+},
+{
+"label": "3h",
+"taken_at_dt": -993600,
+"data": {
+"live": {
+"views": 3517,
+"likes": 211,
+"comments": 14,
+"saves": 35,
+"shares": 28
+}
+}
+},
+{
+"label": "6h",
+"taken_at_dt": -982800,
+"data": {
+"live": {
+"views": 6162,
+"likes": 369,
+"comments": 24,
+"saves": 61,
+"shares": 49
+}
+}
+},
+{
+"label": "12h",
+"taken_at_dt": -961200,
+"data": {
+"live": {
+"views": 8844,
+"likes": 530,
+"comments": 35,
+"saves": 88,
+"shares": 70
+}
+}
+},
+{
+"label": "24h",
+"taken_at_dt": -918000,
+"data": {
+"live": {
+"views": 11129,
+"likes": 667,
+"comments": 44,
+"saves": 111,
+"shares": 89
+},
+"detailed": {
+"post_views": 11129,
+"average_watch_time_s": 7.4,
+"watched_full_video_pct": 38.5,
+"new_followers": 15
+}
+}
+},
+{
+"label": "48h",
+"taken_at_dt": -831600,
+"data": {
+"live": {
+"views": 12097,
+"likes": 725,
+"comments": 48,
+"saves": 120,
+"shares": 96
+},
+"detailed": {
+"post_views": 12097,
+"average_watch_time_s": 7.4,
+"watched_full_video_pct": 38.5,
+"new_followers": 17
+}
+}
+}
+]
+},
+{
+"id": 125,
+"app": "tiktok",
+"account": "nomoreawkwardness",
+"label": "bag-0-c",
+"caption": "Three signs the talking stage is over #dating #situationship",
+"posted_at_dt": -972000,
+"status": "done",
+"phone_id": "moto-1",
+"snapshots": [
+{
+"label": "1h",
+"taken_at_dt": -968400,
+"data": {
+"live": {
+"views": 835,
+"likes": 50,
+"comments": 3,
+"saves": 8,
+"shares": 6
+}
+}
+},
+{
+"label": "3h",
+"taken_at_dt": -961200,
+"data": {
+"live": {
+"views": 2113,
+"likes": 126,
+"comments": 8,
+"saves": 21,
+"shares": 16
+}
+}
+},
+{
+"label": "6h",
+"taken_at_dt": -950400,
+"data": {
+"live": {
+"views": 3597,
+"likes": 215,
+"comments": 14,
+"saves": 35,
+"shares": 28
+}
+}
+},
+{
+"label": "12h",
+"taken_at_dt": -928800,
+"data": {
+"live": {
+"views": 4962,
+"likes": 297,
+"comments": 19,
+"saves": 49,
+"shares": 39
+}
+}
+},
+{
+"label": "24h",
+"taken_at_dt": -885600,
+"data": {
+"live": {
+"views": 6317,
+"likes": 379,
+"comments": 25,
+"saves": 63,
+"shares": 50
+},
+"detailed": {
+"post_views": 6317,
+"average_watch_time_s": 6.0,
+"watched_full_video_pct": 38.5,
+"new_followers": 7
+}
+}
+},
+{
+"label": "48h",
+"taken_at_dt": -799200,
+"data": {
+"live": {
+"views": 6874,
+"likes": 412,
+"comments": 27,
+"saves": 68,
+"shares": 54
+},
+"detailed": {
+"post_views": 6874,
+"average_watch_time_s": 6.0,
+"watched_full_video_pct": 38.5,
+"new_followers": 8
+}
+}
+}
+]
+}
+],
+"research": [
+{
+"id": 1,
+"app": "tiktok",
+"keyword": "dating app burnout",
+"seen_at_dt": -775165,
+"creator": "pixelpanda",
+"caption": "3 signs you need a dating app break #datingappburnout #dating",
+"likes": 5981,
+"comments": 89,
+"shares": 209,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 2,
+"app": "tiktok",
+"keyword": "dating app burnout",
+"seen_at_dt": -174284,
+"creator": "romcom.rae",
+"caption": "Why I deleted all dating apps for a month and what happened #datingappburnout #singlelife",
+"likes": 2866,
+"comments": 44,
+"shares": 27,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 3,
+"app": "tiktok",
+"keyword": "dating app burnout",
+"seen_at_dt": -612993,
+"creator": "the.dating.dad",
+"caption": "Swipe fatigue is real. Here is how I stopped doomscrolling matches #datingappburnout",
+"likes": 1890,
+"comments": 38,
+"shares": 21,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 4,
+"app": "tiktok",
+"keyword": "dating app burnout",
+"seen_at_dt": -891759,
+"creator": "datewithmax",
+"caption": "POV: you open Hinge out of habit and close it 4 seconds later #datingappburnout #hinge",
+"likes": 1030,
+"comments": 14,
+"shares": 30,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 5,
+"app": "instagram",
+"keyword": "dating app burnout",
+"seen_at_dt": -287910,
+"creator": "nora_notes",
+"caption": "POV: you open Hinge out of habit and close it 4 seconds later #datingappburnout #hinge",
+"likes": 544,
+"comments": 13,
+"shares": 22,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 6,
+"app": "tiktok",
+"keyword": "dating app burnout",
+"seen_at_dt": -1086827,
+"creator": "okayzoe",
+"caption": "Swipe fatigue is real. Here is how I stopped doomscrolling matches #datingappburnout",
+"likes": 1105,
+"comments": 26,
+"shares": 13,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 7,
+"app": "tiktok",
+"keyword": "dating app burnout",
+"seen_at_dt": -89513,
+"creator": "datewithmax",
+"caption": "Swipe fatigue is real. Here is how I stopped doomscrolling matches #datingappburnout",
+"likes": 6088,
+"comments": 127,
+"shares": 197,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 8,
+"app": "tiktok",
+"keyword": "dating app burnout",
+"seen_at_dt": -538035,
+"creator": "datewithmax",
+"caption": "3 signs you need a dating app break #datingappburnout #dating",
+"likes": 4435,
+"comments": 43,
+"shares": 23,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 9,
+"app": "instagram",
+"keyword": "dating app burnout",
+"seen_at_dt": -521570,
+"creator": "coach.cole",
+"caption": "3 signs you need a dating app break #datingappburnout #dating",
+"likes": 1620,
+"comments": 16,
+"shares": 74,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": "same, i do this every time",
+"account": "nomoreawkwardness"
+},
+{
+"id": 10,
+"app": "tiktok",
+"keyword": "dating app burnout",
+"seen_at_dt": -429818,
+"creator": "coach.cole",
+"caption": "3 signs you need a dating app break #datingappburnout #dating",
+"likes": 4683,
+"comments": 95,
+"shares": 181,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 11,
+"app": "instagram",
+"keyword": "dating app burnout",
+"seen_at_dt": -549448,
+"creator": "mia.matches",
+"caption": "Why I deleted all dating apps for a month and what happened #datingappburnout #singlelife",
+"likes": 3627,
+"comments": 92,
+"shares": 175,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": "same, i do this every time",
+"account": "nomoreawkwardness"
+},
+{
+"id": 12,
+"app": "instagram",
+"keyword": "dating app burnout",
+"seen_at_dt": -362031,
+"creator": "okayzoe",
+"caption": "Why I deleted all dating apps for a month and what happened #datingappburnout #singlelife",
+"likes": 2863,
+"comments": 24,
+"shares": 78,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 13,
+"app": "instagram",
+"keyword": "dating app burnout",
+"seen_at_dt": -1113067,
+"creator": "romcom.rae",
+"caption": "POV: you open Hinge out of habit and close it 4 seconds later #datingappburnout #hinge",
+"likes": 1918,
+"comments": 24,
+"shares": 63,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 14,
+"app": "tiktok",
+"keyword": "dating app burnout",
+"seen_at_dt": -586467,
+"creator": "the.dating.dad",
+"caption": "Swipe fatigue is real. Here is how I stopped doomscrolling matches #datingappburnout",
+"likes": 16817,
+"comments": 328,
+"shares": 269,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 15,
+"app": "instagram",
+"keyword": "AI dating assistant",
+"seen_at_dt": -316078,
+"creator": "romcom.rae",
+"caption": "How AI dating assistants actually work #aidating #tech",
+"likes": 9383,
+"comments": 131,
+"shares": 148,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 16,
+"app": "tiktok",
+"keyword": "AI dating assistant",
+"seen_at_dt": -548132,
+"creator": "lenaloves",
+"caption": "Would you let AI chat for you? A or B #aidating #dating",
+"likes": 826,
+"comments": 11,
+"shares": 19,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 17,
+"app": "tiktok",
+"keyword": "AI dating assistant",
+"seen_at_dt": -655897,
+"creator": "lenaloves",
+"caption": "I let an AI write my first messages for a week. Results #aidating #hinge",
+"likes": 1438,
+"comments": 19,
+"shares": 13,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 18,
+"app": "tiktok",
+"keyword": "AI dating assistant",
+"seen_at_dt": -134833,
+"creator": "the.dating.dad",
+"caption": "Would you let AI chat for you? A or B #aidating #dating",
+"likes": 3387,
+"comments": 64,
+"shares": 141,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 19,
+"app": "tiktok",
+"keyword": "AI dating assistant",
+"seen_at_dt": -63745,
+"creator": "lenaloves",
+"caption": "I let an AI write my first messages for a week. Results #aidating #hinge",
+"likes": 6652,
+"comments": 112,
+"shares": 184,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 20,
+"app": "instagram",
+"keyword": "AI dating assistant",
+"seen_at_dt": -189347,
+"creator": "romcom.rae",
+"caption": "POV: your dating assistant books the date while you work #aidating",
+"likes": 3925,
+"comments": 16,
+"shares": 160,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 21,
+"app": "tiktok",
+"keyword": "AI dating assistant",
+"seen_at_dt": -249373,
+"creator": "pixelpanda",
+"caption": "POV: your dating assistant books the date while you work #aidating",
+"likes": 4177,
+"comments": 70,
+"shares": 146,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 22,
+"app": "tiktok",
+"keyword": "AI dating assistant",
+"seen_at_dt": -628045,
+"creator": "itsbenny",
+"caption": "POV: your dating assistant books the date while you work #aidating",
+"likes": 6587,
+"comments": 59,
+"shares": 315,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 23,
+"app": "tiktok",
+"keyword": "AI dating assistant",
+"seen_at_dt": -343983,
+"creator": "romcom.rae",
+"caption": "POV: your dating assistant books the date while you work #aidating",
+"likes": 17372,
+"comments": 353,
+"shares": 194,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 24,
+"app": "tiktok",
+"keyword": "AI dating assistant",
+"seen_at_dt": -545681,
+"creator": "pixelpanda",
+"caption": "How AI dating assistants actually work #aidating #tech",
+"likes": 330,
+"comments": 5,
+"shares": 15,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 25,
+"app": "instagram",
+"keyword": "AI dating assistant",
+"seen_at_dt": -17829,
+"creator": "pixelpanda",
+"caption": "Would you let AI chat for you? A or B #aidating #dating",
+"likes": 2473,
+"comments": 11,
+"shares": 51,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 26,
+"app": "instagram",
+"keyword": "AI dating assistant",
+"seen_at_dt": -160543,
+"creator": "coach.cole",
+"caption": "POV: your dating assistant books the date while you work #aidating",
+"likes": 6055,
+"comments": 140,
+"shares": 269,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 27,
+"app": "tiktok",
+"keyword": "hinge tips",
+"seen_at_dt": -614306,
+"creator": "sofia.talks",
+"caption": "How to pick Hinge photos, part 1 #hingetips #hinge",
+"likes": 9246,
+"comments": 275,
+"shares": 423,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 28,
+"app": "tiktok",
+"keyword": "hinge tips",
+"seen_at_dt": -252482,
+"creator": "okayzoe",
+"caption": "Hinge prompts that get replies: 3 examples #hingetips #dating",
+"likes": 4013,
+"comments": 46,
+"shares": 42,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 29,
+"app": "instagram",
+"keyword": "hinge tips",
+"seen_at_dt": -848246,
+"creator": "mia.matches",
+"caption": "Hinge opener that works every time? #hingetips #rizz",
+"likes": 5328,
+"comments": 135,
+"shares": 71,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": "same, i do this every time",
+"account": "nomoreawkwardness"
+},
+{
+"id": 30,
+"app": "instagram",
+"keyword": "hinge tips",
+"seen_at_dt": -56597,
+"creator": "nora_notes",
+"caption": "Storytime: my best Hinge match started with a bad joke #hingetips",
+"likes": 15889,
+"comments": 367,
+"shares": 593,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 31,
+"app": "instagram",
+"keyword": "hinge tips",
+"seen_at_dt": -21422,
+"creator": "pixelpanda",
+"caption": "Hinge prompts that get replies: 3 examples #hingetips #dating",
+"likes": 7639,
+"comments": 195,
+"shares": 187,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 32,
+"app": "instagram",
+"keyword": "hinge tips",
+"seen_at_dt": -47237,
+"creator": "pixelpanda",
+"caption": "Hinge prompts that get replies: 3 examples #hingetips #dating",
+"likes": 2239,
+"comments": 45,
+"shares": 69,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 33,
+"app": "tiktok",
+"keyword": "hinge tips",
+"seen_at_dt": -742661,
+"creator": "datewithmax",
+"caption": "How to pick Hinge photos, part 1 #hingetips #hinge",
+"likes": 8240,
+"comments": 231,
+"shares": 101,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 34,
+"app": "tiktok",
+"keyword": "hinge tips",
+"seen_at_dt": -292334,
+"creator": "okayzoe",
+"caption": "How to pick Hinge photos, part 1 #hingetips #hinge",
+"likes": 6795,
+"comments": 63,
+"shares": 179,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 35,
+"app": "instagram",
+"keyword": "hinge tips",
+"seen_at_dt": -27422,
+"creator": "nora_notes",
+"caption": "How to pick Hinge photos, part 1 #hingetips #hinge",
+"likes": 8982,
+"comments": 198,
+"shares": 201,
+"sound": "original sound",
+"relevant": 1,
+"liked": 1,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 36,
+"app": "tiktok",
+"keyword": "hinge tips",
+"seen_at_dt": -674913,
+"creator": "okayzoe",
+"caption": "Storytime: my best Hinge match started with a bad joke #hingetips",
+"likes": 2943,
+"comments": 40,
+"shares": 96,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 37,
+"app": "instagram",
+"keyword": "hinge tips",
+"seen_at_dt": -852222,
+"creator": "okayzoe",
+"caption": "Hinge opener that works every time? #hingetips #rizz",
+"likes": 5835,
+"comments": 112,
+"shares": 137,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 38,
+"app": "instagram",
+"keyword": "hinge tips",
+"seen_at_dt": -874023,
+"creator": "lenaloves",
+"caption": "Storytime: my best Hinge match started with a bad joke #hingetips",
+"likes": 2575,
+"comments": 63,
+"shares": 47,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 39,
+"app": "instagram",
+"keyword": "tinder tips",
+"seen_at_dt": -240525,
+"creator": "sofia.talks",
+"caption": "POV: your Tinder match replies after 3 days #tindertips",
+"likes": 1356,
+"comments": 24,
+"shares": 11,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 40,
+"app": "tiktok",
+"keyword": "tinder tips",
+"seen_at_dt": -613042,
+"creator": "pixelpanda",
+"caption": "POV: your Tinder match replies after 3 days #tindertips",
+"likes": 2071,
+"comments": 38,
+"shares": 30,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 41,
+"app": "tiktok",
+"keyword": "tinder tips",
+"seen_at_dt": -351935,
+"creator": "lenaloves",
+"caption": "How to move from Tinder to a date in 5 messages #tindertips #dating",
+"likes": 1043,
+"comments": 19,
+"shares": 5,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 42,
+"app": "instagram",
+"keyword": "tinder tips",
+"seen_at_dt": -59246,
+"creator": "nora_notes",
+"caption": "POV: your Tinder match replies after 3 days #tindertips",
+"likes": 19346,
+"comments": 467,
+"shares": 712,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 43,
+"app": "instagram",
+"keyword": "tinder tips",
+"seen_at_dt": -751556,
+"creator": "nora_notes",
+"caption": "Tinder opener ideas that are not hey #tindertips #rizz",
+"likes": 5895,
+"comments": 31,
+"shares": 97,
+"sound": "original sound",
+"relevant": 1,
+"liked": 1,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 44,
+"app": "tiktok",
+"keyword": "tinder tips",
+"seen_at_dt": -362093,
+"creator": "romcom.rae",
+"caption": "POV: your Tinder match replies after 3 days #tindertips",
+"likes": 4389,
+"comments": 68,
+"shares": 60,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 45,
+"app": "instagram",
+"keyword": "tinder tips",
+"seen_at_dt": -711474,
+"creator": "jay.on.dates",
+"caption": "Tinder bio mistakes that cost you matches #tindertips",
+"likes": 3254,
+"comments": 74,
+"shares": 16,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 46,
+"app": "instagram",
+"keyword": "tinder tips",
+"seen_at_dt": -869305,
+"creator": "sofia.talks",
+"caption": "POV: your Tinder match replies after 3 days #tindertips",
+"likes": 937,
+"comments": 4,
+"shares": 12,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 47,
+"app": "tiktok",
+"keyword": "tinder tips",
+"seen_at_dt": -292312,
+"creator": "the.dating.dad",
+"caption": "How to move from Tinder to a date in 5 messages #tindertips #dating",
+"likes": 613,
+"comments": 6,
+"shares": 18,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 48,
+"app": "tiktok",
+"keyword": "bumble",
+"seen_at_dt": -424144,
+"creator": "nora_notes",
+"caption": "Bumble vs Hinge, which is better in 2026? #bumble #hinge",
+"likes": 32299,
+"comments": 699,
+"shares": 1268,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 49,
+"app": "tiktok",
+"keyword": "bumble",
+"seen_at_dt": -812497,
+"creator": "sofia.talks",
+"caption": "Part 2: I made the first move on Bumble #bumble",
+"likes": 1572,
+"comments": 35,
+"shares": 6,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 50,
+"app": "tiktok",
+"keyword": "bumble",
+"seen_at_dt": -890863,
+"creator": "okayzoe",
+"caption": "Part 2: I made the first move on Bumble #bumble",
+"likes": 3625,
+"comments": 34,
+"shares": 39,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 51,
+"app": "instagram",
+"keyword": "bumble",
+"seen_at_dt": -591550,
+"creator": "datewithmax",
+"caption": "Part 2: I made the first move on Bumble #bumble",
+"likes": 6473,
+"comments": 154,
+"shares": 34,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 52,
+"app": "instagram",
+"keyword": "bumble",
+"seen_at_dt": -981896,
+"creator": "itsbenny",
+"caption": "Bumble red flags you should know #bumble",
+"likes": 672,
+"comments": 12,
+"shares": 10,
+"sound": "original sound",
+"relevant": 1,
+"liked": 1,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 53,
+"app": "instagram",
+"keyword": "bumble",
+"seen_at_dt": -708699,
+"creator": "jay.on.dates",
+"caption": "Bumble red flags you should know #bumble",
+"likes": 1112,
+"comments": 8,
+"shares": 21,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 54,
+"app": "tiktok",
+"keyword": "bumble",
+"seen_at_dt": -325491,
+"creator": "jay.on.dates",
+"caption": "Bumble girls, what actually makes you reply? #bumble #dating",
+"likes": 2536,
+"comments": 55,
+"shares": 67,
+"sound": "original sound",
+"relevant": 1,
+"liked": 1,
+"commented": "same, i do this every time",
+"account": "nomoreawkwardness"
+},
+{
+"id": 55,
+"app": "instagram",
+"keyword": "bumble",
+"seen_at_dt": -956746,
+"creator": "sofia.talks",
+"caption": "Part 2: I made the first move on Bumble #bumble",
+"likes": 20546,
+"comments": 406,
+"shares": 253,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 56,
+"app": "instagram",
+"keyword": "bumble",
+"seen_at_dt": -378166,
+"creator": "nora_notes",
+"caption": "Bumble vs Hinge, which is better in 2026? #bumble #hinge",
+"likes": 7300,
+"comments": 170,
+"shares": 272,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 57,
+"app": "instagram",
+"keyword": "bumble",
+"seen_at_dt": -868603,
+"creator": "coach.cole",
+"caption": "Bumble red flags you should know #bumble",
+"likes": 33564,
+"comments": 536,
+"shares": 1193,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 58,
+"app": "instagram",
+"keyword": "bumble",
+"seen_at_dt": -990899,
+"creator": "sofia.talks",
+"caption": "Bumble girls, what actually makes you reply? #bumble #dating",
+"likes": 8013,
+"comments": 202,
+"shares": 366,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": "same, i do this every time",
+"account": "nomoreawkwardness"
+},
+{
+"id": 59,
+"app": "tiktok",
+"keyword": "bumble",
+"seen_at_dt": -593486,
+"creator": "pixelpanda",
+"caption": "Bumble vs Hinge, which is better in 2026? #bumble #hinge",
+"likes": 986,
+"comments": 26,
+"shares": 39,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 60,
+"app": "instagram",
+"keyword": "first date ideas",
+"seen_at_dt": -351081,
+"creator": "mia.matches",
+"caption": "First date idea: the bookstore walk #firstdateideas #dating",
+"likes": 5862,
+"comments": 105,
+"shares": 49,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 61,
+"app": "tiktok",
+"keyword": "first date ideas",
+"seen_at_dt": -999874,
+"creator": "okayzoe",
+"caption": "First date idea: the bookstore walk #firstdateideas #dating",
+"likes": 3156,
+"comments": 81,
+"shares": 107,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 62,
+"app": "instagram",
+"keyword": "first date ideas",
+"seen_at_dt": -698402,
+"creator": "the.dating.dad",
+"caption": "Which first date would you pick, A or B? #firstdateideas",
+"likes": 13782,
+"comments": 281,
+"shares": 642,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 63,
+"app": "tiktok",
+"keyword": "first date ideas",
+"seen_at_dt": -1061036,
+"creator": "nora_notes",
+"caption": "5 first date ideas that are not dinner #firstdateideas",
+"likes": 3331,
+"comments": 34,
+"shares": 50,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 64,
+"app": "tiktok",
+"keyword": "first date ideas",
+"seen_at_dt": -640088,
+"creator": "romcom.rae",
+"caption": "Which first date would you pick, A or B? #firstdateideas",
+"likes": 14280,
+"comments": 145,
+"shares": 331,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 65,
+"app": "instagram",
+"keyword": "first date ideas",
+"seen_at_dt": -700412,
+"creator": "itsbenny",
+"caption": "Which first date would you pick, A or B? #firstdateideas",
+"likes": 2414,
+"comments": 27,
+"shares": 50,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 66,
+"app": "instagram",
+"keyword": "first date ideas",
+"seen_at_dt": -561012,
+"creator": "lenaloves",
+"caption": "First date idea that costs nothing #firstdateideas #budget",
+"likes": 16950,
+"comments": 363,
+"shares": 251,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 67,
+"app": "tiktok",
+"keyword": "first date ideas",
+"seen_at_dt": -768263,
+"creator": "sofia.talks",
+"caption": "Which first date would you pick, A or B? #firstdateideas",
+"likes": 15710,
+"comments": 105,
+"shares": 530,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 68,
+"app": "tiktok",
+"keyword": "first date ideas",
+"seen_at_dt": -675357,
+"creator": "datewithmax",
+"caption": "Which first date would you pick, A or B? #firstdateideas",
+"likes": 18328,
+"comments": 89,
+"shares": 99,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 69,
+"app": "tiktok",
+"keyword": "first date ideas",
+"seen_at_dt": -1079350,
+"creator": "lenaloves",
+"caption": "First date idea: the bookstore walk #firstdateideas #dating",
+"likes": 2609,
+"comments": 77,
+"shares": 25,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 70,
+"app": "instagram",
+"keyword": "first date ideas",
+"seen_at_dt": -463795,
+"creator": "romcom.rae",
+"caption": "First date idea: the bookstore walk #firstdateideas #dating",
+"likes": 13753,
+"comments": 294,
+"shares": 457,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 71,
+"app": "instagram",
+"keyword": "first date ideas",
+"seen_at_dt": -144477,
+"creator": "okayzoe",
+"caption": "5 first date ideas that are not dinner #firstdateideas",
+"likes": 1908,
+"comments": 27,
+"shares": 71,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 72,
+"app": "instagram",
+"keyword": "first date ideas",
+"seen_at_dt": -848366,
+"creator": "nora_notes",
+"caption": "5 first date ideas that are not dinner #firstdateideas",
+"likes": 23993,
+"comments": 187,
+"shares": 654,
+"sound": "original sound",
+"relevant": 1,
+"liked": 1,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 73,
+"app": "instagram",
+"keyword": "situationship",
+"seen_at_dt": -445753,
+"creator": "pixelpanda",
+"caption": "How to leave a situationship with dignity #situationship",
+"likes": 44437,
+"comments": 1103,
+"shares": 992,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 74,
+"app": "instagram",
+"keyword": "situationship",
+"seen_at_dt": -323744,
+"creator": "mia.matches",
+"caption": "Storytime: my situationship ended with a screenshot #situationship",
+"likes": 444,
+"comments": 4,
+"shares": 20,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 75,
+"app": "instagram",
+"keyword": "situationship",
+"seen_at_dt": -218093,
+"creator": "nora_notes",
+"caption": "Storytime: my situationship ended with a screenshot #situationship",
+"likes": 8947,
+"comments": 194,
+"shares": 37,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 76,
+"app": "tiktok",
+"keyword": "situationship",
+"seen_at_dt": -612525,
+"creator": "mia.matches",
+"caption": "Situationship or relationship? Red flag or green flag #situationship",
+"likes": 17841,
+"comments": 224,
+"shares": 244,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 77,
+"app": "tiktok",
+"keyword": "situationship",
+"seen_at_dt": -373118,
+"creator": "romcom.rae",
+"caption": "Storytime: my situationship ended with a screenshot #situationship",
+"likes": 10047,
+"comments": 145,
+"shares": 289,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 78,
+"app": "tiktok",
+"keyword": "situationship",
+"seen_at_dt": -68037,
+"creator": "lenaloves",
+"caption": "Storytime: my situationship ended with a screenshot #situationship",
+"likes": 218,
+"comments": 1,
+"shares": 8,
+"sound": "original sound",
+"relevant": 1,
+"liked": 1,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 79,
+"app": "tiktok",
+"keyword": "situationship",
+"seen_at_dt": -625665,
+"creator": "pixelpanda",
+"caption": "Situationship or relationship? Red flag or green flag #situationship",
+"likes": 2309,
+"comments": 64,
+"shares": 102,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": "same, i do this every time",
+"account": "nomoreawkwardness"
+},
+{
+"id": 80,
+"app": "tiktok",
+"keyword": "situationship",
+"seen_at_dt": -539393,
+"creator": "coach.cole",
+"caption": "How to leave a situationship with dignity #situationship",
+"likes": 3118,
+"comments": 72,
+"shares": 49,
+"sound": "original sound",
+"relevant": 1,
+"liked": 1,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 81,
+"app": "tiktok",
+"keyword": "situationship",
+"seen_at_dt": -376485,
+"creator": "itsbenny",
+"caption": "How to leave a situationship with dignity #situationship",
+"likes": 4655,
+"comments": 74,
+"shares": 179,
+"sound": "original sound",
+"relevant": 1,
+"liked": 1,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 82,
+"app": "tiktok",
+"keyword": "situationship",
+"seen_at_dt": -504080,
+"creator": "sofia.talks",
+"caption": "POV: he calls it a situationship #situationship",
+"likes": 1587,
+"comments": 45,
+"shares": 71,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 83,
+"app": "tiktok",
+"keyword": "situationship",
+"seen_at_dt": -419465,
+"creator": "romcom.rae",
+"caption": "How to leave a situationship with dignity #situationship",
+"likes": 909,
+"comments": 22,
+"shares": 36,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 84,
+"app": "instagram",
+"keyword": "situationship",
+"seen_at_dt": -332671,
+"creator": "the.dating.dad",
+"caption": "Situationship or relationship? Red flag or green flag #situationship",
+"likes": 19807,
+"comments": 353,
+"shares": 373,
+"sound": "original sound",
+"relevant": 1,
+"liked": 1,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 85,
+"app": "instagram",
+"keyword": "talking stage",
+"seen_at_dt": -11206,
+"creator": "romcom.rae",
+"caption": "POV: the talking stage lasts 6 weeks #talkingstage",
+"likes": 7655,
+"comments": 156,
+"shares": 95,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 86,
+"app": "instagram",
+"keyword": "talking stage",
+"seen_at_dt": -584296,
+"creator": "mia.matches",
+"caption": "The talking stage rules nobody tells you #talkingstage",
+"likes": 1249,
+"comments": 26,
+"shares": 20,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 87,
+"app": "tiktok",
+"keyword": "talking stage",
+"seen_at_dt": -589206,
+"creator": "okayzoe",
+"caption": "Why talking stages never turn into dates #talkingstage #dating",
+"likes": 1905,
+"comments": 36,
+"shares": 42,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 88,
+"app": "tiktok",
+"keyword": "talking stage",
+"seen_at_dt": -503364,
+"creator": "mia.matches",
+"caption": "The talking stage rules nobody tells you #talkingstage",
+"likes": 3142,
+"comments": 49,
+"shares": 86,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 89,
+"app": "instagram",
+"keyword": "talking stage",
+"seen_at_dt": -108464,
+"creator": "lenaloves",
+"caption": "POV: the talking stage lasts 6 weeks #talkingstage",
+"likes": 25026,
+"comments": 322,
+"shares": 215,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 90,
+"app": "instagram",
+"keyword": "talking stage",
+"seen_at_dt": -293527,
+"creator": "romcom.rae",
+"caption": "Why talking stages never turn into dates #talkingstage #dating",
+"likes": 1906,
+"comments": 16,
+"shares": 35,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 91,
+"app": "instagram",
+"keyword": "talking stage",
+"seen_at_dt": -662667,
+"creator": "coach.cole",
+"caption": "POV: the talking stage lasts 6 weeks #talkingstage",
+"likes": 16781,
+"comments": 164,
+"shares": 564,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 92,
+"app": "tiktok",
+"keyword": "talking stage",
+"seen_at_dt": -581042,
+"creator": "coach.cole",
+"caption": "Ask him out or wait? #talkingstage",
+"likes": 2629,
+"comments": 62,
+"shares": 114,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 93,
+"app": "instagram",
+"keyword": "talking stage",
+"seen_at_dt": -661095,
+"creator": "pixelpanda",
+"caption": "Ask him out or wait? #talkingstage",
+"likes": 1019,
+"comments": 20,
+"shares": 13,
+"sound": "original sound",
+"relevant": 1,
+"liked": 1,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 94,
+"app": "instagram",
+"keyword": "talking stage",
+"seen_at_dt": -408645,
+"creator": "datewithmax",
+"caption": "Why talking stages never turn into dates #talkingstage #dating",
+"likes": 391,
+"comments": 1,
+"shares": 5,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 95,
+"app": "instagram",
+"keyword": "talking stage",
+"seen_at_dt": -423038,
+"creator": "sofia.talks",
+"caption": "POV: the talking stage lasts 6 weeks #talkingstage",
+"likes": 5562,
+"comments": 92,
+"shares": 129,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 96,
+"app": "tiktok",
+"keyword": "talking stage",
+"seen_at_dt": -385802,
+"creator": "the.dating.dad",
+"caption": "The talking stage rules nobody tells you #talkingstage",
+"likes": 5528,
+"comments": 66,
+"shares": 178,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 97,
+"app": "tiktok",
+"keyword": "talking stage",
+"seen_at_dt": -127844,
+"creator": "itsbenny",
+"caption": "Why talking stages never turn into dates #talkingstage #dating",
+"likes": 2329,
+"comments": 45,
+"shares": 90,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 98,
+"app": "tiktok",
+"keyword": "talking stage",
+"seen_at_dt": -157869,
+"creator": "coach.cole",
+"caption": "Ask him out or wait? #talkingstage",
+"likes": 1077,
+"comments": 22,
+"shares": 26,
+"sound": "original sound",
+"relevant": 1,
+"liked": 1,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 99,
+"app": "instagram",
+"keyword": "meet cute",
+"seen_at_dt": -805254,
+"creator": "lenaloves",
+"caption": "How to engineer a meet cute #meetcute #dating",
+"likes": 3888,
+"comments": 47,
+"shares": 99,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 100,
+"app": "instagram",
+"keyword": "meet cute",
+"seen_at_dt": -954194,
+"creator": "mia.matches",
+"caption": "A real meet cute at the farmers market #meetcute #love",
+"likes": 844,
+"comments": 3,
+"shares": 38,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 101,
+"app": "instagram",
+"keyword": "meet cute",
+"seen_at_dt": -154756,
+"creator": "lenaloves",
+"caption": "Meet cute storytime part 1 #meetcute",
+"likes": 2872,
+"comments": 26,
+"shares": 107,
+"sound": "original sound",
+"relevant": 1,
+"liked": 1,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 102,
+"app": "instagram",
+"keyword": "meet cute",
+"seen_at_dt": -304116,
+"creator": "lenaloves",
+"caption": "A real meet cute at the farmers market #meetcute #love",
+"likes": 4210,
+"comments": 123,
+"shares": 84,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 103,
+"app": "instagram",
+"keyword": "meet cute",
+"seen_at_dt": -1009835,
+"creator": "the.dating.dad",
+"caption": "Meet cute storytime part 1 #meetcute",
+"likes": 7392,
+"comments": 144,
+"shares": 188,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 104,
+"app": "tiktok",
+"keyword": "meet cute",
+"seen_at_dt": -216600,
+"creator": "pixelpanda",
+"caption": "Meet cute storytime part 1 #meetcute",
+"likes": 8512,
+"comments": 125,
+"shares": 287,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 105,
+"app": "tiktok",
+"keyword": "meet cute",
+"seen_at_dt": -699797,
+"creator": "romcom.rae",
+"caption": "How to engineer a meet cute #meetcute #dating",
+"likes": 4505,
+"comments": 111,
+"shares": 222,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 106,
+"app": "instagram",
+"keyword": "meet cute",
+"seen_at_dt": -422683,
+"creator": "nora_notes",
+"caption": "How to engineer a meet cute #meetcute #dating",
+"likes": 1238,
+"comments": 24,
+"shares": 19,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 107,
+"app": "tiktok",
+"keyword": "meet cute",
+"seen_at_dt": -273633,
+"creator": "lenaloves",
+"caption": "A real meet cute at the farmers market #meetcute #love",
+"likes": 7307,
+"comments": 202,
+"shares": 282,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 108,
+"app": "tiktok",
+"keyword": "meet cute",
+"seen_at_dt": -349296,
+"creator": "coach.cole",
+"caption": "POV: a meet cute at the laundromat #meetcute",
+"likes": 31537,
+"comments": 878,
+"shares": 1544,
+"sound": "original sound",
+"relevant": 1,
+"liked": 1,
+"commented": "same, i do this every time",
+"account": "nomoreawkwardness"
+},
+{
+"id": 109,
+"app": "tiktok",
+"keyword": "meet cute",
+"seen_at_dt": -908557,
+"creator": "sofia.talks",
+"caption": "How to engineer a meet cute #meetcute #dating",
+"likes": 1476,
+"comments": 42,
+"shares": 30,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 110,
+"app": "instagram",
+"keyword": "meet cute",
+"seen_at_dt": -847668,
+"creator": "pixelpanda",
+"caption": "A real meet cute at the farmers market #meetcute #love",
+"likes": 1416,
+"comments": 36,
+"shares": 33,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 111,
+"app": "tiktok",
+"keyword": "meet cute",
+"seen_at_dt": -215586,
+"creator": "mia.matches",
+"caption": "How to engineer a meet cute #meetcute #dating",
+"likes": 2025,
+"comments": 41,
+"shares": 56,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": "same, i do this every time",
+"account": "nomoreawkwardness"
+},
+{
+"id": 112,
+"app": "instagram",
+"keyword": "rizz",
+"seen_at_dt": -202483,
+"creator": "sofia.talks",
+"caption": "Pick up lines that work, ranked #rizz #pickuplines",
+"likes": 7581,
+"comments": 168,
+"shares": 309,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 113,
+"app": "instagram",
+"keyword": "rizz",
+"seen_at_dt": -257582,
+"creator": "itsbenny",
+"caption": "Rizz tip: be specific, not clever #rizz #dating",
+"likes": 6770,
+"comments": 99,
+"shares": 138,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 114,
+"app": "instagram",
+"keyword": "rizz",
+"seen_at_dt": -33722,
+"creator": "nora_notes",
+"caption": "Pick up lines that work, ranked #rizz #pickuplines",
+"likes": 3839,
+"comments": 55,
+"shares": 25,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": "same, i do this every time",
+"account": "nomoreawkwardness"
+},
+{
+"id": 115,
+"app": "tiktok",
+"keyword": "rizz",
+"seen_at_dt": -331882,
+"creator": "nora_notes",
+"caption": "Rizz tip: be specific, not clever #rizz #dating",
+"likes": 11696,
+"comments": 325,
+"shares": 254,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 116,
+"app": "tiktok",
+"keyword": "rizz",
+"seen_at_dt": -590335,
+"creator": "okayzoe",
+"caption": "POV: you tried rizz and she said wow #rizz",
+"likes": 9791,
+"comments": 277,
+"shares": 417,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 117,
+"app": "tiktok",
+"keyword": "rizz",
+"seen_at_dt": -484299,
+"creator": "lenaloves",
+"caption": "POV: you tried rizz and she said wow #rizz",
+"likes": 2522,
+"comments": 71,
+"shares": 36,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 118,
+"app": "tiktok",
+"keyword": "rizz",
+"seen_at_dt": -372594,
+"creator": "the.dating.dad",
+"caption": "POV: you tried rizz and she said wow #rizz",
+"likes": 4615,
+"comments": 19,
+"shares": 46,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 119,
+"app": "instagram",
+"keyword": "rizz",
+"seen_at_dt": -70078,
+"creator": "coach.cole",
+"caption": "What to say after matching: rizz edition #rizz",
+"likes": 4442,
+"comments": 17,
+"shares": 170,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 120,
+"app": "tiktok",
+"keyword": "rizz",
+"seen_at_dt": -498029,
+"creator": "itsbenny",
+"caption": "Rizz tip: be specific, not clever #rizz #dating",
+"likes": 9377,
+"comments": 165,
+"shares": 129,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": "same, i do this every time",
+"account": "nomoreawkwardness"
+},
+{
+"id": 121,
+"app": "instagram",
+"keyword": "rizz",
+"seen_at_dt": -335860,
+"creator": "okayzoe",
+"caption": "Pick up lines that work, ranked #rizz #pickuplines",
+"likes": 7691,
+"comments": 73,
+"shares": 332,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 122,
+"app": "instagram",
+"keyword": "dating in your 20s",
+"seen_at_dt": -314885,
+"creator": "pixelpanda",
+"caption": "POV: dating in your 20s, one app open, two tabs of work #datingin20s",
+"likes": 5077,
+"comments": 93,
+"shares": 222,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 123,
+"app": "tiktok",
+"keyword": "dating in your 20s",
+"seen_at_dt": -611571,
+"creator": "mia.matches",
+"caption": "POV: dating in your 20s, one app open, two tabs of work #datingin20s",
+"likes": 14194,
+"comments": 167,
+"shares": 572,
+"sound": "original sound",
+"relevant": 1,
+"liked": 1,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 124,
+"app": "instagram",
+"keyword": "dating in your 20s",
+"seen_at_dt": -720419,
+"creator": "pixelpanda",
+"caption": "Dating in your 20s: no time to chat all day #datingin20s #busylife",
+"likes": 3581,
+"comments": 16,
+"shares": 25,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": "same, i do this every time",
+"account": "nomoreawkwardness"
+},
+{
+"id": 125,
+"app": "instagram",
+"keyword": "dating in your 20s",
+"seen_at_dt": -109611,
+"creator": "mia.matches",
+"caption": "Dating in your 20s: no time to chat all day #datingin20s #busylife",
+"likes": 5219,
+"comments": 132,
+"shares": 217,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 126,
+"app": "tiktok",
+"keyword": "dating in your 20s",
+"seen_at_dt": -603803,
+"creator": "jay.on.dates",
+"caption": "POV: dating in your 20s, one app open, two tabs of work #datingin20s",
+"likes": 4544,
+"comments": 110,
+"shares": 65,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 127,
+"app": "tiktok",
+"keyword": "dating in your 20s",
+"seen_at_dt": -229030,
+"creator": "datewithmax",
+"caption": "Dating in your 20s is chaos. A or B? #datingin20s",
+"likes": 7168,
+"comments": 75,
+"shares": 111,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 128,
+"app": "tiktok",
+"keyword": "dating in your 20s",
+"seen_at_dt": -782269,
+"creator": "datewithmax",
+"caption": "How to date with a full time job #datingin20s",
+"likes": 8998,
+"comments": 102,
+"shares": 103,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 129,
+"app": "instagram",
+"keyword": "dating in your 20s",
+"seen_at_dt": -859320,
+"creator": "okayzoe",
+"caption": "Dating in your 20s is chaos. A or B? #datingin20s",
+"likes": 4635,
+"comments": 137,
+"shares": 76,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 130,
+"app": "tiktok",
+"keyword": "dating in your 20s",
+"seen_at_dt": -791146,
+"creator": "romcom.rae",
+"caption": "Dating in your 20s is chaos. A or B? #datingin20s",
+"likes": 27065,
+"comments": 505,
+"shares": 328,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 131,
+"app": "instagram",
+"keyword": "dating in your 20s",
+"seen_at_dt": -972925,
+"creator": "coach.cole",
+"caption": "Dating in your 20s is chaos. A or B? #datingin20s",
+"likes": 1135,
+"comments": 20,
+"shares": 50,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 132,
+"app": "tiktok",
+"keyword": "dating in your 20s",
+"seen_at_dt": -509411,
+"creator": "sofia.talks",
+"caption": "Dating in your 20s is chaos. A or B? #datingin20s",
+"likes": 11382,
+"comments": 268,
+"shares": 518,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 133,
+"app": "tiktok",
+"keyword": "dating in your 20s",
+"seen_at_dt": -763674,
+"creator": "pixelpanda",
+"caption": "Dating in your 20s: no time to chat all day #datingin20s #busylife",
+"likes": 2048,
+"comments": 26,
+"shares": 77,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 134,
+"app": "instagram",
+"keyword": "dating in your 20s",
+"seen_at_dt": -1079791,
+"creator": "datewithmax",
+"caption": "How to date with a full time job #datingin20s",
+"likes": 449,
+"comments": 8,
+"shares": 20,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 135,
+"app": "tiktok",
+"keyword": "texting anxiety",
+"seen_at_dt": -1009306,
+"creator": "pixelpanda",
+"caption": "Texting anxiety: why I reread every message 5 times #textinganxiety",
+"likes": 8664,
+"comments": 111,
+"shares": 281,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 136,
+"app": "instagram",
+"keyword": "texting anxiety",
+"seen_at_dt": -234294,
+"creator": "the.dating.dad",
+"caption": "Texting anxiety: why I reread every message 5 times #textinganxiety",
+"likes": 6114,
+"comments": 170,
+"shares": 256,
+"sound": "original sound",
+"relevant": 1,
+"liked": 1,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 137,
+"app": "instagram",
+"keyword": "texting anxiety",
+"seen_at_dt": -1112558,
+"creator": "mia.matches",
+"caption": "Texting anxiety storytime: the double text #textinganxiety",
+"likes": 2571,
+"comments": 40,
+"shares": 53,
+"sound": "original sound",
+"relevant": 1,
+"liked": 1,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 138,
+"app": "tiktok",
+"keyword": "texting anxiety",
+"seen_at_dt": -678350,
+"creator": "pixelpanda",
+"caption": "How to stop overthinking texts #textinganxiety #dating",
+"likes": 1106,
+"comments": 16,
+"shares": 26,
+"sound": "original sound",
+"relevant": 1,
+"liked": 1,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 139,
+"app": "tiktok",
+"keyword": "texting anxiety",
+"seen_at_dt": -366136,
+"creator": "coach.cole",
+"caption": "Texting anxiety: why I reread every message 5 times #textinganxiety",
+"likes": 811,
+"comments": 16,
+"shares": 10,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 140,
+"app": "tiktok",
+"keyword": "texting anxiety",
+"seen_at_dt": -839520,
+"creator": "romcom.rae",
+"caption": "Texting anxiety storytime: the double text #textinganxiety",
+"likes": 11162,
+"comments": 226,
+"shares": 47,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 141,
+"app": "tiktok",
+"keyword": "texting anxiety",
+"seen_at_dt": -722561,
+"creator": "jay.on.dates",
+"caption": "POV: she left you on read #textinganxiety",
+"likes": 4569,
+"comments": 65,
+"shares": 202,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 142,
+"app": "tiktok",
+"keyword": "texting anxiety",
+"seen_at_dt": -747703,
+"creator": "pixelpanda",
+"caption": "How to stop overthinking texts #textinganxiety #dating",
+"likes": 2884,
+"comments": 26,
+"shares": 107,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+},
+{
+"id": 143,
+"app": "instagram",
+"keyword": "texting anxiety",
+"seen_at_dt": -1023036,
+"creator": "mia.matches",
+"caption": "Texting anxiety: why I reread every message 5 times #textinganxiety",
+"likes": 280,
+"comments": 6,
+"shares": 9,
+"sound": "original sound",
+"relevant": 1,
+"liked": 0,
+"commented": null,
+"account": "nomoreawkwardness"
+}
+]
+}
