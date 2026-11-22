@@ -1,6 +1,9 @@
 """Read one of our posts' stats on the phone and save a snapshot to stats.db.
 
-A post is found by its caption: the newest posts on the profile are opened one by one until the caption matches.
+A post is found by its caption: the profile's reels are opened one by one, newest first, scrolling the grid (up to
+MAX_TILES, pinned tiles skipped) until the caption matches (stats_lookup.py: emoji / whitespace / "... more" proof).
+If the whole grid is scanned and the post is not there, the run prints "NOT_FOUND: ..." and exits 3: the engine
+records the stats job as not_found once instead of retrying and alerting for every snapshot.
 
 TikTok   live:     views / likes / comments / saves / shares from the post screen (text, real time)
          detailed: ••• -> Analytics -> "Post analysis" (a web view: read with OCR). TikTok refreshes it about
@@ -17,7 +20,9 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
+import os
 import re
 import sqlite3
 import sys
@@ -26,9 +31,12 @@ from pathlib import Path
 
 from phone import SERIAL, Abort, Phone
 from research import count
+from stats_lookup import (MAX_TILES, NoTiles, NotFound, caption_key, caption_matches, is_pinned, node_texts,
+                          scan_reels)
 
 DB = Path(__file__).parent / "stats.db"
 PKGS = {"tiktok": "com.zhiliaoapp.musically", "instagram": "com.instagram.android"}
+NOT_FOUND_EXIT = 3
 TILE_SPOTS = [(119, 795), (359, 795), (599, 795), (119, 1115), (359, 1115), (599, 1115)]  # TikTok grid, newest first
 
 
@@ -98,28 +106,65 @@ def value_right(items, label: str) -> str:
 
 
 # ---------------------------------------------------------------- TikTok
-def tt_open_post(p: Phone, caption: str) -> None:
+TT_ROW_PX = 320         # distance between two rows of the TikTok profile grid
+TT_PAGE_ROWS = 2        # rows visible below the profile header; one scroll moves a whole page
+TT_PINNED_BOX = (120, 160)  # half width / half height around a tile centre where a "Pinned" badge counts as its own
+
+
+def tt_pinned(ns: list[dict], x: int, y: int) -> bool:
+    return any(is_pinned(n["label"]) and abs(n["center"][0] - x) < TT_PINNED_BOX[0]
+               and abs(n["center"][1] - y) < TT_PINNED_BOX[1] for n in ns)
+
+
+def tt_open_post(p: Phone, caption: str, budget_s: float = 420) -> None:
+    key = caption_key(caption)
+    deadline = time.time() + budget_s
     p.d.app_start(PKGS["tiktok"], stop=True)
     ns = p.wait("TikTok home", "Home", "Profile", timeout=30)
     p.tap_node(next(n for n in ns if n["label"] == "Profile" and n["box"][1] > p.h * 0.88), "Profile")
     time.sleep(4)
+    scanned = 0
+    tabs_seen = 0
     for tab in ("Videos", "Private videos"):  # "Only me" posts live under Private videos
         t = p.find(tab)
         if t is None:
             continue
+        tabs_seen += 1
         p.tap_node(t, f"{tab} tab")
         time.sleep(3)
-        for i, (x, y) in enumerate(TILE_SPOTS):
-            p.tap(x, y, f"{tab} tile {i + 1}")
-            time.sleep(4)
-            p.wake()
-            if p.find(re.compile(re.escape(caption[:30]))):
-                return
-            if p.find("Profile menu"):  # no tile there (fewer posts than spots): still on the profile
+        page, last_shot = 0, None
+        while scanned < MAX_TILES:
+            ended = False
+            for i, (x, y) in enumerate(TILE_SPOTS):
+                if scanned >= MAX_TILES:
+                    break
+                if time.time() > deadline:
+                    p.fail(f"stopped after {scanned} tiles (time budget used up); post not located yet")
+                if tt_pinned(p.nodes(), x, y):
+                    continue  # pinned tiles sit on top whatever their age
+                p.tap(x, y, f"{tab} page {page} tile {i + 1}")
+                scanned += 1
+                time.sleep(4)
+                p.wake()
+                if caption_matches(key, node_texts(p.nodes())):
+                    return
+                if p.find("Profile menu"):  # no tile there (fewer posts than spots): still on the profile
+                    ended = True
+                    break
+                p.d.press("back")
+                time.sleep(2)
+            if ended or scanned >= MAX_TILES:
                 break
-            p.d.press("back")
+            shot = hashlib.md5(p.d.screenshot(format="raw")).hexdigest()
+            if shot == last_shot:
+                break  # the last scroll changed nothing: end of the grid
+            last_shot = shot
+            p.d.swipe(360, 1300, 360, 1300 - TT_ROW_PX * TT_PAGE_ROWS, 1.2)  # slow swipe: no fling
             time.sleep(2)
-    p.fail(f"no post with caption {caption[:30]!r} among the newest {len(TILE_SPOTS)}")
+            page += 1
+    if scanned == 0:
+        p.fail("TikTok profile showed no video tiles (profile did not load?)" if tabs_seen else "TikTok profile has no Videos tab")
+    raise NotFound(f"no TikTok post with caption {caption[:30]!r} among {scanned} tiles scanned")
 
 
 def tt_live(p: Phone) -> dict:
@@ -189,21 +234,46 @@ def tt_detailed(p: Phone) -> dict:
 
 
 # ---------------------------------------------------------------- Instagram
-def ig_open_post(p: Phone, caption: str) -> None:
+def ig_grid_tiles(p: Phone) -> list[dict]:
+    """Visible reel tiles of the profile grid, top-left first (tiles cut off by the screen edges are left out)."""
+    return sorted((n for n in p.nodes() if n["label"].startswith("Reel by ")
+                   and n["box"][3] - n["box"][1] > 150 and n["box"][3] < p.h - 60 and n["box"][1] > 150),
+                  key=lambda n: (n["box"][1], n["box"][0]))
+
+
+def ig_open_post(p: Phone, caption: str, budget_s: float = 420) -> None:
     import instagram_upload as ig
+    key = caption_key(caption)
     p.d.app_start(PKGS["instagram"], stop=True)
     p.wait("Instagram home", "Home", "Profile", timeout=30)
     ig.open_profile_reels(p)
-    tiles = sorted((n for n in p.nodes() if n["label"].startswith("Reel by ")), key=lambda n: (n["box"][1], n["box"][0]))
-    for i, t in enumerate(tiles[:6]):
-        p.tap_node(t, f"reel tile {i + 1}")
-        time.sleep(4)
-        p.wake()
-        if p.find(re.compile(re.escape(caption[:30]))):
-            return
+    for _ in range(5):  # tiles render a moment after the tab opens
+        if ig_grid_tiles(p):
+            break
+        time.sleep(2)
+
+    def close() -> None:
         p.d.press("back")
         time.sleep(2)
-    p.fail(f"no reel with caption {caption[:30]!r} among the newest 6")
+        if not ig_grid_tiles(p):  # backed out of the grid (a tap that opened nothing, a pop-up): start again
+            ig.open_profile_reels(p)
+
+    def open_tile(t: dict, n: int) -> None:
+        p.tap_node(t, f"reel tile {n}")
+        time.sleep(4)
+        p.wake()
+
+    def scroll() -> None:
+        p.d.swipe(360, 1250, 360, 450, 0.9)  # slow swipe: no fling past tiles
+        time.sleep(1.5)
+
+    try:
+        scan_reels(lambda: ig_grid_tiles(p), open_tile, lambda: caption_matches(key, node_texts(p.nodes())), close,
+                   scroll, deadline=time.time() + budget_s)
+    except NoTiles as e:
+        p.fail(f"{e} (profile did not load, or a login / challenge screen is in the way)")
+    except TimeoutError as e:
+        p.fail(f"{e}; post not located yet")
 
 
 def ig_insights(p: Phone) -> dict:
@@ -268,6 +338,18 @@ def main() -> None:
         else:
             ig_open_post(p, a.caption)
             data = ig_insights(p)
+    except NotFound as e:
+        shot = None
+        try:
+            from phone import SHOTS
+            SHOTS.mkdir(exist_ok=True)
+            tag = os.environ.get("PHONE_ID", "")
+            shot = SHOTS / f"fail-{time.strftime('%m%d-%H%M%S')}{'-' + tag if tag else ''}.png"
+            p.d.screenshot(str(shot))
+        except Exception:
+            pass
+        print(f"NOT_FOUND: {e} (screenshot: {shot})", flush=True)
+        sys.exit(NOT_FOUND_EXIT)
     except Abort as e:
         print(f"ABORTED: {e}", flush=True)
         sys.exit(1)
