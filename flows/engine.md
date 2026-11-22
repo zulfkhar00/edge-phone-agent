@@ -62,3 +62,12 @@ phone runs a job (NULL = jobs from before multi-phone: the first phone's). Per-p
 as `paused:<id>`, `touched:<id>`, `job_pgid:<id>`. Flow scripts get `PHONE_SERIAL` (the live transport) and `PHONE_ID`
 from the engine; failure screenshots are named `fail-<time>-<id>.png` so each runner links only its own. Daily limits
 stay per account, so two phones never share a limit; one account is never on two phones.
+
+## Alerts and pace (2026-11-21)
+- Stats job status `not_found` = the whole profile was scanned and the post is not there. Terminal; one digest alert a day.
+- A missing plan is ONE alert per day (`daily_alert`): the preflight problem and the 11:00 "no plan arrived" check share
+  it; it is not retried (a retry cannot make a plan). The preflight text includes how last night's render-server run ended.
+  Other preflight problems (phone, accounts, disk) alert and retry as before.
+- Posting pace per account (`[schedule]`): `post_min_gap_min` = 45 (a post waits until 45 min after the account's
+  last published one; a backlog after downtime drains one post per gap) and `post_max_late_min` = 240 (a slot missed by
+  more than that is skipped, one alert a day). 0 turns either off.

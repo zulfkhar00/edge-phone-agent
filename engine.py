@@ -631,7 +631,7 @@ class Runner:
             return False
         gap = SCHED.get("post_min_gap_min", 45)
         last = db().execute("select max(coalesce(ended_at, started_at)) from jobs where kind='post' and app=? and account=? "
-                            "and status in ('done','unverified') and id<>?", (job["app"], job["account"], job["id"])).fetchone()[0]
+                            "and status in ('done','unverified') and id<>?", (job["app"], job["account"], job["id"])).fetchall()[0][0]
         if gap and last and now < last + gap * 60:
             self.finish(job["id"], "waiting", run_at=last + gap * 60)
             return False

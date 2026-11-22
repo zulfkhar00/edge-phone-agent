@@ -57,7 +57,7 @@ Local only (gitignored): `config.toml` (secrets), `engine.db` (jobs, alerts, sta
 
 ## Data
 
-- `engine.db` `jobs`: `kind` = post | stats | research | delete | preflight | outliers, `status` = waiting | running |
+- `engine.db` `jobs`: `kind` = post | stats | research | delete | preflight | outliers, `status` = waiting | not_found | running |
   done | failed | unverified | skipped, `run_at` / `not_after` (unix time), `args` JSON, `result` JSON,
   `post_key` (`<plan>/<post id>/<app>`). Also `alerts`, `plans` (imported names) and `state` (k/v JSON: `paused`,
   `touched`, ...).
