@@ -70,6 +70,8 @@ INBOX = ROOT / CFG["mailbox"]["inbox"]
 SCHED = CFG["schedule"]
 FIXED = ("preflight", "post", "delete", "stats")  # jobs with a set time; research fills the gaps
 TIMEOUT_MIN = {"post": 15, "delete": 8, "stats": 10, "preflight": 15}
+NOT_FOUND_EXIT = 3  # stats.py: scanned the whole profile, the post is not there (terminal, not a failure)
+NO_PLAN = "no posts planned for"  # preflight.check_plan problem text (kept in sync with preflight.py)
 PUBLISH_TAP = re.compile(r"tap (Post|Share) at")  # once seen, a failed post must not be retried blindly
 
 
@@ -134,12 +136,13 @@ def add_job(con, **f) -> int:
 _last_alert: dict[str, float] = {}
 
 
-def alert(kind: str, text: str, every_min: float = 30, phone_id: str | None = None) -> None:
-    """Record an alert; email it to yourself if an app password is configured. Same kind (per phone) at most every N min."""
+def alert(kind: str, text: str, every_min: float = 30, phone_id: str | None = None) -> int | None:
+    """Record an alert; email it to yourself if an app password is configured. Same kind (per phone) at most every N min.
+    Returns the alert's row id (None when throttled)."""
     now = time.time()
     key = f"{kind}:{phone_id or ''}"
     if now - _last_alert.get(key, 0) < every_min * 60:
-        return
+        return None
     _last_alert[key] = now
     if phone_id and len(PHONES) > 1:
         text = f"[{PHONE_BY_ID[phone_id].label if phone_id in PHONE_BY_ID else phone_id}] {text}"
@@ -159,8 +162,35 @@ def alert(kind: str, text: str, every_min: float = 30, phone_id: str | None = No
         except Exception as ex:  # never let alerting break the runner
             print(f"  email failed: {ex}", flush=True)
     con = db()
-    con.execute("insert into alerts (at, kind, text, emailed, phone_id) values (?,?,?,?,?)", (now, kind, text, emailed, phone_id))
+    cur = con.execute("insert into alerts (at, kind, text, emailed, phone_id) values (?,?,?,?,?)", (now, kind, text, emailed, phone_id))
     con.commit()
+    return cur.lastrowid
+
+
+def daily_alert(key: str, kind: str, text: str, phone_id: str | None = None) -> None:
+    """One alert row per `key` per day. The first call creates (and emails) it; later calls with new text append a line
+    to the same row (and mark it unseen) instead of adding another alert, so a recurring cause is one entry, not N."""
+    day = datetime.now().strftime("%Y-%m-%d")
+    st = get_state(f"daily_alert:{key}")
+    con = db()
+    if st and st.get("day") == day:
+        row = con.execute("select text from alerts where id=?", (st["id"],)).fetchone()
+        if row is not None:
+            if text not in row["text"]:
+                con.execute("update alerts set text=?, seen=0 where id=?", (row["text"] + "\n" + text, st["id"]))
+                con.commit()
+            return
+    aid = alert(kind, text, every_min=0, phone_id=phone_id)
+    set_state(f"daily_alert:{key}", {"day": day, "id": aid})
+
+
+def note_not_found(job, err: str) -> None:
+    """A stats read scanned the whole profile and the post is not there. Not retried, not one alert per snapshot:
+    one digest alert per phone and day lists every post that could not be found."""
+    caption = json.loads(job["args"] or "{}").get("caption") or job["label"]
+    label = f"{job['app']} @{job['account']} '{caption[:40]}' ({job['label']})"
+    daily_alert(f"stats-not-found:{job['phone_id'] or ''}", "stats",
+                f"stats: post not found on the profile (deleted, hidden, or not published?): {label}", phone_id=job["phone_id"])
 
 
 # ================================================================ plans -> jobs
@@ -317,8 +347,9 @@ def check_plan_arrived() -> None:
     if db().execute("select 1 from plans where day=?", (today,)).fetchone():
         return
     set_state("plan_warned", today)
-    alert("plan", f"no plan for {today} arrived by {deadline}: the nightly run on the render server probably failed "
-                  f"(check ~/nightly/runs/{today}/run.log on {s['host']}). Nothing will be posted today.", every_min=0)
+    daily_alert(f"noplan:{today}", "plan",
+                f"no plan for {today} arrived by {deadline}: the nightly run on the render server probably failed "
+                f"(check ~/nightly/runs/{today}/run.log on {s['host']}). Nothing will be posted today.")
 
 
 # ================================================================ morning preflight
@@ -561,10 +592,12 @@ class Runner:
         """Next job of this phone to run now, or None. Fixed jobs first (posts > deletes > stats), then research in a gap."""
         con = db()
         mine, mp = self.mine()
-        job = con.execute(f"select * from jobs where status='waiting' and kind in {FIXED_KINDS} and run_at<=? and {mine} "
-                          "order by case kind when 'preflight' then 0 when 'post' then 1 when 'delete' then 2 else 3 end, run_at limit 1",
-                          (now, *mp)).fetchone()
-        if job:
+        due = con.execute(f"select * from jobs where status='waiting' and kind in {FIXED_KINDS} and run_at<=? and {mine} "
+                          "order by case kind when 'preflight' then 0 when 'post' then 1 when 'delete' then 2 else 3 end, run_at",
+                          (now, *mp)).fetchall()
+        for job in due:
+            if job["kind"] == "post" and not self.post_allowed(job, now):
+                continue
             return job, None
         nxt = con.execute(f"select min(run_at) from jobs where status='waiting' and kind in {FIXED_KINDS} and {mine}", mp).fetchone()[0]
         # fetchall: an open read cursor keeps a shared lock, and finish() below writes on another connection
@@ -582,6 +615,27 @@ class Runner:
             if minutes >= (20 if a.get("mode") == "outliers" else 2):
                 return r, round(minutes, 1)
         return None, None
+
+    def post_allowed(self, job, now: float) -> bool:
+        """Posting pace per account, so downtime never turns into a burst of posts (an IG ban risk):
+        - a slot more than [schedule].post_max_late_min (default 240) past its time is stale: skipped, one digest alert a day,
+        - otherwise at least [schedule].post_min_gap_min (default 45) after the account's last published post: the job is
+          moved to that moment (and so is each following one: a backlog drains one post per gap)."""
+        max_late = SCHED.get("post_max_late_min", 240)
+        if max_late and now - job["run_at"] > max_late * 60:
+            late = round((now - job["run_at"]) / 60)
+            self.finish(job["id"], "skipped", error=f"slot missed by {late} min (engine or phone was down): not posting stale content")
+            daily_alert(f"stale-posts:{self.id}", "post",
+                        f"skipped {job['app']} @{job['account']} '{job['label']}': its slot was missed by {late} min "
+                        "(engine or phone was down). Stale slots are skipped, never posted in a burst.", phone_id=self.id)
+            return False
+        gap = SCHED.get("post_min_gap_min", 45)
+        last = db().execute("select max(coalesce(ended_at, started_at)) from jobs where kind='post' and app=? and account=? "
+                            "and status in ('done','unverified') and id<>?", (job["app"], job["account"], job["id"])).fetchone()[0]
+        if gap and last and now < last + gap * 60:
+            self.finish(job["id"], "waiting", run_at=last + gap * 60)
+            return False
+        return True
 
     def finish(self, job_id: int, status: str, **f) -> None:
         con = db()
@@ -631,7 +685,7 @@ class Runner:
         timeout = (minutes + 8 if job["kind"] == "research" else TIMEOUT_MIN[job["kind"]]) * 60
         # the flow script drives exactly this phone: its live transport and id come from the environment
         env = {**os.environ, "PHONE_SERIAL": self.serial, "PHONE_ID": self.id, "PYTHONUNBUFFERED": "1"}
-        result, aborted = None, None
+        result, aborted, not_found = None, None, None
         ticker = asyncio.create_task(self._tick())
         try:
             with log.open("a") as fh:
@@ -641,7 +695,7 @@ class Runner:
                 set_state(self.key("job_pgid"), self.proc.pid)  # so a restarted engine can stop an orphaned job
 
                 async def pump():
-                    nonlocal result, aborted
+                    nonlocal result, aborted, not_found
                     async for raw in self.proc.stdout:
                         line = raw.decode(errors="replace").rstrip()
                         fh.write(line + "\n")
@@ -651,6 +705,8 @@ class Runner:
                             result = line[7:]
                         elif line.startswith("ABORTED:"):
                             aborted = line[8:].strip()
+                        elif line.startswith("NOT_FOUND:"):
+                            not_found = line[10:].strip()
 
                 try:
                     await asyncio.wait_for(pump(), timeout)
@@ -682,6 +738,11 @@ class Runner:
             if job["kind"] == "post":
                 self.schedule_stats(job, ended)
             return
+        if job["kind"] == "stats" and rc == NOT_FOUND_EXIT and not_found:
+            # a full scan of the profile did not find the post: terminal, recorded once, never retried
+            self.finish(job["id"], "not_found", ended_at=ended, error=not_found, shot=shot)
+            note_not_found(job, not_found)
+            return
         err = aborted or f"exit code {rc}"
         gone = await self.find_phone() is None  # did the phone drop off adb (cable pulled, battery dead)?
         if gone:
@@ -698,6 +759,16 @@ class Runner:
             self.finish(job["id"], "failed", ended_at=ended, error=err, shot=shot)
             alert("job", f"{job['kind']} {job['app']} @{job['account']} '{job['label']}' failed: {err}", every_min=0, phone_id=self.id)
             return
+        if job["kind"] == "preflight":
+            problems = [x.strip() for x in err.split(" | ") if x.strip()]
+            plan = [x for x in problems if x.startswith(NO_PLAN)]
+            others = [x for x in problems if not x.startswith(NO_PLAN)]
+            if plan:  # a missing plan does not fix itself in 5 min and is one alert a day, not one per attempt / check
+                daily_alert(f"noplan:{datetime.now():%Y-%m-%d}", "plan", "\n".join(plan), phone_id=self.id)
+                if not others:
+                    self.finish(job["id"], "failed", ended_at=ended, error=err, shot=shot)
+                    return
+                err = " | ".join(others)
         if attempts < SCHED["max_attempts"] and job["kind"] != "research":
             self.finish(job["id"], "waiting", ended_at=ended, error=err, shot=shot,
                         run_at=time.time() + SCHED["retry_after_min"] * 60)

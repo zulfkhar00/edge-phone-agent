@@ -48,6 +48,9 @@ tiktok_detailed_from_min = 1440    # TikTok Post analysis refreshes daily: only 
 research_margin_min = 4            # keep this much free before the next fixed job (posts, stats)
 retry_after_min = 5
 max_attempts = 2
+# Posting pace per account (downtime must never become a burst of posts):
+post_min_gap_min = 45              # at least this long after the account's last published post; later jobs are moved
+post_max_late_min = 240            # a slot missed by more than this is skipped (stale), with one alert a day
 
 # Accounts already logged in on the phone. Daily limits are per account.
 [accounts.tiktok.nomoreawkwardness]
