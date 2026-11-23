@@ -211,6 +211,55 @@ Plug in a second phone and check it:
    `transport` (usb / wifi) and `alive`; `tail logs/adb_keeper.log` lines are tagged `[phone-1]`, `[phone-2]`.
 5. Run each phone's morning check: the 09:30 preflight queues one per phone (see `jobs` where `kind='preflight'`).
 
+## NoSwipe (dating accounts)
+
+The rig can run the dating profiles [noswipe.app](https://www.noswipe.app) creates for its clients. Contract:
+`docs/automation.md` in `zulfkhar00/date-finder`. **Off by default**: nothing below happens unless `[noswipe] enabled = true`.
+
+```toml
+[[phones]]
+id = "phone-3"
+hw_serial = "..."
+noswipe_phone_id = "pi-rack-1-phone-3"   # optional: the id NoSwipe's admin Run panel assigned (default: id)
+
+[noswipe]
+enabled = true
+base_url = "https://www.noswipe.app/api/automation/v1"
+api_key_env = "NOSWIPE_AUTOMATION_KEY"   # the key itself lives only in the engine's environment, never in config.toml
+```
+All options (poll interval, session length, caps, quiet hours, pacing) are in `config.example.toml`.
+
+What is **real** (and tested against a fake NoSwipe server, `tests/test_noswipe.py`):
+- `noswipe.py` polls `GET /runs?phoneId=<noswipe_phone_id>` for every phone each `poll_every_min` and acts only on
+  `shouldRun = true`. Each wanted run becomes a `dating_session` job (`jobs.kind`) on that phone, one open at a time per
+  account, spaced by `session_every_min`. The runner fits it in the gap before the next fixed job, like research.
+- A run turning `shouldRun = false` (client paused, unassigned, held): its waiting session is skipped at once and a running one
+  gets SIGTERM and ends at its next step. If NoSwipe cannot be reached for `stale_after_min`, no new session starts and running
+  ones stop (a stale list must never keep an account swiping). Take over stops sessions too.
+- Reporting goes through an on-disk outbox (`noswipe_outbox.db`, shared by the engine and session processes). `POST /activity`
+  is retried with exponential backoff (30 s up to 1 h); every event has a deterministic idempotency key (hash of client, app, kind
+  and the real event's id), so a replay (lost answer, restart) is a `duplicate` and never a second count. `invalid` / `no_account`
+  are dropped; `bad_time` is retried a few times with the server clock correction (read from the `Date` header), `occurredAt` is
+  kept inside the accepted window (never ahead of the server clock, events older than 7 days are dropped).
+- Session lifecycle in `dating.py`: quiet hours in the client's timezone (`timezone` on the run if NoSwipe sends one, else
+  `default_timezone`), a time budget, a daily swipe cap per account (client-local day, counted in the outbox so it spans
+  sessions), jittered pacing, graceful stop. Not logged in: one `needs_you` ("Sign-in needed for your Hinge account") per
+  account per day, nothing else.
+- Dashboard: each phone's page has a NoSwipe panel (enabled, API key present, last poll, runs assigned to this phone, outbox
+  size, last errors); the phones overview shows a tag. `/api/state` -> `phones[].noswipe`.
+
+What is **skeleton**: the phone steps. Opening Tinder / Hinge / Bumble, checking the login, swiping, reading new matches
+sit behind the `DatingUI` interface (`dating.py`); the only implementation, `UnmappedUI`, raises `NotMapped` because the
+screens have not been mapped on a real phone yet. A session therefore ends with outcome `not_mapped` and reports **nothing**:
+no swipes, matches or chats are ever invented, and the UI's counts are never trusted beyond what was asked. Chat replies, date
+booking and `PUT /clients/{id}/apps/{app}` status moves are not built (they need the mapped UI). To finish an app: implement
+`DatingUI` for it (screen mapping like the other flows) and return it from `make_ui`.
+
+Turn it on at the Pi: add the `[noswipe]` section (and `noswipe_phone_id` per phone), put
+`NOSWIPE_AUTOMATION_KEY=<key>` in the systemd unit's environment (`sudo systemctl edit content-engine`, then
+`[Service]` / `Environment=...` or an `EnvironmentFile=`), `sudo systemctl restart content-engine`, and watch the phone's NoSwipe
+panel. Until the UI is mapped the sessions will show up as done with `not_mapped` and the outbox stays empty.
+
 ## Setup (Raspberry Pi OS Lite 64-bit, Debian 13)
 
 ```bash

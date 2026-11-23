@@ -14,6 +14,7 @@ hw_serial = "ZD222RWWGT"        # the phone's own serial (adb shell getprop ro.s
 # hw_serial = "ZD222RWWGT"                # required: adb shell getprop ro.serialno. Wi-Fi devices must report it, or they are refused.
 # usb_serial = "ZD222RWWGT"               # optional: its serial on the cable, when `adb devices` shows another one than hw_serial
 # wifi_serial = "192.168.1.150:5555"      # optional Wi-Fi fallback; adb_keeper.sh keeps it current
+# noswipe_phone_id = "pi-rack-1-phone-3" # optional: the phone's id in NoSwipe's admin Run panel (default: id above)
 # accounts = ["ig:@tinyloveshows", "tt:@nomoreawkwardness"]   # ig = Instagram, tt = TikTok
 #             also "x:@handle" and "reddit:u/name": listed in the dashboard only (login by hand via Take over, nothing automated)
 # quotas = { posts_per_day = 2 }          # optional: overrides the [accounts.*] limits of this phone's accounts
@@ -23,6 +24,22 @@ hw_serial = "ZD222RWWGT"        # the phone's own serial (adb shell getprop ro.s
 # label = "Pixel, right"
 # hw_serial = "REPLACE-WITH-ITS-SERIAL"
 # accounts = ["ig:@secondaccount"]
+
+# NoSwipe: run the dating accounts NoSwipe creates for its clients (README "NoSwipe"). OFF unless enabled = true.
+# The API key is NEVER written here: export it in the engine's environment (systemd EnvironmentFile), see api_key_env.
+# [noswipe]
+# enabled = true
+# base_url = "https://www.noswipe.app/api/automation/v1"
+# api_key_env = "NOSWIPE_AUTOMATION_KEY"   # name of the environment variable that holds the key
+# poll_every_min = 2                       # GET /runs per phone; at least 1
+# stale_after_min = 10                     # no good answer this long: no new sessions, running ones stop
+# session_every_min = 180                  # per account: pause between sessions
+# session_minutes = 20                     # time budget of one session
+# default_timezone = "America/Los_Angeles" # for runs that carry no timezone
+# quiet_hours = "23:00-08:00"              # client-local; "off" disables
+# swipe_caps = { tinder = 100, hinge = 25, bumble = 60 }   # per account per client-local day (these are the defaults)
+# pace_s = [4, 14]                         # random pause between swipe batches
+# batch_size = [4, 12]                     # swipes per batch
 
 [dashboard]
 host = "127.0.0.1"                 # local only; remote access goes through [access] below
