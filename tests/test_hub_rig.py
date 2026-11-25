@@ -333,3 +333,22 @@ def test_only_hub_plans_may_use_practice_accounts_outside_practice_plans(tmp_pat
     assert plain["posts"] == [] and any("not for nightly plans" in p for p in problems)
     ok, problems = plan_check.check_plan({"day": "2026-11-26", "source": "hub", "posts": [post]}, tmp_path, cfg, set(), {}, today=day)
     assert len(ok["posts"]) == 1 and not problems
+
+
+def test_audience_is_read_from_both_instagram_layouts():
+    import instagram_upload as iu
+    old = [{"label": "Audience", "resource-id": ""}, {"label": "Everyone", "resource-id": "com.instagram.android:id/inline_subtitle"}]
+    new = [{"label": "Rename audio"}, {"label": "Original Audio"}, {"label": "Audience"}, {"label": "Close Friends"}]
+    assert iu.audience_value(old) == "Everyone" and iu.audience_value(new) == "Close Friends"
+    assert iu.audience_value([{"label": "Audience"}, {"label": "Tag people"}]) == ""
+
+
+def test_a_preview_item_is_scheduled_for_now_not_for_its_hub_slot(rig, hub, tmp_path):
+    it = item(hub, 119, "threads", caption="Preview is scheduled right away, cutpress.app", minutes=24 * 60)
+    it["dry"] = True
+    rig.tick()
+    plan = json.loads((rig.eng.INBOX / "hub-119-a1" / "plan.json").read_text())
+    assert plan["preview"] is True
+    from datetime import datetime
+    at = datetime.strptime(f"{plan['day']} {plan['posts'][0]['at']}", "%Y-%m-%d %H:%M")
+    assert abs((at - datetime.now()).total_seconds()) < 26 * 3600 and plan["day"] == hub_rig.local_slot(time.time(), time.time())[0]
