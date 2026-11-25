@@ -25,7 +25,8 @@ from pathlib import Path
 from phone import SERIAL, Abort, Phone
 
 PKG = "com.instagram.android"
-CFG = tomllib.loads((Path(__file__).parent / "config.toml").read_text())
+_CONFIG = Path(__file__).parent / "config.toml"
+CFG = tomllib.loads(_CONFIG.read_text()) if _CONFIG.exists() else {}  # missing only in CI / tests
 AUDIENCE = {"everyone": "Everyone", "close_friends": "Close Friends"}
 POPUPS = ("No, thanks", "Not now", "Not Now", "Remind me later")  # dismiss buttons for nag dialogs
 
@@ -97,6 +98,20 @@ def open_profile_reels(p: Phone) -> None:
     if p.find("Most viewed"):  # the tab was already selected; tapping again opened its sort menu
         p.d.press("back")
         time.sleep(1)
+
+
+def audience_value(ns: list[dict]) -> str:
+    """The audience the share screen currently shows ("Everyone" / "Close Friends"). Older Instagram builds put it in an
+    `inline_subtitle` node; newer ones (phone-2, Nov 2026) list the "Audience" label and its value as consecutive nodes."""
+    by_id = next((n["label"] for n in ns if n.get("resource-id", "").endswith(":id/inline_subtitle")), "")
+    if by_id:
+        return by_id
+    labels = [n["label"] for n in ns]
+    if "Audience" in labels:
+        nxt = labels[labels.index("Audience") + 1:][:1]
+        if nxt and nxt[0] in AUDIENCE.values():
+            return nxt[0]
+    return ""
 
 
 def keyboard_open(p: Phone) -> bool:
@@ -213,7 +228,7 @@ def _upload(p: Phone, remote: str, caption: str, audience: str, delete_after: bo
     scroll(p)
     want = AUDIENCE[audience]
     ns = p.wait("share screen settings", "Audience", "Facebook", "Your story")
-    current = next((n["label"] for n in ns if n.get("resource-id", "").endswith(":id/inline_subtitle")), "")
+    current = audience_value(ns)
     if current != want:
         p.tap_node(p.find("Audience", ns), "Audience row")
         ns = p.wait("audience screen", "Who can see your reel", want)
@@ -226,7 +241,7 @@ def _upload(p: Phone, remote: str, caption: str, audience: str, delete_after: bo
         p.d.press("back")
         time.sleep(1.5)
         ns = p.wait("share screen settings", "Audience", "Facebook")
-        current = next((n["label"] for n in ns if n.get("resource-id", "").endswith(":id/inline_subtitle")), "")
+        current = audience_value(ns)
         if current != want:
             p.fail(f"audience did not stick (shows {current!r})")
 

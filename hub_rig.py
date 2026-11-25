@@ -425,7 +425,8 @@ class Integration:
             for it in ok:
                 self.refuse(ph, it, str(ex), now)
             return
-        day, at = local_slot(float(first.get("scheduled_at") or 0) / 1000.0, now)
+        # a preview runs at once (its point is to look at the compose screen now); a real post at its Hub slot
+        day, at = local_slot(now if preview else float(first.get("scheduled_at") or 0) / 1000.0, now)
         post = {"id": "p", "caption": caption, "at": at, "targets": [{"app": i["platform"], "account": i["handle"]} for i in ok]}
         if rel:
             post["video"] = rel
