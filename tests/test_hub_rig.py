@@ -274,7 +274,7 @@ def test_dry_run_downloads_and_plans_a_preview_job_that_never_posts_and_reports_
     r = rig.build(dry_run=True)
     r.tick()
     assert hub.plan_calls[-1].get("dry") == "1"
-    assert json.loads((rig.eng.INBOX / "hub-114-a1" / "plan.json").read_text())["preview"] is True
+    assert json.loads((rig.eng.INBOX / "hub-114-a1-preview" / "plan.json").read_text())["preview"] is True
     rig.eng.import_plans()
     (job,) = jobs(rig)
     assert json.loads(job["args"])["preview"] is True
@@ -347,8 +347,28 @@ def test_a_preview_item_is_scheduled_for_now_not_for_its_hub_slot(rig, hub, tmp_
     it = item(hub, 119, "threads", caption="Preview is scheduled right away, cutpress.app", minutes=24 * 60)
     it["dry"] = True
     rig.tick()
-    plan = json.loads((rig.eng.INBOX / "hub-119-a1" / "plan.json").read_text())
+    plan = json.loads((rig.eng.INBOX / "hub-119-a1-preview" / "plan.json").read_text())
     assert plan["preview"] is True
     from datetime import datetime
     at = datetime.strptime(f"{plan['day']} {plan['posts'][0]['at']}", "%Y-%m-%d %H:%M")
     assert abs((at - datetime.now()).total_seconds()) < 26 * 3600 and plan["day"] == hub_rig.local_slot(time.time(), time.time())[0]
+
+
+def test_a_rehearsal_never_blocks_the_real_item_with_the_same_hub_attempt(rig, hub):
+    item(hub, 120, "threads", caption="Rehearsed first, then posted for real, cutpress.app")
+    dry = rig.build(dry_run=True)
+    dry.tick()
+    rig.eng.import_plans()
+    (j,) = jobs(rig)
+    set_job(rig, j["id"], "skipped", error="preview: compose screen filled, nothing was posted")
+    dry.tick(time.time() + 10)
+    assert dry.store.counts()["items"] == {"preview": 1} and not hub.results
+    dry.tick(time.time() + 20)
+    assert [p.name for p in rig.eng.INBOX.glob("hub-120-*")] == ["hub-120-a1-preview"]   # another preview poll does not re-import it
+    real = rig.build()                                             # dry_run switched off: the same Hub item is taken for real
+    real.tick(time.time() + 30)
+    rig.eng.import_plans()
+    plan = json.loads((rig.eng.INBOX / "hub-120-a1" / "plan.json").read_text())
+    assert "preview" not in plan
+    assert real.store.counts()["items"] == {"imported": 1}
+    assert [json.loads(x["args"]).get("preview") for x in jobs(rig)] == [True, None]
