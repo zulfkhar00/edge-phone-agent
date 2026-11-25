@@ -372,3 +372,39 @@ def test_a_rehearsal_never_blocks_the_real_item_with_the_same_hub_attempt(rig, h
     assert "preview" not in plan
     assert real.store.counts()["items"] == {"imported": 1}
     assert [json.loads(x["args"]).get("preview") for x in jobs(rig)] == [True, None]
+
+
+# ================================================================ research comments via Hub
+def test_research_comment_falls_back_to_hub_when_there_is_no_claude_cli(monkeypatch):
+    import research
+    monkeypatch.setattr(research, "claude_bin", lambda: None)
+    seen = {}
+    monkeypatch.setattr(hub_rig, "hub_comment", lambda *a, **k: seen.setdefault("args", a) and "that part got me lol")
+    v = {"caption": "pov: you texted first", "creator": "someone"}
+    assert research.write_comment("tiktok", "dating", v, [{"text": "first"}, {"text": "same"}]) == "that part got me lol"
+    assert seen["args"] == ("tiktok", "dating", "pov: you texted first", "someone", ["first", "same"])
+    monkeypatch.setattr(hub_rig, "hub_comment", lambda *a, **k: "see https://x.co")      # Hub's answer is cleaned like the CLI's
+    assert research.write_comment("tiktok", "dating", v, []) is None
+
+
+def test_hub_comment_is_none_when_hub_is_off_has_no_token_refuses_or_skips(hub, monkeypatch):
+    monkeypatch.setenv("HUB_RIG_TOKEN", TOKEN)
+    assert hub_rig.hub_comment("tiktok", "k", "c", "u", [], cfg={}) is None                  # [hub] not enabled
+    on = {"hub": {"enabled": True, "base_url": hub.url}}
+    monkeypatch.setenv("HUB_RIG_TOKEN", "wrong")
+    assert hub_rig.hub_comment("tiktok", "k", "c", "u", [], cfg=on) is None                  # Hub answers 401
+    monkeypatch.delenv("HUB_RIG_TOKEN")
+    assert hub_rig.hub_comment("tiktok", "k", "c", "u", [], cfg=on) is None                  # no token in the environment
+    monkeypatch.setenv("HUB_RIG_TOKEN", TOKEN)
+    hub.comment_answer = "nice one"
+    assert hub_rig.hub_comment("tiktok", "k", "c", "u", ["a", "b"], cfg=on) == "nice one"
+    assert hub.comment_calls[-1] == {"app": "tiktok", "keyword": "k", "caption": "c", "creator": "u", "top_comments": ["a", "b"]}
+    hub.comment_answer = None
+    assert hub_rig.hub_comment("tiktok", "k", "c", "u", [], cfg=on) is None                  # Hub says skip
+
+
+def test_the_cli_output_and_hubs_answer_are_cleaned_by_one_function():
+    import research
+    assert research.clean_comment('"relatable lol"') == "relatable lol"
+    for bad in ("SKIP", "see https://x.co", "hi @me", "#fyp", "x" * 151, ""):
+        assert research.clean_comment(bad) is None

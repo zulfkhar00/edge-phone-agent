@@ -26,6 +26,8 @@ class FakeHub:
         self.media_auth_seen: list[str | None] = []
         self.fail_results = 0
         self.fail_plan = 0
+        self.comment_answer: str | None = None
+        self.comment_calls: list[dict] = []
         self.result_status = 200
         hub = self
 
@@ -68,11 +70,15 @@ class FakeHub:
                 self._send(200, {"ok": True, "phone": q.get("phone"), "items": [{k: v for k, v in i.items() if k != "_phone"} for i in mine]})
 
             def do_POST(self):
-                if urlparse(self.path).path != "/api/rig/result":
+                path = urlparse(self.path).path
+                if path not in ("/api/rig/result", "/api/rig/comment"):
                     return self._send(404, {"error": "no"})
                 if not self._auth():
                     return
                 body = json.loads(self.rfile.read(int(self.headers.get("Content-Length", 0))) or b"{}")
+                if path == "/api/rig/comment":
+                    hub.comment_calls.append(body)
+                    return self._send(200, {"ok": True, "comment": hub.comment_answer})
                 if hub.fail_results:
                     hub.fail_results -= 1
                     return self._send(500, {"error": "boom"})
