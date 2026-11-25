@@ -274,6 +274,27 @@ Turn it on at the Pi: add the `[noswipe]` section (and `noswipe_phone_id` per ph
 `[Service]` / `Environment=...` or an `EnvironmentFile=`), `sudo systemctl restart content-engine`, and watch the phone's NoSwipe
 panel. Until the UI is mapped the sessions will show up as done with `not_mapped` and the outbox stays empty.
 
+## Hub bridge (Hub's posting queue through the rig)
+
+`hub_rig.py` + `[hub]` in config.toml (off by default). Hub cannot reach the Pi, so the rig pulls: every `poll_every_min` it asks
+`GET {base_url}/api/rig/plan?phone=<id>` for each phone (items of models set to "via rig" in Hub's `data/rig.json`), downloads the
+signed media URL into `mailbox/inbox/hub-<queue id>-a<attempt>/`, validates the item with `plan_check` (plan `source: "hub"`: accounts
+with `use = "hub"` or `"practice"` are allowed, quotas and caption rules still apply) and writes a normal `plan.json`. From there it is
+an ordinary post job on the phone that owns the account. Each finished job is reported with `POST /api/rig/result`
+(`posted` / `unverified` / `failed`, from the job status) through a retry outbox (`hub_rig.db`); a replay is harmless on Hub's side.
+Nothing is posted twice: an attempt number (Hub raises it when its Retry button hands a failed item over again) is imported once.
+Captions are flattened to one line of ASCII (emoji dropped, `%` spelled out) because they are typed with `adb input text`.
+
+Put the token in the engine's environment (never in config.toml): `HUB_RIG_TOKEN=<token>` in an `EnvironmentFile=` of the unit.
+
+**Dry run** (`dry_run = true`, or an item Hub marks `dry`): the whole path runs (poll, download, plan, job) but the flow stops before
+Post / Share, takes `runs/preview-*.png`, cancels the compose screen (Delete / Start over, never a draft) and the job ends `skipped`
+("preview"): it does not count against the daily limit, schedules no stats and nothing is reported to Hub.
+`python instagram_upload.py v.mp4 --caption "..." --account handle --preview` and `x_post.py` / `threads_post.py ... --preview` do the same by hand.
+
+To add another account to rig mode: log it in on a phone (Take over), add it to that phone's `accounts` and an `[accounts.<app>.<handle>]`
+section here, then in Hub's `data/rig.json` give its model the platform (`"instagram": true` or `{"phone": "phone-2", "handle": "x"}`).
+
 ## Setup (Raspberry Pi OS Lite 64-bit, Debian 13)
 
 ```bash

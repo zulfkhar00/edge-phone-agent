@@ -52,6 +52,7 @@ def check_plan(plan: dict, folder: Path, cfg: dict, existing_captions: set[str],
     today = today or date.today()
     accounts = cfg.get("accounts", {})
     practice = bool(plan.get("practice"))  # test plans may use practice accounts and deletes
+    hub = plan.get("source") == "hub"  # written by hub_rig.py for a Hub queue item: its accounts are the ones Hub's rig mode names
 
     # ---- plan level
     try:
@@ -69,7 +70,7 @@ def check_plan(plan: dict, folder: Path, cfg: dict, existing_captions: set[str],
         if lim is None:
             problems.append(f"{where}: {app} account {account!r} is not in config.toml")
             return None
-        if lim.get("use") != "noswipe" and not practice:
+        if lim.get("use") != "noswipe" and not practice and not (hub and lim.get("use") in ("hub", "practice")):
             problems.append(f"{where}: {app} @{account} is a {lim.get('use', 'unlabelled')} account, not for nightly plans")
             return None
         return lim

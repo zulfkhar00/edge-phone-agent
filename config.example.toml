@@ -42,6 +42,18 @@ hw_serial = "ZD222RWWGT"        # the phone's own serial (adb shell getprop ro.s
 # pace_s = [4, 14]                         # random pause between swipe batches
 # batch_size = [4, 12]                     # swipes per batch
 
+# Hub (michaelsxan/hub) posting queue via this rig: Hub rows of models set to "via rig" for Instagram / Threads / X are posted here.
+# OFF unless enabled = true. The bearer token is NEVER written here: export it in the engine's environment
+# (systemd EnvironmentFile, same as NOSWIPE_AUTOMATION_KEY). Each phone is asked for its own items (phone id = [[phones]] id in Hub's rig.json).
+# [hub]
+# enabled = true
+# base_url = "https://hub.codenrap.com"
+# token_env = "HUB_RIG_TOKEN"     # name of the environment variable that holds the token
+# poll_every_min = 3              # GET /api/rig/plan per phone (Hub hands an item over the first time it lists it)
+# horizon_min = 180               # ask for items due within this long
+# dry_run = false                 # true = rehearse: media downloaded, compose screen filled, screenshot, cancelled, nothing posted or reported
+# The accounts Hub names must exist under [[phones]] accounts and [accounts.<app>.<handle>] (use = "hub" or "practice" is fine for hub plans).
+
 [dashboard]
 host = "127.0.0.1"                 # local only; remote access goes through [access] below
 port = 8080
