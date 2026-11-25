@@ -101,9 +101,11 @@ def claude_bin() -> str | None:
 def write_comment(app: str, keyword: str, v: dict, top: list[dict]) -> str | None:
     """One short, human comment for this video, or None to skip it."""
     exe = claude_bin()
-    if not exe:
-        print("  no claude CLI: skipping the comment", flush=True)
-        return None
+    if not exe:  # the Pi has no claude CLI: Hub writes the comment with the same rules ([hub] enabled, token in the environment)
+        import hub_rig
+        text = hub_rig.hub_comment(app, keyword, v["caption"], v["creator"], [c["text"] for c in top])
+        print(f"  no claude CLI: {'comment from Hub' if text else 'Hub gave none, skipping the comment'}", flush=True)
+        return clean_comment(text) if text else None
     others = "\n".join(f"- {c['text'][:150]}" for c in top[:5]) or "(none)"
     prompt = (
         f"You are a real person scrolling {app} who relates to videos about '{keyword}'. Write ONE comment for this video.\n"
@@ -116,8 +118,11 @@ def write_comment(app: str, keyword: str, v: dict, top: list[dict]) -> str | Non
         out = subprocess.run([exe, "-p", prompt], capture_output=True, text=True, timeout=90).stdout.strip()
     except subprocess.TimeoutExpired:
         return None
-    out = out.splitlines()[-1].strip().strip('"') if out else ""
-    out = re.sub(r"[^\x20-\x7E]", "", out).strip()  # adb input text is ASCII only
+    return clean_comment(out.splitlines()[-1] if out else "")
+
+
+def clean_comment(out: str) -> str | None:
+    out = re.sub(r"[^\x20-\x7E]", "", out.strip().strip('"')).strip()  # adb input text is ASCII only
     if not out or out.upper().startswith("SKIP") or len(out) > 150 or re.search(r"https?:|www\.|@|#", out):
         return None
     return out

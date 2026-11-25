@@ -164,6 +164,13 @@ class Client:
     def result(self, payload: dict) -> dict:
         return self._call("POST", "/api/rig/result", body=payload)
 
+    def comment(self, app: str, keyword: str, caption: str, creator: str, top_comments: list[str]) -> str | None:
+        """A research comment written on Hub (the rig has no claude CLI). None = skip this video."""
+        body = self._call("POST", "/api/rig/comment", body={"app": app, "keyword": keyword, "caption": caption, "creator": creator,
+                                                              "top_comments": top_comments[:5]})
+        c = body.get("comment")
+        return c if isinstance(c, str) and c.strip() else None
+
     def download(self, url: str, dest: Path, max_bytes: int) -> int:
         """Signed media URL on Hub's own host only; no token is sent (the signature is the credential)."""
         u = urllib.parse.urlparse(url)
@@ -535,3 +542,21 @@ class Integration:
     def view(self) -> dict:
         return {"enabled": self.cfg.enabled, "token_missing": self.key_missing, "dry_run": self.cfg.dry_run, "last_poll": self.last_poll,
                 "last_ok": self.last_ok, "last_error": self.last_error, **(self.store.counts() if self.cfg.enabled else {})}
+
+
+def hub_comment(app: str, keyword: str, caption: str, creator: str, top: list[str], cfg: dict | None = None,
+                client: Client | None = None) -> str | None:
+    """research.py's fallback when the box has no claude CLI: ask Hub. None when [hub] is off, the token is missing, or Hub says skip /
+    is unreachable (a comment is never worth a failed research session)."""
+    try:
+        if client is None:
+            if cfg is None:
+                import tomllib
+                cfg = tomllib.loads((Path(__file__).parent / "config.toml").read_text())
+            hc = HubCfg.from_cfg(cfg)
+            if not (hc.enabled and hc.token):
+                return None
+            client = Client(hc.base_url, hc.token, min(hc.timeout_s, 60))
+        return client.comment(app, keyword, caption, creator, top)
+    except (HubError, ConfigError, OSError, ValueError):
+        return None
