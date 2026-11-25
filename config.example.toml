@@ -16,7 +16,8 @@ hw_serial = "ZD222RWWGT"        # the phone's own serial (adb shell getprop ro.s
 # wifi_serial = "192.168.1.150:5555"      # optional Wi-Fi fallback; adb_keeper.sh keeps it current
 # noswipe_phone_id = "pi-rack-1-phone-3" # optional: the phone's id in NoSwipe's admin Run panel (default: id above)
 # accounts = ["ig:@tinyloveshows", "tt:@nomoreawkwardness"]   # ig = Instagram, tt = TikTok
-#             also "x:@handle" and "reddit:u/name": listed in the dashboard only (login by hand via Take over, nothing automated)
+#             also "x:@handle" and "threads:@handle" (posts + stats, login checked, never logged into: see flows/x_threads.md)
+#             and "reddit:u/name": listed in the dashboard only (login by hand via Take over, nothing automated)
 # quotas = { posts_per_day = 2 }          # optional: overrides the [accounts.*] limits of this phone's accounts
 #
 # [[phones]]
@@ -88,6 +89,14 @@ posts_per_day = 4
 likes_per_day = 20
 comments_per_day = 5
 research_minutes_per_day = 60
+
+# X and Threads (log in by hand once with Take over; the engine only checks the login, never types credentials)
+# [accounts.x.yourhandle]
+# use = "practice"           # "noswipe" once the flow has been run live; never in nightly plans while "practice"
+# posts_per_day = 3
+# [accounts.threads.yourhandle]
+# use = "practice"
+# posts_per_day = 3
 
 # Engine-queued keyword research (off unless accounts is set). See README "Stats, research and trend export".
 # [research_seeds]

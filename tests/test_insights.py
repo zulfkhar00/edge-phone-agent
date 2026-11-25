@@ -210,7 +210,9 @@ def test_x_and_reddit_accounts_parse():
     assert phones.parse_account("twitter:handle") == ("x", "handle")
     assert phones.parse_account("reddit:u/some_name") == ("reddit", "some_name")
     assert phones.parse_account("reddit:/u/Other") == ("reddit", "Other")
-    assert "x" not in phones.AUTOMATED_APPS and "reddit" not in phones.AUTOMATED_APPS
+    assert phones.parse_account("threads:@Handle") == ("threads", "Handle")
+    assert phones.parse_account("th:handle") == ("threads", "handle")
+    assert {"x", "threads"} <= phones.AUTOMATED_APPS and "reddit" not in phones.AUTOMATED_APPS  # Reddit stays listed-only
 
 
 def test_listed_accounts_show_in_state_without_jobs(make_engine):
@@ -223,10 +225,11 @@ accounts = ["ig:@alpha", "x:@brand", "reddit:u/brand"]
     from conftest import BASE
     eng = make_engine(BASE + cfg)
     accts = eng.build_state()["phones"][0]["accounts"]
-    listed = [a for a in accts if a["app"] in ("x", "reddit")]
-    assert {(a["app"], a["account"]) for a in listed} == {("x", "brand"), ("reddit", "brand")}
+    listed = [a for a in accts if a["app"] == "reddit"]
+    assert {(a["app"], a["account"]) for a in listed} == {("reddit", "brand")}
     assert all(a["login"] == "unknown" and a["automated"] is False and a["note"] for a in listed)
     assert all(a["automated"] for a in accts if a["app"] == "instagram")
+    assert not any(a["app"] == "x" for a in accts)  # x is automated now: it shows once it has an [accounts.x.*] section
 
 
 def test_seed_jobs_rotate_and_respect_config():
