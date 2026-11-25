@@ -127,6 +127,34 @@ def scroll(p: Phone, down: bool = True) -> None:
     time.sleep(1.5)
 
 
+def finish_share_sheets(p: Phone) -> None:
+    """The one-time sheets that can sit between the share screen's button and the reel being published. Both are the owner's
+    publish confirmation (they are only ever opened by our own tap on Share / Next), never a promo:
+      * "About Reels" (2026-11-25, the first reel of an account, build 457): "Next" opens it; its Share button publishes.
+      * "Update on your original audio ... Meta AI app" (2026-11-03): both its buttons share. Which one is the account owner's
+        choice: [instagram].meta_ai_audio = "off" | "allow"."""
+    end = time.time() + 14
+    said_about = False
+    while time.time() < end:
+        nux = p.by_id("clips_nux_sheet_share_button")
+        if nux is not None and not said_about:
+            said_about = True
+            p.tap_node(nux, "Share (About Reels notice)")
+            end = max(end, time.time() + 8)   # the Meta AI notice may follow
+        elif p.find("Turn off and share"):
+            choice = (CFG.get("instagram") or {}).get("meta_ai_audio")
+            if choice == "off":
+                p.tap_node(p.find("Turn off and share"), "Turn off and share (Meta AI audio off)")
+            elif choice == "allow":
+                p.tap_node(p.by_id("clips_original_audio_nux_sheet_share_button"), "Share (Meta AI audio allowed)")
+            else:
+                p.tap_node(p.find("Dismiss"), "dismiss the Meta AI audio notice")
+                p.fail("Instagram asks whether Meta AI may reuse our original audio; set [instagram] meta_ai_audio "
+                       "= \"off\" or \"allow\" in config.toml (nothing was shared)")
+            return
+        time.sleep(1)
+
+
 def upload(video: Path, caption: str, audience: str, delete_after: bool, preview: bool = False) -> None:
     p = Phone(SERIAL)
     today = f"{date.today():%B} {date.today().day}, {date.today().year}"  # e.g. "November 2, 2026"
@@ -261,22 +289,7 @@ def _upload(p: Phone, remote: str, caption: str, audience: str, delete_after: bo
 
     print(f"6. SHARE  (audience: {want}, caption: {caption!r})", flush=True)
     p.tap_node(p.by_id("share_button"), "Share")
-    # One-time notice (2026-11-03): "Update on your original audio ... can be used by people on the Meta AI app".
-    # Its buttons both share. Which one is the account owner's choice: [instagram].meta_ai_audio = "off" | "allow".
-    end = time.time() + 8
-    while time.time() < end:
-        if p.find("Turn off and share"):
-            choice = (CFG.get("instagram") or {}).get("meta_ai_audio")
-            if choice == "off":
-                p.tap_node(p.find("Turn off and share"), "Turn off and share (Meta AI audio off)")
-            elif choice == "allow":
-                p.tap_node(p.by_id("clips_original_audio_nux_sheet_share_button"), "Share (Meta AI audio allowed)")
-            else:
-                p.tap_node(p.find("Dismiss"), "dismiss the Meta AI audio notice")
-                p.fail("Instagram asks whether Meta AI may reuse our original audio; set [instagram] meta_ai_audio "
-                       "= \"off\" or \"allow\" in config.toml (nothing was shared)")
-            break
-        time.sleep(1)
+    finish_share_sheets(p)
 
     print("7. confirm it on the profile's Reels tab", flush=True)
     time.sleep(20)  # let the upload finish; never restart the app here, it could cut the upload off
