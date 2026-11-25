@@ -9,7 +9,7 @@ Plans arrive as mailbox/inbox/<name>/plan.json (+ videos/). Each plan is importe
   stats     added after a post succeeds, at the configured offsets (1h 3h 6h 12h 24h 48h)
   research  fills the gaps between fixed jobs, inside its time window, within daily limits
   delete    clean-up of test posts
-Each job runs the matching script (tiktok_upload.py, instagram_upload.py, stats.py, research.py, delete.py) as
+Each job runs the matching script (tiktok_upload.py, instagram_upload.py, x_post.py, threads_post.py, stats.py, research.py, delete.py) as
 a subprocess; its output goes to logs/<id>.log. Failures retry once, then raise an alert (dashboard + email).
 Take over pauses the runner: research/stats are stopped at once, a post or delete is allowed to finish first.
 Phones are listed in config.toml ([[phones]], or the old [phone]); see phones.py. A job runs on the phone that owns its account.
@@ -213,9 +213,12 @@ def import_plans() -> None:
                         run_at = at_time(day, t.get("at") or post["at"])
                     else:  # a random minute (and second) of the round's hour
                         run_at = at_time(day, f"{int(post['round']):02d}:00") + random.randrange(0, 3600)
-                    args = {"video": str((f.parent / post["video"]).resolve()), "caption": post["caption"],
-                            "stats_offsets_min": plan.get("stats_offsets_min")}
-                    if t["app"] == "tiktok":
+                    media = str((f.parent / post["video"]).resolve()) if post.get("video") else None
+                    args = {"video": media, "caption": post["caption"], "stats_offsets_min": plan.get("stats_offsets_min")}
+                    if t["app"] in phonecfg.TEXT_APPS:  # X / Threads: a text post, media (image or video) optional
+                        args["text"], args["media"] = post["caption"], media
+                        args.pop("video")
+                    elif t["app"] == "tiktok":
                         args["visibility"] = t.get("visibility", "everyone")
                     else:
                         args["audience"] = t.get("audience", "everyone")
@@ -448,6 +451,16 @@ def cleanup() -> None:
 
 
 # ================================================================ limits
+def set_login(app: str, account: str, status: str) -> None:
+    """Remember whether an X / Threads account was seen logged in ('ok') or not ('needs_login'): the dashboard shows it."""
+    set_state(f"login:{app}:{account}", {"status": status, "at": time.time()})
+
+
+def login_view(app: str, account: str) -> dict:
+    v = get_state(f"login:{app}:{account}") or {}
+    return {"login": v.get("status", "unknown"), "login_at": v.get("at")}
+
+
 def acct_cfg(app: str, account: str) -> dict:
     return CFG.get("accounts", {}).get(app, {}).get(account, {})
 
@@ -626,6 +639,9 @@ class Runner:
         py = sys.executable
         app, acct = job["app"], job["account"]
         if job["kind"] == "post":
+            if app in phonecfg.TEXT_APPS:
+                cmd = [py, "x_post.py" if app == "x" else "threads_post.py", a["text"], "--account", acct]
+                return cmd + (["--media", a["media"]] if a.get("media") else [])
             if app == "tiktok":
                 return [py, "tiktok_upload.py", a["video"], "--caption", a["caption"], "--visibility", a["visibility"], "--account", acct]
             return [py, "instagram_upload.py", a["video"], "--caption", a["caption"], "--audience", a["audience"], "--account", acct]
@@ -714,10 +730,20 @@ class Runner:
             return
         if rc == 0:
             self.finish(job["id"], "done", ended_at=ended, result=result, shot=shot)
+            if job["app"] in phonecfg.TEXT_APPS:
+                set_login(job["app"], job["account"], "ok")
             if job["kind"] == "post":
                 self.schedule_stats(job, ended)
             return
         err = aborted or f"exit code {rc}"
+        if aborted and aborted.startswith("needs login") and job["app"] in phonecfg.TEXT_APPS:
+            # logged out / wrong account: retrying cannot help and nothing was published (the flow stops before compose).
+            # Never log in for the owner: raise one alert, the owner logs in by hand (Take over), then Retry on the job.
+            set_login(job["app"], job["account"], "needs_login")
+            self.finish(job["id"], "failed", ended_at=ended, error=err, shot=shot)
+            alert("login", f"{job['app']} @{job['account']} needs login on phone {self.id}: log in by hand with Take over "
+                  f"(the engine never types credentials), then retry the job. Detail: {err}", every_min=360, phone_id=self.id)
+            return
         gone = await self.find_phone() is None  # did the phone drop off adb (cable pulled, battery dead)?
         if gone:
             self.phone_ok = False
@@ -947,7 +973,8 @@ def build_state(phone_id: str | None = None) -> dict:
         for name, lim in accts.items():
             ph = phonecfg.owner_of(PHONES, app, name)
             accounts.append({"app": app, "account": name, "limits": lim, "used": used_today(app, name),
-                             "phone_id": ph.id if ph else None, "automated": app in phonecfg.AUTOMATED_APPS})
+                             "phone_id": ph.id if ph else None, "automated": app in phonecfg.AUTOMATED_APPS,
+                             **(login_view(app, name) if app in phonecfg.TEXT_APPS else {})})
     for ph in PHONES:  # X / Reddit accounts: only listed on the phone, nothing runs for them
         for app, name in sorted(ph.accounts or ()):
             if app not in phonecfg.AUTOMATED_APPS:

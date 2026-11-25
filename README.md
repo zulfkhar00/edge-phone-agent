@@ -34,6 +34,7 @@ Python 3.12, asyncio, `adb` + scrcpy. Everything is driven through the phone's U
 | `preflight.py` | Daily morning checks: phone, battery, accounts logged in, disks, render server, today's plan |
 | `phone.py` | Shared phone helpers: read the screen as labelled nodes, wait for an expected screen, tap by label/id, type. Anything unexpected aborts with a screenshot |
 | `instagram_upload.py`, `tiktok_upload.py` | Post one video, checking every screen before tapping |
+| `social.py`, `x_post.py`, `threads_post.py` | X and Threads: login gate, text post (+ image/video), verify on profile, per-post counts (see `flows/x_threads.md`) |
 | `stats.py` | Read one post's insights (OCR with macOS Vision, tesseract on Linux) |
 | `research.py` | Research sessions: search a keyword, watch, like and comment within limits; results in `research.db` |
 | `explore.py` | Dev tool: maps an app's screens and how they connect (for writing new flows) |
@@ -48,6 +49,7 @@ Python 3.12, asyncio, `adb` + scrcpy. Everything is driven through the phone's U
 | `research_seeds.py` | Seed keywords for the engine's own daily research sessions (opt-in, `[research_seeds]`) |
 | `web/dashboard.html` | The dashboard (single page) |
 | `web/mock_server.py`, `web/fixtures/` | Serves the dashboard with sample data and no phone: `python3 web/mock_server.py multi 8099` (the insights tabs run the real `insights.py` over `fixtures/insights.json`) |
+| `docs/how-flows-work.md` | The pattern every flow follows: job model, plan, phone helpers, verification, stats, preflight, tests with fakes |
 | `flows/*.md` | How each app flow works and what broke before. Read the relevant one before changing an uploader or reader |
 | `tests/` | pytest: plan validation, self-update, access gate, outliers, multi-phone (fake adb, no phones needed) |
 | `*_chain.sh`, `build_viewer.py`, `publish_viewer.sh` | Old one-off tools from the Mac era; not used by the service |
@@ -57,7 +59,7 @@ Local only (gitignored): `config.toml` (secrets), `engine.db` (jobs, alerts, sta
 
 ## Data
 
-- `engine.db` `jobs`: `kind` = post | stats | research | delete | preflight | outliers, `status` = waiting | running |
+- `engine.db` `jobs`: `kind` = post | stats | research | delete | preflight | outliers (X / Threads posts are `kind='post'` with `app` x / threads), `status` = waiting | running |
   done | failed | unverified | skipped, `run_at` / `not_after` (unix time), `args` JSON, `result` JSON,
   `post_key` (`<plan>/<post id>/<app>`). Also `alerts`, `plans` (imported names) and `state` (k/v JSON: `paused`,
   `touched`, ...).
@@ -150,19 +152,31 @@ a video's engagement is `likes + 3 x comments + 5 x shares`. A theme needs 2+ vi
 same videos under another spelling are merged. `trending` is `rising` when more of its videos were seen in the last half of
 the window than the half before. An empty research database gives `"trends": []`.
 
-## X and Reddit accounts
+## X and Threads (automated), Reddit (listed only)
 
-An X (Twitter) or Reddit account can be listed on a phone so it shows in the dashboard:
+X and Threads post text (+ an optional image or video), read per-post stats and are login-checked each morning. Pattern:
+`docs/how-flows-work.md`; screens, status and the live-verification checklist: `flows/x_threads.md`.
 
 ```toml
 [[phones]]
 id = "phone-1"
-accounts = ["ig:@tinyloveshows", "x:@noswipe_app", "reddit:u/noswipe_team"]
+accounts = ["ig:@tinyloveshows", "x:@noswipe_app", "threads:@noswipe_app", "reddit:u/noswipe_team"]
+
+[accounts.x.noswipe_app]          # limits and `use`, like Instagram / TikTok
+use = "noswipe"
+posts_per_day = 3
+[accounts.threads.noswipe_app]
+use = "noswipe"
+posts_per_day = 3
 ```
-They need no `[accounts.*]` section. **Nothing runs for them**: there are no X/Reddit posting, research or stats flows
-(those need live screen mapping first), plans naming them are rejected by `plan_check.py`, and the preflight skips them.
-The owner logs in by hand with **Take over** on that phone. The dashboard shows them as "Login: unknown", because no flow
-verifies the login.
+Plan post: `{"id": "t1", "at": "13:00", "text": "<= 280 chars (X) / 500 (Threads), plain ASCII", "media": "videos/p.jpg", "targets": [{"app": "x", "account": "noswipe_app"}, {"app": "threads", "account": "noswipe_app"}]}`
+(`media` optional; no media needed when every target is X / Threads). The engine never logs in: a logged-out app or another account
+fails the job at once with a `login` alert and a red "Needs login" pill; the owner logs in with **Take over**, then retries the job.
+No research or delete flow for them. **The post / compose / media / profile steps have not been run on a logged-in phone yet**
+(`LIVE-VERIFY` in `social.py`).
+
+Reddit accounts can still be listed on a phone so they show in the dashboard. **Nothing runs for them** (no flow, plans naming
+them are rejected, the preflight skips them); the owner logs in by hand with Take over and the dashboard shows "Login: unknown".
 
 ## Several phones
 

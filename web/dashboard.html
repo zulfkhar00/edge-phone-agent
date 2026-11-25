@@ -402,8 +402,12 @@ const BUSY = new Set();                       // "id:action" buttons currently i
 const OPEN = {};                              // details sections the viewer opened/closed
 const KIND = {post: "Post", stats: "Stats", research: "Research", delete: "Delete", preflight: "Preflight", dating_session: "Dating session"};
 const STATUS = {idle: "Idle", running: "Running", offline: "Offline", error: "Screen error", manual: "Taken over"};
-const appName = a => ({tiktok: "TikTok", instagram: "Instagram", x: "X", reddit: "Reddit"})[a] || a;
-const appTag = a => `<span class="app">${({tiktok: "TT", instagram: "IG", x: "X", reddit: "RD"})[a] || esc(a)}</span>`;
+const appName = a => ({tiktok: "TikTok", instagram: "Instagram", x: "X", threads: "Threads", reddit: "Reddit"})[a] || a;
+const appTag = a => `<span class="app">${({tiktok: "TT", instagram: "IG", x: "X", threads: "TH", reddit: "RD"})[a] || esc(a)}</span>`;
+// X / Threads: the engine remembers whether the account was last seen logged in (post / stats / morning check)
+const loginPill = a => !a.login ? "" : a.login === "ok" ? `<span class="pill idle" title="Last seen logged in">Logged in</span>` :
+  a.login === "needs_login" ? `<span class="pill error" title="Log in by hand with Take over; the engine never types credentials">Needs login</span>` :
+  `<span class="pill unk" title="Not checked yet (the morning check or the first job will tell)">Login: unknown</span>`;
 const listed = a => a.automated === false;   // X / Reddit: on the phone, logged in by the owner, nothing runs for them
 const listedRow = a => `<div class="acct listed"><div class="who">${appTag(a.app)}<span class="trunc">${a.app === "reddit" ? "u/" : "@"}${esc(a.account)}</span>` +
   `<span class="pill unk" title="${esc(a.note || "")}">Login: unknown</span></div><div class="why">Owner logs in with Take over. Not automated: no posting, no checks.</div></div>`;
@@ -437,7 +441,7 @@ const quotas = a => `<div class="qs">${meter("Posts", a.used.posts, a.limits.pos
 // ---------------------------------------------------------------- overview
 function phoneCard(p, now) {
   const auto = p.accounts.filter(a => !listed(a)), extra = p.accounts.filter(listed);
-  const accts = auto.slice(0, 2).map(a => `<div class="acct"><div class="who">${appTag(a.app)}<span class="trunc">@${esc(a.account)}</span></div>${quotas(a)}</div>`).join("") +
+  const accts = auto.slice(0, 2).map(a => `<div class="acct"><div class="who">${appTag(a.app)}<span class="trunc">@${esc(a.account)}</span>${loginPill(a)}</div>${quotas(a)}</div>`).join("") +
     (auto.length > 2 ? `<div class="more">+${auto.length - 2} more account${auto.length > 3 ? "s" : ""}</div>` : "") +
     extra.slice(0, 2).map(listedRow).join("") + (extra.length > 2 ? `<div class="more">+${extra.length - 2} more listed</div>` : "") +
     (!p.accounts.length ? `<div class="muted">No accounts configured</div>` : "");
@@ -534,7 +538,7 @@ function renderPhone() {
   $("#veil").style.display = p.paused ? "none" : "";
 
   $("#quotaCard").innerHTML = `<h3>Today's quota</h3>` + (p.accounts.length ? p.accounts.map(a => listed(a) ? listedRow(a) :
-    `<div class="quota-row"><div class="who" style="display:flex;gap:6px;align-items:center;font-weight:600;min-width:0">${appTag(a.app)}<span class="trunc">@${esc(a.account)}</span></div>${quotas(a)}</div>`).join("") : `<div class="muted">No accounts configured.</div>`);
+    `<div class="quota-row"><div class="who" style="display:flex;gap:6px;align-items:center;font-weight:600;min-width:0">${appTag(a.app)}<span class="trunc">@${esc(a.account)}</span>${loginPill(a)}</div>${quotas(a)}</div>`).join("") : `<div class="muted">No accounts configured.</div>`);
 
   $("#nsCard").innerHTML = nsPanel(p, now);
   $("#nsCard").hidden = !p.noswipe;

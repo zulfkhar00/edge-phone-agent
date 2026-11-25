@@ -2,6 +2,8 @@
 
 TikTok:    Profile tab -> tap the name at the top -> "Switch account" sheet -> tap the handle.
 Instagram: Profile tab -> tap the username at the top -> account sheet -> tap the handle.
+X / Threads: social.ensure_account: verifies the logged-in handle, switches only to an already logged-in account,
+           otherwise exits with "ABORTED: needs login: ..." (never logs in).
 Each switch is verified on the profile afterwards. "Add account" / "Add Instagram account" are never tapped.
 
 Usage:
@@ -224,6 +226,10 @@ def ig_switch(p: Phone, handle: str) -> None:
 
 
 def switch(p: Phone, app: str, handle: str) -> None:
+    if app in ("x", "threads"):  # social.py: checks the logged-in account, switches only between logged-in ones, else NeedsLogin
+        import social
+        social.ensure_account(p, social.SPECS[app], handle)
+        return
     p.wake()
     # always start from a clean app (it may have been left deep in search, comments, an editor...)
     p.d.app_start(TT if app == "tiktok" else IG, stop=True)
@@ -236,12 +242,14 @@ def switch(p: Phone, app: str, handle: str) -> None:
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("app", choices=("tiktok", "instagram"))
+    ap.add_argument("app", choices=("tiktok", "instagram", "x", "threads"))
     ap.add_argument("handle", nargs="?")
     ap.add_argument("--current", action="store_true")
     a = ap.parse_args()
     p = Phone(SERIAL)
     try:
+        if a.app in ("x", "threads") and not a.handle:
+            ap.error("x / threads: give the handle to check")
         if a.current or not a.handle:
             p.d.app_start(TT if a.app == "tiktok" else IG)
             time.sleep(6)
