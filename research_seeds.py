@@ -31,9 +31,20 @@ ASCII_LINE = re.compile(r"^[\x20-\x7E]+$")
 HHMM = re.compile(r"^([01]\d|2[0-3]):[0-5]\d$")
 
 
-def clean_keywords(cfg: dict) -> list[str]:
-    kws = cfg.get("keywords") or SEED_KEYWORDS
+def clean_keywords(cfg: dict, kws: list | None = None) -> list[str]:
+    kws = kws if kws is not None else (cfg.get("keywords") or SEED_KEYWORDS)
     return [k for k in kws if isinstance(k, str) and ASCII_LINE.match(k) and 2 <= len(k) <= 60]
+
+
+def account_keywords(cfg: dict, app: str, handle: str, default: list[str]) -> list[str]:
+    """Per-account override from [research_seeds.keywords_by_account] (keys like "instagram:handle"), else default."""
+    table = cfg.get("keywords_by_account") or {}
+    for key in (f"{app}:{handle}", f"{app}:@{handle}", {"instagram": "ig", "tiktok": "tt"}.get(app, app) + f":@{handle}"):
+        if key in table:
+            own = clean_keywords(cfg, table[key])
+            if own:
+                return own
+    return default
 
 
 def seed_jobs(cfg: dict, day: date, accounts: dict) -> tuple[list[dict], list[str]]:
@@ -61,9 +72,10 @@ def seed_jobs(cfg: dict, day: date, accounts: dict) -> tuple[list[dict], list[st
         if app not in ("instagram", "tiktok") or handle not in accounts.get(app, {}):
             problems.append(f"[research_seeds] {spec!r}: not an Instagram / TikTok account listed in [accounts.*]")
             continue
-        start = (day.toordinal() * per + i * 5) % len(kws)
-        for k in range(min(per, len(kws))):
-            jobs.append({"app": app, "account": handle, "keyword": kws[(start + k) % len(kws)], "minutes": minutes,
+        akws = account_keywords(cfg, app, handle, kws)
+        start = (day.toordinal() * per + i * 5) % len(akws)
+        for k in range(min(per, len(akws))):
+            jobs.append({"app": app, "account": handle, "keyword": akws[(start + k) % len(akws)], "minutes": minutes,
                          "max_likes": int(cfg.get("max_likes", 3)), "max_comments": int(cfg.get("max_comments", 0)),
                          "not_before": after, "not_after": before})
     return jobs, problems
