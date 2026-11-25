@@ -210,13 +210,16 @@ class Store:
         con.row_factory = sqlite3.Row
         return con
 
-    def seen(self, key: str, attempt: int) -> bool:
+    def seen(self, key: str, attempt: int, preview: bool = False) -> bool:
+        """Already taken? A rehearsal never blocks the real thing: only another preview counts as seen for a preview."""
         with self._con() as c:
-            return c.execute("select 1 from items where key=? and attempt=?", (key, attempt)).fetchone() is not None
+            return c.execute("select 1 from items where key=? and attempt=? and (?=1 or preview=0)", (key, attempt, int(preview))).fetchone() is not None
 
     def add_item(self, now: float, **f) -> None:
         f = {"plan_name": None, "post_id": None, "preview": 0, "detail": None, **f}
         with self._con() as c:
+            if not f["preview"]:   # the real item replaces its rehearsal (same Hub attempt: a dry run claims nothing on Hub)
+                c.execute("delete from items where key=? and attempt=? and preview=1", (f["key"], f["attempt"]))
             c.execute("insert or ignore into items (key, attempt, queue_id, platform, app, account, phone_id, plan_name, post_id, state, preview, detail, created_at) "
                       "values (:key,:attempt,:queue_id,:platform,:app,:account,:phone_id,:plan_name,:post_id,:state,:preview,:detail,:now)", {**f, "now": now})
 
@@ -344,7 +347,7 @@ class Integration:
             except (KeyError, TypeError, ValueError):
                 self.log(f"hub: ignoring a malformed plan item: {str(it)[:120]}")
                 continue
-            if self.store.seen(f"{qid}:{platform}", attempt):
+            if self.store.seen(f"{qid}:{platform}", attempt, bool(it.get("dry") or self.cfg.dry_run)):
                 continue
             groups.setdefault((qid, attempt), []).append({**it, "queue_id": qid, "attempt": attempt, "platform": platform})
         for (qid, attempt), group in groups.items():
@@ -397,7 +400,7 @@ class Integration:
             for it in ok:
                 self.refuse(ph, it, problem, now)
             return
-        name = f"hub-{qid}-a{attempt}"
+        name = f"hub-{qid}-a{attempt}" + ("-preview" if preview else "")   # the engine imports each plan name once: a rehearsal must not use up the real one
         folder = self.inbox / name
         if folder.exists():
             shutil.rmtree(folder)
