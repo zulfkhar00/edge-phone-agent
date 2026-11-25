@@ -22,12 +22,13 @@ Usage:
 
 from __future__ import annotations
 
+import os
 import re
 import time
 from dataclasses import dataclass
 from pathlib import Path
 
-from phone import Abort, Phone
+from phone import SHOTS, Abort, Phone
 
 MEDIA_DIR = "/storage/emulated/0/DCIM/flagd"
 IMAGE_EXT = {".jpg", ".jpeg", ".png", ".webp"}
@@ -464,8 +465,19 @@ def verify_on_profile(p: Phone, spec: Spec, text: str, wait_s: int = 150) -> dic
         time.sleep(3)
 
 
-def post(p: Phone, spec: Spec, handle: str, text: str, media: Path | None = None, verify_wait_s: int = 150) -> dict:
-    """The whole post flow on an already connected phone. Returns the RESULT dict."""
+def preview_shot(p: Phone, what: str) -> str:
+    """Screenshot of a rehearsal (runs/preview-<what>-<time>-<phone id>.png); returns its path."""
+    SHOTS.mkdir(exist_ok=True)
+    tag = os.environ.get("PHONE_ID", "")
+    shot = SHOTS / f"preview-{what}-{time.strftime('%m%d-%H%M%S')}{'-' + tag if tag else ''}.png"
+    p.d.screenshot(str(shot))
+    return str(shot)
+
+
+def post(p: Phone, spec: Spec, handle: str, text: str, media: Path | None = None, verify_wait_s: int = 150, preview: bool = False) -> dict:
+    """The whole post flow on an already connected phone. Returns the RESULT dict.
+    preview=True: everything up to just before Post (account checked, text typed and read back, media attached), screenshot,
+    then discard the compose screen. Post is never tapped."""
     check_text(spec, text)
     remote = None
     posted = False
@@ -479,6 +491,16 @@ def post(p: Phone, spec: Spec, handle: str, text: str, media: Path | None = None
             print(f"3. attach {media_kind(media)}", flush=True)
             remote = p.push_video(media)
             attach_media(p, spec, media)
+        if preview:
+            shot = preview_shot(p, spec.key)
+            print(f"4. PREVIEW  (@{handle}, {len(text)} chars{', with media' if media else ''}): compose screen is filled, NOT posting; "
+                  f"screenshot {shot}", flush=True)
+            btn = find_id(p.nodes(), spec.post_ids) or exact(p.nodes(), spec.post_labels)
+            if btn is None:
+                p.fail("the Post button was not found on the filled compose screen")
+            discard_compose(p, spec)
+            return {"app": spec.key, "account": handle, "preview": True, "shot": shot, "chars": len(text),
+                    "media": media_kind(media) if media else None, "post_button_enabled": btn.get("enabled") != "false"}
         print(f"4. POST  (@{handle}, {len(text)} chars{', with media' if media else ''})", flush=True)
         tap_post(p, spec)
         posted = True
@@ -571,11 +593,12 @@ def cli(spec: Spec) -> None:
     ap.add_argument("text")
     ap.add_argument("--media", type=Path, help="an image or video to attach")
     ap.add_argument("--account", required=True, help="the handle that must be logged in (checked; never logged into)")
+    ap.add_argument("--preview", action="store_true", help="rehearse: fill the compose screen, screenshot, cancel; never tap Post")
     a = ap.parse_args()
     try:
         if a.media is not None and not a.media.is_file():
             raise Abort(f"media file {a.media} does not exist")
-        result = post(Phone(SERIAL), spec, a.account.lstrip("@"), a.text, a.media)
+        result = post(Phone(SERIAL), spec, a.account.lstrip("@"), a.text, a.media, preview=a.preview)
     except Abort as e:
         print(f"ABORTED: {e}", flush=True)
         sys.exit(1)

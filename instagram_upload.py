@@ -13,6 +13,8 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import json
+import os
 import re
 import sys
 import time
@@ -110,14 +112,14 @@ def scroll(p: Phone, down: bool = True) -> None:
     time.sleep(1.5)
 
 
-def upload(video: Path, caption: str, audience: str, delete_after: bool) -> None:
+def upload(video: Path, caption: str, audience: str, delete_after: bool, preview: bool = False) -> None:
     p = Phone(SERIAL)
     today = f"{date.today():%B} {date.today().day}, {date.today().year}"  # e.g. "November 2, 2026"
 
     print("1. copy video to the gallery", flush=True)
     remote = p.push_video(video)
     try:
-        _upload(p, remote, caption, audience, delete_after, today)
+        _upload(p, remote, caption, audience, delete_after, today, preview)
     except Abort:
         try:
             if p.find("Share") or p.find("Edit video") or p.find("Start over") or p.find("Save draft"):
@@ -130,7 +132,7 @@ def upload(video: Path, caption: str, audience: str, delete_after: bool) -> None
         print("  removed the copied video from the phone", flush=True)
 
 
-def _upload(p: Phone, remote: str, caption: str, audience: str, delete_after: bool, today: str) -> None:
+def _upload(p: Phone, remote: str, caption: str, audience: str, delete_after: bool, today: str, preview: bool = False) -> None:
 
     print("2. open Instagram -> Create", flush=True)
     p.wake()
@@ -233,6 +235,15 @@ def _upload(p: Phone, remote: str, caption: str, audience: str, delete_after: bo
     if toggles_on:
         p.fail(f"{len(toggles_on)} toggle(s) are on (Facebook / Your story / AI label); refusing to share")
 
+    if preview:
+        shot = Path(__file__).parent / "runs" / f"preview-instagram-{time.strftime('%m%d-%H%M%S')}{'-' + os.environ['PHONE_ID'] if os.environ.get('PHONE_ID') else ''}.png"
+        shot.parent.mkdir(exist_ok=True)
+        p.d.screenshot(str(shot))
+        print(f"6. PREVIEW  (audience: {want}, caption: {caption!r}): share screen is filled, NOT sharing; screenshot {shot}", flush=True)
+        discard_session(p)   # Start over, never Save draft
+        print("RESULT " + json.dumps({"app": "instagram", "preview": True, "shot": str(shot), "audience": want, "chars": len(caption)}), flush=True)
+        return
+
     print(f"6. SHARE  (audience: {want}, caption: {caption!r})", flush=True)
     p.tap_node(p.by_id("share_button"), "Share")
     # One-time notice (2026-11-03): "Update on your original audio ... can be used by people on the Meta AI app".
@@ -296,13 +307,14 @@ def main() -> None:
     ap.add_argument("--audience", choices=AUDIENCE, default="everyone")
     ap.add_argument("--account", help="switch to this already-logged-in account first")
     ap.add_argument("--delete-after", action="store_true", help="for tests: delete the reel once verified")
+    ap.add_argument("--preview", action="store_true", help="rehearse: fill the share screen, screenshot, Start over; never tap Share")
     a = ap.parse_args()
     try:
         if a.account:
             import accounts
             p = Phone(SERIAL)
             accounts.switch(p, "instagram", a.account)
-        upload(a.video, a.caption, a.audience, a.delete_after)
+        upload(a.video, a.caption, a.audience, a.delete_after, a.preview)
     except Abort as e:
         print(f"ABORTED: {e}", flush=True)
         sys.exit(1)

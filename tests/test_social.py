@@ -248,3 +248,16 @@ def test_snapshot_metrics_for_x_and_threads():
     m = insights.snap_metrics("x", {"views": 345, "likes": 10, "replies": 1, "reposts": 2})
     assert (m["views"], m["likes"], m["comments"], m["shares"]) == (345, 10, 1, 2)
     assert insights.snap_metrics("threads", {"likes": 5})["views"] is None
+
+
+# ---------------------------------------------------------------- preview (Hub bridge dry run)
+def test_preview_fills_the_compose_screen_then_discards_and_never_taps_post(capsys, tmp_path, monkeypatch):
+    monkeypatch.setattr(social, "SHOTS", tmp_path)
+    p = x_phone()
+    result = social.post(p, social.X, "brand", "Rehearsal only, nothing goes out.", preview=True)
+    assert result["preview"] is True and result["post_button_enabled"] is True and "verified" not in result
+    assert p.typed == ["Rehearsal only, nothing goes out."]
+    assert p.state.get("posts", 0) == 0 and p.state.get("discarded") is True      # Delete, never Save
+    out = capsys.readouterr().out
+    assert "tap Post at" not in out and "PREVIEW" in out
+    assert list(tmp_path.glob("preview-x-*.png"))                                    # the screenshot of the filled screen
