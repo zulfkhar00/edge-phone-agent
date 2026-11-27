@@ -155,6 +155,18 @@ def check_server(problems: list[str], info: dict) -> None:
         problems.append(f"the last nightly run did not end cleanly: {last[-150:]}")
 
 
+def nightly_note(info: dict) -> str:
+    """What this box knows about last night's planner run (read from the render server by check_server)."""
+    last = info.get("last_nightly")
+    if last is None:
+        return "Last nightly run: unknown (the render server check did not run or did not answer)."
+    if not last.strip():
+        return "Last nightly run: the render server has no nightly run log at all."
+    m = re.search(r"exit=(\d+)", last)
+    state = (f"finished, exit={m.group(1)}" if m else "no exit line yet (still running, or it stopped early)")
+    return f"Last nightly run: {state}; log tail: {last.strip()[-100:].replace(' | ', ' / ')!r}."
+
+
 def check_plan(problems: list[str], info: dict) -> None:
     s = CFG.get("sync") or {}
     if not s.get("expect_plans"):
@@ -169,7 +181,8 @@ def check_plan(problems: list[str], info: dict) -> None:
     posting = any(lim.get("use") == "noswipe" and me.owns(app, name)
                   for app, accts in CFG.get("accounts", {}).items() for name, lim in accts.items())
     if n == 0 and posting:  # a phone whose accounts are research-only has nothing to post
-        problems.append(f"no posts planned for {today} on phone {me.id} (did the nightly plan arrive?)")
+        problems.append(f"no posts planned for {today} on phone {me.id} (did the nightly plan arrive?) "
+                        f"{nightly_note(info)}")
 
 
 def main() -> None:

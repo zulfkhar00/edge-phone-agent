@@ -245,6 +245,7 @@ async def test_failure_after_post_tap_is_unverified_for_x_too(eng, monkeypatch):
 
 async def test_daily_post_limit_covers_x(eng, monkeypatch):
     left = eng.RUNNER_BY_ID["left"]
+    monkeypatch.setitem(eng.SCHED, "post_min_gap_min", 0)  # pacing has its own tests; this one is about the daily limit
     script(eng, monkeypatch, "print('RESULT {}')")
     ids = [add(eng, kind="post", app="x", account="brand", args={"text": f"post {i} here", "caption": f"post {i} here", "media": None,
                                                                  "stats_offsets_min": [60]}) for i in range(3)]

@@ -130,7 +130,7 @@ details.sec > summary .sub { color: var(--faint); font-weight: 450; font-size: 1
 .what .e { color: var(--bad); font-size: 12px; margin-top: 2px; display: flex; gap: 8px; align-items: baseline; }
 .acts { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
 .state { font-size: 11px; font-weight: 650; padding: 1px 8px; border-radius: 99px; background: var(--soft); color: var(--muted); }
-.state.done { background: var(--ok-bg); color: var(--ok); } .state.skipped { background: var(--warn-bg); color: var(--warn); }
+.state.done { background: var(--ok-bg); color: var(--ok); } .state.skipped, .state.not_found { background: var(--warn-bg); color: var(--warn); }
 .empty { color: var(--muted); padding: 14px 0; }
 
 /* alerts panel */
@@ -488,10 +488,10 @@ function jobRow(j, now, kind) {
   let acts = "", extra = "";
   if (j.started_at) acts += btn(j.id, "log", "Log", "small ghost");
   if (kind === "next") acts += btn(j.id, "now", "Run now") + btn(j.id, "skip", "Skip");
-  if (kind === "bad" || j.status === "skipped") acts += btn(j.id, "retry", "Retry", "small primary");
+  if (kind === "bad" || j.status === "skipped" || j.status === "not_found") acts += btn(j.id, "retry", "Retry", "small primary");
   if (kind === "bad") extra = `<div class="e"><span class="trunc" title="${esc(j.error)}">${esc(j.error || j.status)}</span>` +
     (j.shot ? `<a href="/shots/${esc(j.shot)}" target="_blank" rel="noopener">screenshot</a>` : "") + `</div>`;
-  const state = kind === "done" ? `<span class="state ${j.status}">${j.status}</span> ` : "";
+  const state = kind === "done" ? `<span class="state ${j.status}">${j.status.replace("_", " ")}</span> ` : "";
   return `<div class="job"><div class="when"><b>${when(t, now)}</b><span class="${late ? "late" : ""}">${late ? "late · " : ""}${rel(t, now)}${j.attempts > 1 ? " · ×" + j.attempts : ""}</span></div>
     <div class="what"><div class="t">${state}<span>${esc(x.t)}</span>${x.x ? `<em>${esc(x.x)}</em>` : ""}</div>${x.d ? `<div class="d trunc" title="${esc(full)}">${esc(x.d)}</div>` : ""}${extra}</div>
     <div class="acts">${acts}</div></div>`;
@@ -552,7 +552,7 @@ function renderPhone() {
   } else rc.hidden = true;
 
   const bad = needsAttention(p), nxt = waiting(p);
-  const done = p.jobs.filter(j => ["done", "skipped"].includes(j.status)).sort((a, b) => (b.started_at || b.run_at) - (a.started_at || a.run_at));
+  const done = p.jobs.filter(j => ["done", "skipped", "not_found"].includes(j.status)).sort((a, b) => (b.started_at || b.run_at) - (a.started_at || a.run_at));
   const attn = bad.sort((a, b) => b.run_at - a.run_at);
   $("#jobsBox").innerHTML = (p.mirror_error ? `<div class="card pad" style="color:var(--bad)">Screen mirror: ${esc(p.mirror_error)}</div>` : "") +
     (attn.length ? section(p, "bad", "Needs attention", attn, "bad", true, "attn") : "") +

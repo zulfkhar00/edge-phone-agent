@@ -22,3 +22,13 @@
 - Insights need a professional account (@tinyloveshows was personal: no insights at all; switched to professional by the user).
 - The reel's way into insights varies: "<N> views" link, an "Insights" button (brand-new reel), or a "<N> • View insights" bar
   under the caption. Next to that bar is "Boost reel" (paid promotion): never tap it.
+
+## Finding the post (2026-11-21)
+- The reel is found by caption, not by position: the profile grid is scrolled and up to 30 reels are opened, newest
+  first. Pinned tiles ("Pinned" in the tile description / badge) are skipped. A 24-48 h old reel is often 7-15 tiles down.
+- Caption match: first 30 characters of letters/digits only (case, emoji, punctuation, line breaks and a trailing
+  "... more" are ignored; an emoji-only caption falls back to its emoji). Code: `stats_lookup.py`.
+- A full scan without a match prints `NOT_FOUND: ...` and exits 3 (failure screenshot in `runs/`). The engine records
+  the stats job as `not_found` (terminal, no retry) and lists it in ONE "stats" alert per phone and day. Phone off,
+  app crash, login wall, empty grid or the time budget (7 min) still abort normally: retry once, then alert.
+- Not done: opening the reel by its link. Nothing stores a permalink at publish time (the share flow never reads it).
