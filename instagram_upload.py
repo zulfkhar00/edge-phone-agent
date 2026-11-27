@@ -13,6 +13,8 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import json
+import os
 import re
 import sys
 import time
@@ -23,7 +25,8 @@ from pathlib import Path
 from phone import SERIAL, Abort, Phone
 
 PKG = "com.instagram.android"
-CFG = tomllib.loads((Path(__file__).parent / "config.toml").read_text())
+_CONFIG = Path(__file__).parent / "config.toml"
+CFG = tomllib.loads(_CONFIG.read_text()) if _CONFIG.exists() else {}  # missing only in CI / tests
 AUDIENCE = {"everyone": "Everyone", "close_friends": "Close Friends"}
 POPUPS = ("No, thanks", "Not now", "Not Now", "Remind me later")  # dismiss buttons for nag dialogs
 
@@ -97,6 +100,20 @@ def open_profile_reels(p: Phone) -> None:
         time.sleep(1)
 
 
+def audience_value(ns: list[dict]) -> str:
+    """The audience the share screen currently shows ("Everyone" / "Close Friends"). Older Instagram builds put it in an
+    `inline_subtitle` node; newer ones (phone-2, Nov 2026) list the "Audience" label and its value as consecutive nodes."""
+    by_id = next((n["label"] for n in ns if n.get("resource-id", "").endswith(":id/inline_subtitle")), "")
+    if by_id:
+        return by_id
+    labels = [n["label"] for n in ns]
+    if "Audience" in labels:
+        nxt = labels[labels.index("Audience") + 1:][:1]
+        if nxt and nxt[0] in AUDIENCE.values():
+            return nxt[0]
+    return ""
+
+
 def keyboard_open(p: Phone) -> bool:
     return any(n.get("resource-id", "").endswith(("key_pos_space", "input_method_nav_back")) or n["label"] == "Space"
                for n in p.nodes())
@@ -110,14 +127,42 @@ def scroll(p: Phone, down: bool = True) -> None:
     time.sleep(1.5)
 
 
-def upload(video: Path, caption: str, audience: str, delete_after: bool) -> None:
+def finish_share_sheets(p: Phone) -> None:
+    """The one-time sheets that can sit between the share screen's button and the reel being published. Both are the owner's
+    publish confirmation (they are only ever opened by our own tap on Share / Next), never a promo:
+      * "About Reels" (2026-11-25, the first reel of an account, build 457): "Next" opens it; its Share button publishes.
+      * "Update on your original audio ... Meta AI app" (2026-11-03): both its buttons share. Which one is the account owner's
+        choice: [instagram].meta_ai_audio = "off" | "allow"."""
+    end = time.time() + 14
+    said_about = False
+    while time.time() < end:
+        nux = p.by_id("clips_nux_sheet_share_button")
+        if nux is not None and not said_about:
+            said_about = True
+            p.tap_node(nux, "Share (About Reels notice)")
+            end = max(end, time.time() + 8)   # the Meta AI notice may follow
+        elif p.find("Turn off and share"):
+            choice = (CFG.get("instagram") or {}).get("meta_ai_audio")
+            if choice == "off":
+                p.tap_node(p.find("Turn off and share"), "Turn off and share (Meta AI audio off)")
+            elif choice == "allow":
+                p.tap_node(p.by_id("clips_original_audio_nux_sheet_share_button"), "Share (Meta AI audio allowed)")
+            else:
+                p.tap_node(p.find("Dismiss"), "dismiss the Meta AI audio notice")
+                p.fail("Instagram asks whether Meta AI may reuse our original audio; set [instagram] meta_ai_audio "
+                       "= \"off\" or \"allow\" in config.toml (nothing was shared)")
+            return
+        time.sleep(1)
+
+
+def upload(video: Path, caption: str, audience: str, delete_after: bool, preview: bool = False) -> None:
     p = Phone(SERIAL)
     today = f"{date.today():%B} {date.today().day}, {date.today().year}"  # e.g. "November 2, 2026"
 
     print("1. copy video to the gallery", flush=True)
     remote = p.push_video(video)
     try:
-        _upload(p, remote, caption, audience, delete_after, today)
+        _upload(p, remote, caption, audience, delete_after, today, preview)
     except Abort:
         try:
             if p.find("Share") or p.find("Edit video") or p.find("Start over") or p.find("Save draft"):
@@ -130,7 +175,7 @@ def upload(video: Path, caption: str, audience: str, delete_after: bool) -> None
         print("  removed the copied video from the phone", flush=True)
 
 
-def _upload(p: Phone, remote: str, caption: str, audience: str, delete_after: bool, today: str) -> None:
+def _upload(p: Phone, remote: str, caption: str, audience: str, delete_after: bool, today: str, preview: bool = False) -> None:
 
     print("2. open Instagram -> Create", flush=True)
     p.wake()
@@ -211,7 +256,7 @@ def _upload(p: Phone, remote: str, caption: str, audience: str, delete_after: bo
     scroll(p)
     want = AUDIENCE[audience]
     ns = p.wait("share screen settings", "Audience", "Facebook", "Your story")
-    current = next((n["label"] for n in ns if n.get("resource-id", "").endswith(":id/inline_subtitle")), "")
+    current = audience_value(ns)
     if current != want:
         p.tap_node(p.find("Audience", ns), "Audience row")
         ns = p.wait("audience screen", "Who can see your reel", want)
@@ -224,7 +269,7 @@ def _upload(p: Phone, remote: str, caption: str, audience: str, delete_after: bo
         p.d.press("back")
         time.sleep(1.5)
         ns = p.wait("share screen settings", "Audience", "Facebook")
-        current = next((n["label"] for n in ns if n.get("resource-id", "").endswith(":id/inline_subtitle")), "")
+        current = audience_value(ns)
         if current != want:
             p.fail(f"audience did not stick (shows {current!r})")
 
@@ -233,24 +278,18 @@ def _upload(p: Phone, remote: str, caption: str, audience: str, delete_after: bo
     if toggles_on:
         p.fail(f"{len(toggles_on)} toggle(s) are on (Facebook / Your story / AI label); refusing to share")
 
+    if preview:
+        shot = Path(__file__).parent / "runs" / f"preview-instagram-{time.strftime('%m%d-%H%M%S')}{'-' + os.environ['PHONE_ID'] if os.environ.get('PHONE_ID') else ''}.png"
+        shot.parent.mkdir(exist_ok=True)
+        p.d.screenshot(str(shot))
+        print(f"6. PREVIEW  (audience: {want}, caption: {caption!r}): share screen is filled, NOT sharing; screenshot {shot}", flush=True)
+        discard_session(p)   # Start over, never Save draft
+        print("RESULT " + json.dumps({"app": "instagram", "preview": True, "shot": str(shot), "audience": want, "chars": len(caption)}), flush=True)
+        return
+
     print(f"6. SHARE  (audience: {want}, caption: {caption!r})", flush=True)
     p.tap_node(p.by_id("share_button"), "Share")
-    # One-time notice (2026-11-03): "Update on your original audio ... can be used by people on the Meta AI app".
-    # Its buttons both share. Which one is the account owner's choice: [instagram].meta_ai_audio = "off" | "allow".
-    end = time.time() + 8
-    while time.time() < end:
-        if p.find("Turn off and share"):
-            choice = (CFG.get("instagram") or {}).get("meta_ai_audio")
-            if choice == "off":
-                p.tap_node(p.find("Turn off and share"), "Turn off and share (Meta AI audio off)")
-            elif choice == "allow":
-                p.tap_node(p.by_id("clips_original_audio_nux_sheet_share_button"), "Share (Meta AI audio allowed)")
-            else:
-                p.tap_node(p.find("Dismiss"), "dismiss the Meta AI audio notice")
-                p.fail("Instagram asks whether Meta AI may reuse our original audio; set [instagram] meta_ai_audio "
-                       "= \"off\" or \"allow\" in config.toml (nothing was shared)")
-            break
-        time.sleep(1)
+    finish_share_sheets(p)
 
     print("7. confirm it on the profile's Reels tab", flush=True)
     time.sleep(20)  # let the upload finish; never restart the app here, it could cut the upload off
@@ -296,13 +335,14 @@ def main() -> None:
     ap.add_argument("--audience", choices=AUDIENCE, default="everyone")
     ap.add_argument("--account", help="switch to this already-logged-in account first")
     ap.add_argument("--delete-after", action="store_true", help="for tests: delete the reel once verified")
+    ap.add_argument("--preview", action="store_true", help="rehearse: fill the share screen, screenshot, Start over; never tap Share")
     a = ap.parse_args()
     try:
         if a.account:
             import accounts
             p = Phone(SERIAL)
             accounts.switch(p, "instagram", a.account)
-        upload(a.video, a.caption, a.audience, a.delete_after)
+        upload(a.video, a.caption, a.audience, a.delete_after, a.preview)
     except Abort as e:
         print(f"ABORTED: {e}", flush=True)
         sys.exit(1)

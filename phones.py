@@ -8,8 +8,9 @@ config.toml describes them as an array of tables:
     hw_serial = "ZD222RWWGT"          # the phone's own serial (adb shell getprop ro.serialno): required
     usb_serial = "ZD222RWWGT"         # optional: its serial on the cable, when that differs from hw_serial
     wifi_serial = "192.168.1.150:5555" # optional: Wi-Fi adb address, the fallback (adb_keeper.sh keeps it current)
-    accounts = ["ig:@tinyloveshows", "tt:@nomoreawkwardness", "x:@handle", "reddit:u/name"]   # each account lives on exactly one phone
+    accounts = ["ig:@tinyloveshows", "tt:@nomoreawkwardness", "x:@handle", "threads:@handle", "reddit:u/name"]   # each account lives on exactly one phone
     quotas = { posts_per_day = 2 }    # optional: overrides the [accounts.*] limits of this phone's accounts
+    noswipe_phone_id = "pi-rack-1-phone-3"   # optional: this phone's id in NoSwipe's admin Run panel (default: id). See noswipe.py
 
 An old config with only [phone] keeps working: it is one phone with id "phone-1" that owns every account.
 
@@ -30,10 +31,12 @@ from typing import Awaitable, Callable
 
 LEGACY_ID = "phone-1"
 APPS = {"ig": "instagram", "instagram": "instagram", "tt": "tiktok", "tiktok": "tiktok",
-        "x": "x", "twitter": "x", "reddit": "reddit", "rd": "reddit"}
-# Apps the engine can drive (post, stats, research). X and Reddit accounts can live on a phone (listed in the dashboard,
-# logged in by the owner through Take over) but have no flows: no job is ever created for them.
-AUTOMATED_APPS = frozenset({"instagram", "tiktok"})
+        "x": "x", "twitter": "x", "threads": "threads", "th": "threads", "reddit": "reddit", "rd": "reddit"}
+# Apps the engine can drive. instagram / tiktok: post, stats, research. x / threads: text posts (+ image or video),
+# stats and the login check (no research, no delete). Reddit accounts can live on a phone (listed in the dashboard, logged
+# in by the owner through Take over) but have no flows: no job is ever created for them.
+AUTOMATED_APPS = frozenset({"instagram", "tiktok", "x", "threads"})
+TEXT_APPS = frozenset({"x", "threads"})  # text-first apps: posts may have no video; see social.py
 LISTED_ONLY_NOTE = ("Listed only: log in yourself with Take over on the phone. The engine has no posting flow for this app, "
                     "and whether the login is still valid is not checked (unknown).")
 ID_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_-]{0,31}$")
@@ -53,6 +56,11 @@ class PhoneCfg:
     accounts: frozenset[tuple[str, str]] | None = None  # (app, handle lower-cased); None = owns every account (legacy)
     quotas: dict = field(default_factory=dict)
     index: int = 0
+    noswipe_phone_id: str = ""  # the phoneId NoSwipe knows this phone by ("" = the phone's own id)
+
+    @property
+    def noswipe_id(self) -> str:
+        return self.noswipe_phone_id or self.id
 
     @property
     def usb(self) -> str:
@@ -64,7 +72,7 @@ class PhoneCfg:
 
 
 def parse_account(spec: str) -> tuple[str, str]:
-    """'ig:@name' / 'tt:name' / 'instagram:@name' / 'x:@name' / 'reddit:u/name' -> ('instagram', 'name')."""
+    """'ig:@name' / 'tt:name' / 'instagram:@name' / 'x:@name' / 'threads:@name' / 'reddit:u/name' -> ('instagram', 'name')."""
     app, sep, handle = str(spec).partition(":")
     handle = handle.strip()
     if app.strip().lower() == "reddit" or app.strip().lower() == "rd":
@@ -85,7 +93,7 @@ def load_phones(cfg: dict) -> list[PhoneCfg]:
             raise ConfigError("config.toml needs a [phone] section or one or more [[phones]] entries")
         return [PhoneCfg(id=LEGACY_ID, label=legacy.get("label") or "Phone", hw_serial=legacy.get("hw_serial", ""),
                          usb_serial=legacy.get("usb_serial", ""), wifi_serial=legacy.get("serial", ""), accounts=None,
-                         index=0)]
+                         index=0, noswipe_phone_id=str(legacy.get("noswipe_phone_id", "")).strip())]
     if not isinstance(multi, list) or not multi:
         raise ConfigError("[[phones]] must have at least one entry")
     phones: list[PhoneCfg] = []
@@ -121,7 +129,8 @@ def load_phones(cfg: dict) -> list[PhoneCfg]:
         if not isinstance(quotas, dict):
             raise ConfigError(f"phone {pid}: quotas must be a table, e.g. quotas = {{ posts_per_day = 2 }}")
         phones.append(PhoneCfg(id=pid, label=str(p.get("label") or pid), hw_serial=hw, usb_serial=usb, wifi_serial=wifi,
-                               accounts=frozenset(accts), quotas=dict(quotas), index=i))
+                               accounts=frozenset(accts), quotas=dict(quotas), index=i,
+                               noswipe_phone_id=str(p.get("noswipe_phone_id", "")).strip()))
     return phones
 
 

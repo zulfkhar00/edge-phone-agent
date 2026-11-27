@@ -11,7 +11,12 @@ TikTok   live:     views / likes / comments / saves / shares from the post scree
 Instagram         "<N> views" on the reel -> Reel insights (native text): views, viewers, average watch time,
                    skip rate, like/share/save/repost/comment rates, sources.
 
+X, Threads    views / likes / replies / reposts read from the post's row on our profile (see social.read_stats; the
+                  numbers come from the row's accessibility labels, missing ones stay empty; Threads shows views only in
+                  its own insights screen, which is not read yet)
+
 Usage:
+  python stats.py x "first words of the post"
   python stats.py tiktok "I interrupted them and wanted to disappear" [--detailed]
   python stats.py instagram "I interrupted them and wanted to disappear"
   options: --account <handle> (switch first), --label 1h (which snapshot this is)
@@ -35,7 +40,8 @@ from stats_lookup import (MAX_TILES, NoTiles, NotFound, caption_key, caption_mat
                           scan_reels)
 
 DB = Path(__file__).parent / "stats.db"
-PKGS = {"tiktok": "com.zhiliaoapp.musically", "instagram": "com.instagram.android"}
+PKGS = {"tiktok": "com.zhiliaoapp.musically", "instagram": "com.instagram.android",
+        "x": "com.twitter.android", "threads": "com.instagram.barcelona"}
 NOT_FOUND_EXIT = 3
 TILE_SPOTS = [(119, 795), (359, 795), (599, 795), (119, 1115), (359, 1115), (599, 1115)]  # TikTok grid, newest first
 
@@ -330,7 +336,13 @@ def main() -> None:
         if a.account:
             import accounts
             accounts.switch(p, a.app, a.account)
-        if a.app == "tiktok":
+        if a.app in ("x", "threads"):
+            import social
+            spec = social.SPECS[a.app]
+            if not a.account:
+                raise Abort("x / threads stats need --account (the handle is checked before reading)")
+            data = social.read_stats(p, spec, a.caption)
+        elif a.app == "tiktok":
             tt_open_post(p, a.caption)
             data = {"live": tt_live(p)}
             if a.detailed:

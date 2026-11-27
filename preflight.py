@@ -1,8 +1,10 @@
 """Morning preflight: find problems hours before the first post, not at noon.
 
 Checks (each one independently; all problems are reported together):
-  phone      adb connected, screen wakes, battery level / temperature, TikTok + Instagram installed
-  accounts   every account with use = "noswipe" is still logged in (switch to it and confirm the profile)
+  phone      adb connected, screen wakes, battery level / temperature, TikTok + Instagram installed (X / Threads too,
+             on a phone that owns such an account)
+  accounts   every account with use = "noswipe" is still logged in (switch to it and confirm the profile; X / Threads:
+             confirm the handle, "needs login" when logged out or another account: we never log in)
   engine     free disk space on this machine
   server     the render server answers over Tailscale, its disk has room, the last nightly run ended cleanly
   plan       today's plan has arrived (only when [sync].expect_plans is on)
@@ -24,6 +26,7 @@ import shutil
 import sqlite3
 import subprocess
 import sys
+import time
 import tomllib
 from datetime import datetime
 from pathlib import Path
@@ -32,7 +35,9 @@ import phones as phonecfg
 
 ROOT = Path(__file__).parent
 CFG = tomllib.loads(Path(os.environ.get("ENGINE_CONFIG") or ROOT / "config.toml").read_text())
-PKGS = {"tiktok": "com.zhiliaoapp.musically", "instagram": "com.instagram.android"}
+PKGS = {"tiktok": "com.zhiliaoapp.musically", "instagram": "com.instagram.android",
+        "x": "com.twitter.android", "threads": "com.instagram.barcelona"}
+BASE_APPS = ("tiktok", "instagram")  # always expected on a phone; X / Threads only where this phone owns such an account
 
 
 PHONES = phonecfg.load_phones(CFG)
@@ -73,15 +78,32 @@ def check_phone(problems: list[str], info: dict) -> bool:
     if info["battery_c"] is not None and info["battery_c"] >= 45:
         problems.append(f"phone battery is hot: {info['battery_c']} C")
     pkgs = adb("shell", "pm", "list", "packages")
-    for app, pkg in PKGS.items():
+    me = this_phone()
+    wanted = [a for a in PKGS if a in BASE_APPS or any(me.owns(a, h) for h in CFG.get("accounts", {}).get(a, {}))]
+    for app in wanted:
+        pkg = PKGS[app]
         if f"package:{pkg}" not in pkgs:
             problems.append(f"{app} is not installed on the phone")
     return True
 
 
+def record_login(app: str, handle: str, ok: bool) -> None:
+    """X / Threads: leave the result where the dashboard reads it (engine.db state). Never fails the preflight."""
+    if app not in ("x", "threads"):
+        return
+    try:
+        con = sqlite3.connect(ROOT / "engine.db", timeout=10)
+        con.execute("insert into state (k, v) values (?, ?) on conflict(k) do update set v=excluded.v",
+                    (f"login:{app}:{handle}", json.dumps({"status": "ok" if ok else "needs_login", "at": time.time()})))
+        con.commit()
+        con.close()
+    except sqlite3.Error:
+        pass
+
+
 def check_accounts(problems: list[str], info: dict) -> None:
     for app, accts in CFG.get("accounts", {}).items():
-        if app not in PKGS:  # X / Reddit: no flow to verify the login
+        if app not in PKGS:  # Reddit: no flow to verify the login
             continue
         for handle, lim in accts.items():
             if lim.get("use") != "noswipe" or not this_phone().owns(app, handle):  # only this phone's accounts
@@ -90,9 +112,13 @@ def check_accounts(problems: list[str], info: dict) -> None:
                                timeout=240)
             ok = r.returncode == 0 and ("now on" in r.stdout or "already on" in r.stdout)
             info[f"{app}@{handle}"] = "ok" if ok else "FAILED"
+            record_login(app, handle, ok)
             if not ok:
                 why = next((l for l in r.stdout.splitlines() if l.startswith("ABORTED")), r.stdout.strip()[-150:])
-                problems.append(f"{app} @{handle} could not be opened (logged out? challenge screen?): {why}")
+                if "needs login" in why:  # X / Threads (never logged into by us): say what the owner has to do
+                    problems.append(f"{app} @{handle} needs login on phone {this_phone().id}: log in by hand with Take over ({why[-120:]})")
+                else:
+                    problems.append(f"{app} @{handle} could not be opened (logged out? challenge screen?): {why}")
 
 
 def check_engine_disk(problems: list[str], info: dict) -> None:

@@ -9,7 +9,7 @@ Plans arrive as mailbox/inbox/<name>/plan.json (+ videos/). Each plan is importe
   stats     added after a post succeeds, at the configured offsets (1h 3h 6h 12h 24h 48h)
   research  fills the gaps between fixed jobs, inside its time window, within daily limits
   delete    clean-up of test posts
-Each job runs the matching script (tiktok_upload.py, instagram_upload.py, stats.py, research.py, delete.py) as
+Each job runs the matching script (tiktok_upload.py, instagram_upload.py, x_post.py, threads_post.py, stats.py, research.py, delete.py) as
 a subprocess; its output goes to logs/<id>.log. Failures retry once, then raise an alert (dashboard + email).
 Take over pauses the runner: research/stats are stopped at once, a post or delete is allowed to finish first.
 Phones are listed in config.toml ([[phones]], or the old [phone]); see phones.py. A job runs on the phone that owns its account.
@@ -36,7 +36,9 @@ from email.message import EmailMessage
 from pathlib import Path
 
 import access
+import hub_rig
 import insights
+import noswipe
 import phones as phonecfg
 import research_seeds
 import updater
@@ -52,6 +54,8 @@ CFG = tomllib.loads(CONFIG.read_text())
 PHONES = phonecfg.load_phones(CFG)  # raises ConfigError: a bad phone setup must stop the engine, not guess
 phonecfg.apply_quotas(CFG, PHONES)
 PHONE_BY_ID = {p.id: p for p in PHONES}
+NSCFG = noswipe.NoswipeCfg.from_cfg(CFG)  # [noswipe]: off unless enabled = true; a bad value stops the engine
+HUBCFG = hub_rig.HubCfg.from_cfg(CFG)  # [hub]: Hub's posting queue via this rig; off unless enabled = true
 DEFAULT_PHONE = PHONES[0]  # what the old single-phone endpoints and legacy jobs (no phone_id) mean
 
 
@@ -69,6 +73,8 @@ THUMBS = ROOT / "thumbs"   # post thumbnails for the dashboard (made while the v
 INBOX = ROOT / CFG["mailbox"]["inbox"]
 SCHED = CFG["schedule"]
 FIXED = ("preflight", "post", "delete", "stats")  # jobs with a set time; research fills the gaps
+NS: noswipe.Integration | None = None  # built in on_start / tests (needs ROOT, which tests move)
+HUB: hub_rig.Integration | None = None  # same for [hub]
 TIMEOUT_MIN = {"post": 15, "delete": 8, "stats": 10, "preflight": 15}
 NOT_FOUND_EXIT = 3  # stats.py: scanned the whole profile, the post is not there (terminal, not a failure)
 NO_PLAN = "no posts planned for"  # preflight.check_plan problem text (kept in sync with preflight.py)
@@ -198,6 +204,32 @@ def at_time(day: str, hhmm: str) -> float:
     return datetime.strptime(f"{day} {hhmm}", "%Y-%m-%d %H:%M").timestamp()
 
 
+def plan_context(con, raw: dict) -> tuple[set, dict]:
+    """What check_plan needs from the database: caption keys already used (a failed / skipped post never went out, so its caption
+    may be used again) and the posts already planned per account on the plan's day."""
+    existing = {caption_key(json.loads(r["args"]).get("caption", ""))
+                for r in con.execute("select args from jobs where kind='post' and status not in ('failed','skipped')")}
+    per_day: dict = {}
+    try:
+        d0 = datetime.strptime(str(raw.get("day")), "%Y-%m-%d").timestamp()
+        for r in con.execute("select app, account, count(*) n from jobs where kind='post' and status not in "
+                             "('failed','skipped') and run_at>=? and run_at<? group by app, account", (d0, d0 + 86400)):
+            per_day[(r["app"], r["account"])] = r["n"]
+    except ValueError:
+        pass
+    return existing, per_day
+
+
+def check_plan_now(raw: dict, folder: Path):
+    """check_plan with the live database context (used by the Hub bridge before it writes a plan into the inbox)."""
+    con = db()
+    try:
+        existing, per_day = plan_context(con, raw)
+    finally:
+        con.close()
+    return check_plan(raw, folder, CFG, existing, per_day)
+
+
 def import_plans() -> None:
     con = db()
     for f in sorted(INBOX.glob("*/plan.json")):
@@ -206,16 +238,7 @@ def import_plans() -> None:
             continue
         try:
             raw = json.loads(f.read_text())
-            existing = {caption_key(json.loads(r["args"]).get("caption", ""))
-                        for r in con.execute("select args from jobs where kind='post'")}
-            per_day: dict = {}
-            try:
-                d0 = datetime.strptime(str(raw.get("day")), "%Y-%m-%d").timestamp()
-                for r in con.execute("select app, account, count(*) n from jobs where kind='post' and status not in "
-                                     "('failed','skipped') and run_at>=? and run_at<? group by app, account", (d0, d0 + 86400)):
-                    per_day[(r["app"], r["account"])] = r["n"]
-            except ValueError:
-                pass
+            existing, per_day = plan_context(con, raw)
             plan, problems = check_plan(raw, f.parent, CFG, existing, per_day)
             if problems:
                 alert("plan", f"plan {name}: {'rejected' if plan is None else 'some items dropped'}:\n- " + "\n- ".join(problems),
@@ -240,9 +263,14 @@ def import_plans() -> None:
                         run_at = at_time(day, t.get("at") or post["at"])
                     else:  # a random minute (and second) of the round's hour
                         run_at = at_time(day, f"{int(post['round']):02d}:00") + random.randrange(0, 3600)
-                    args = {"video": str((f.parent / post["video"]).resolve()), "caption": post["caption"],
-                            "stats_offsets_min": plan.get("stats_offsets_min")}
-                    if t["app"] == "tiktok":
+                    media = str((f.parent / post["video"]).resolve()) if post.get("video") else None
+                    args = {"video": media, "caption": post["caption"], "stats_offsets_min": plan.get("stats_offsets_min")}
+                    if plan.get("preview"):  # fill the compose screen, stop before Post, cancel (Hub bridge dry run)
+                        args["preview"] = True
+                    if t["app"] in phonecfg.TEXT_APPS:  # X / Threads: a text post, media (image or video) optional
+                        args["text"], args["media"] = post["caption"], media
+                        args.pop("video")
+                    elif t["app"] == "tiktok":
                         args["visibility"] = t.get("visibility", "everyone")
                     else:
                         args["audience"] = t.get("audience", "everyone")
@@ -476,6 +504,16 @@ def cleanup() -> None:
 
 
 # ================================================================ limits
+def set_login(app: str, account: str, status: str) -> None:
+    """Remember whether an X / Threads account was seen logged in ('ok') or not ('needs_login'): the dashboard shows it."""
+    set_state(f"login:{app}:{account}", {"status": status, "at": time.time()})
+
+
+def login_view(app: str, account: str) -> dict:
+    v = get_state(f"login:{app}:{account}") or {}
+    return {"login": v.get("status", "unknown"), "login_at": v.get("at")}
+
+
 def acct_cfg(app: str, account: str) -> dict:
     return CFG.get("accounts", {}).get(app, {}).get(account, {})
 
@@ -600,6 +638,9 @@ class Runner:
                 continue
             return job, None
         nxt = con.execute(f"select min(run_at) from jobs where status='waiting' and kind in {FIXED_KINDS} and {mine}", mp).fetchone()[0]
+        d = self.pick_dating(con, now, nxt, mine, mp)
+        if d is not None:
+            return d
         # fetchall: an open read cursor keeps a shared lock, and finish() below writes on another connection
         for r in con.execute(f"select * from jobs where status='waiting' and kind='research' and run_at<=? and {mine} order by run_at",
                              (now, *mp)).fetchall():
@@ -637,6 +678,32 @@ class Runner:
             return False
         return True
 
+    def pick_dating(self, con, now: float, nxt, mine: str, mp: tuple):
+        """A NoSwipe dating session fits in the gap before the next fixed job (like research) and only runs while NoSwipe's
+        list for this phone is fresh and still wants that account."""
+        if not NSCFG.enabled or not ns().active:
+            return None
+        want = NS.wanted(self.id, now)
+        for r in con.execute(f"select * from jobs where status='waiting' and kind='dating_session' and run_at<=? and {mine} order by run_at",
+                             (now, *mp)).fetchall():
+            if (r["not_after"] and now > r["not_after"]) or (r["app"], r["account"]) not in want:
+                self.finish(r["id"], "skipped", error="its window passed or NoSwipe no longer wants this run")
+                continue
+            a = json.loads(r["args"])
+            minutes = min(float(a.get("budget_min", 20)), (nxt - now) / 60 - SCHED["research_margin_min"] if nxt else 1e9)
+            if minutes >= 5:
+                return r, round(minutes, 1)
+        return None
+
+    def stop_job(self, job_id: int) -> None:
+        """Stop the running job gracefully (SIGTERM): NoSwipe paused its run. dating.py finishes its step and exits."""
+        if self.proc and self.job and self.job["id"] == job_id:
+            self.interrupted = True
+            try:
+                os.killpg(self.proc.pid, signal.SIGTERM)
+            except ProcessLookupError:
+                pass
+
     def finish(self, job_id: int, status: str, **f) -> None:
         con = db()
         f["status"] = status
@@ -648,9 +715,13 @@ class Runner:
         py = sys.executable
         app, acct = job["app"], job["account"]
         if job["kind"] == "post":
+            preview = ["--preview"] if a.get("preview") else []
+            if app in phonecfg.TEXT_APPS:
+                cmd = [py, "x_post.py" if app == "x" else "threads_post.py", a["text"], "--account", acct]
+                return cmd + (["--media", a["media"]] if a.get("media") else []) + preview
             if app == "tiktok":
                 return [py, "tiktok_upload.py", a["video"], "--caption", a["caption"], "--visibility", a["visibility"], "--account", acct]
-            return [py, "instagram_upload.py", a["video"], "--caption", a["caption"], "--audience", a["audience"], "--account", acct]
+            return [py, "instagram_upload.py", a["video"], "--caption", a["caption"], "--audience", a["audience"], "--account", acct] + preview
         if job["kind"] == "stats":
             cmd = [py, "stats.py", app, a["caption"], "--account", acct, "--label", job["label"]]
             if app == "tiktok" and a.get("offset_min", 0) >= SCHED["tiktok_detailed_from_min"]:
@@ -666,6 +737,9 @@ class Runner:
                     "--max-comments", str(comments), "--account", acct]
         if job["kind"] == "delete":
             return [py, "delete.py", app, a["caption"], "--account", acct]
+        if job["kind"] == "dating_session":
+            return [py, "dating.py", "--user-id", a["userId"], "--app", app, "--account-ref", acct, "--timezone", a.get("timezone", ""),
+                    "--minutes", str(minutes), "--job-id", str(job["id"])]
         if job["kind"] == "preflight":
             return [py, "preflight.py"]
         raise ValueError(job["kind"])
@@ -682,7 +756,7 @@ class Runner:
         self.finish(job["id"], "running", started_at=started, attempts=attempts, error=None, phone_id=self.id)
         cmd = self.command(job, minutes)
         log = LOGS / f"{job['id']}.log"
-        timeout = (minutes + 8 if job["kind"] == "research" else TIMEOUT_MIN[job["kind"]]) * 60
+        timeout = (minutes + 8 if job["kind"] in ("research", "dating_session") else TIMEOUT_MIN[job["kind"]]) * 60
         # the flow script drives exactly this phone: its live transport and id come from the environment
         env = {**os.environ, "PHONE_SERIAL": self.serial, "PHONE_ID": self.id, "PYTHONUNBUFFERED": "1"}
         result, aborted, not_found = None, None, None
@@ -728,13 +802,20 @@ class Runner:
         self.job = None
 
         if self.interrupted:  # taken over mid-job
-            if job["kind"] == "research":
-                self.finish(job["id"], "done", ended_at=ended, result=result, error="stopped early (taken over)")
+            if job["kind"] in ("research", "dating_session"):
+                self.finish(job["id"], "done", ended_at=ended, result=result, error="stopped early (taken over or paused by NoSwipe)")
             else:
                 self.finish(job["id"], "waiting", ended_at=ended, attempts=attempts - 1, error="interrupted (taken over)")
             return
+        if rc == 0 and job["kind"] == "post" and json.loads(job["args"]).get("preview"):
+            # a rehearsal: the compose screen was filled and cancelled, nothing was published. Not 'done': it must not count
+            # against the daily limit, schedule stats or look like a post.
+            self.finish(job["id"], "skipped", ended_at=ended, result=result, error="preview: compose screen filled, nothing was posted")
+            return
         if rc == 0:
             self.finish(job["id"], "done", ended_at=ended, result=result, shot=shot)
+            if job["app"] in phonecfg.TEXT_APPS:
+                set_login(job["app"], job["account"], "ok")
             if job["kind"] == "post":
                 self.schedule_stats(job, ended)
             return
@@ -744,6 +825,14 @@ class Runner:
             note_not_found(job, not_found)
             return
         err = aborted or f"exit code {rc}"
+        if aborted and aborted.startswith("needs login") and job["app"] in phonecfg.TEXT_APPS:
+            # logged out / wrong account: retrying cannot help and nothing was published (the flow stops before compose).
+            # Never log in for the owner: raise one alert, the owner logs in by hand (Take over), then Retry on the job.
+            set_login(job["app"], job["account"], "needs_login")
+            self.finish(job["id"], "failed", ended_at=ended, error=err, shot=shot)
+            alert("login", f"{job['app']} @{job['account']} needs login on phone {self.id}: log in by hand with Take over "
+                  f"(the engine never types credentials), then retry the job. Detail: {err}", every_min=360, phone_id=self.id)
+            return
         gone = await self.find_phone() is None  # did the phone drop off adb (cable pulled, battery dead)?
         if gone:
             self.phone_ok = False
@@ -769,7 +858,7 @@ class Runner:
                     self.finish(job["id"], "failed", ended_at=ended, error=err, shot=shot)
                     return
                 err = " | ".join(others)
-        if attempts < SCHED["max_attempts"] and job["kind"] != "research":
+        if attempts < SCHED["max_attempts"] and job["kind"] not in ("research", "dating_session"):
             self.finish(job["id"], "waiting", ended_at=ended, error=err, shot=shot,
                         run_at=time.time() + SCHED["retry_after_min"] * 60)
         else:
@@ -803,7 +892,7 @@ class Runner:
         self.touch()
         await self.adb("-s", self.serial, "shell", "input", "keyevent", "KEYCODE_WAKEUP")  # you see a live screen
         await self.adb("-s", self.serial, "shell", "wm", "dismiss-keyguard")
-        if self.proc and self.job and self.job["kind"] in ("research", "stats"):
+        if self.proc and self.job and self.job["kind"] in ("research", "stats", "dating_session"):
             self.interrupted = True
             try:
                 os.killpg(self.proc.pid, signal.SIGTERM)
@@ -873,6 +962,58 @@ def orphan_jobs() -> None:
         alert("job", f"job {j['id']} skipped: phone {j['phone_id']} is no longer configured", every_min=0)
 
 
+def ns() -> noswipe.Integration:
+    global NS
+    if NS is None:
+        NS = noswipe.Integration(NSCFG, PHONES, noswipe.Outbox(ROOT / "noswipe_outbox.db"))
+    return NS
+
+
+def hub() -> hub_rig.Integration:
+    global HUB
+    if HUB is None:
+        HUB = hub_rig.Integration(HUBCFG, PHONES, hub_rig.Store(ROOT / "hub_rig.db"), INBOX, check_plan_now, db, alert)
+    return HUB
+
+
+def hub_tick(now: float | None = None) -> None:
+    """One blocking pass of the Hub bridge (runs in a thread): pull the plan when due, watch the jobs, report results."""
+    if not HUBCFG.enabled:
+        return
+    if hub().key_missing:
+        alert("hub", f"[hub] is enabled but the environment variable {HUBCFG.token_env} is empty: not polling", every_min=360)
+        return
+    hub().tick(now)
+
+
+async def noswipe_tick(now: float | None = None) -> None:
+    """One pass: poll NoSwipe when due, make the jobs match its runs, stop sessions whose run stopped, flush the outbox."""
+    now = now if now is not None else time.time()
+    if not NSCFG.enabled or not ns().active:
+        return
+    if NS.poll_due(now):
+        await NS.poll(now)
+    # every pass (cheap): a stale list or a pause must stop swiping at once, not at the next poll
+    for job_id in NS.sync_jobs(db(), now):
+        for r in RUNNERS:
+            r.stop_job(job_id)
+    if NS.flush_due(now):
+        await NS.flush(now)
+
+
+async def noswipe_loop() -> None:
+    if ns().key_missing:
+        alert("noswipe", f"[noswipe] is enabled but the environment variable {NSCFG.api_key_env} is empty: not polling", every_min=0)
+    while True:
+        try:
+            await noswipe_tick()
+        except asyncio.CancelledError:
+            raise
+        except Exception as ex:
+            alert("noswipe", f"noswipe loop error: {ex!r}")
+        await asyncio.sleep(5)
+
+
 async def housekeeping() -> None:
     """Everything that is not tied to one phone: sync, plan import, scheduling, clean-up, health ping, self-update."""
     while True:
@@ -882,6 +1023,10 @@ async def housekeeping() -> None:
             except Exception as ex:
                 alert("sync", f"sync failed: {ex!r}")
             import_plans()
+            try:
+                await asyncio.to_thread(hub_tick)
+            except Exception as ex:
+                alert("hub", f"hub bridge error: {ex!r}")
             schedule_preflight()
             schedule_outliers()
             schedule_seed_research()
@@ -948,7 +1093,8 @@ def build_state(phone_id: str | None = None) -> dict:
         for name, lim in accts.items():
             ph = phonecfg.owner_of(PHONES, app, name)
             accounts.append({"app": app, "account": name, "limits": lim, "used": used_today(app, name),
-                             "phone_id": ph.id if ph else None, "automated": app in phonecfg.AUTOMATED_APPS})
+                             "phone_id": ph.id if ph else None, "automated": app in phonecfg.AUTOMATED_APPS,
+                             **(login_view(app, name) if app in phonecfg.TEXT_APPS else {})})
     for ph in PHONES:  # X / Reddit accounts: only listed on the phone, nothing runs for them
         for app, name in sorted(ph.accounts or ()):
             if app not in phonecfg.AUTOMATED_APPS:
@@ -963,6 +1109,7 @@ def build_state(phone_id: str | None = None) -> dict:
         # alerts of this phone; alerts about no phone in particular belong to the first one
         v["alerts"] = [a for a in alerts if (a.get("phone_id") or DEFAULT_PHONE.id) == r.id]
         v["accounts"] = [a for a in accounts if a["phone_id"] == r.id]
+        v["noswipe"] = ns().view(r.phone, now)
         views.append(v)
     first = views[0]
     return {
@@ -977,6 +1124,8 @@ def build_state(phone_id: str | None = None) -> dict:
         "accounts": accounts,
         "mirror_error": first["mirror_error"],
         "phones": views,
+        "noswipe": {"enabled": NSCFG.enabled},
+        "hub": hub().view() if HUBCFG.enabled else {"enabled": False},
     }
 
 
@@ -1186,6 +1335,8 @@ async def ws_screen(req):
 
 async def on_start(app):
     app["runners"] = [asyncio.create_task(housekeeping())]
+    if NSCFG.enabled:
+        app["runners"].append(asyncio.create_task(noswipe_loop()))
     for r in RUNNERS:
         r.task = asyncio.create_task(r.loop())
         app["runners"].append(r.task)

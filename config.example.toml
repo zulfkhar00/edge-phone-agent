@@ -14,8 +14,10 @@ hw_serial = "ZD222RWWGT"        # the phone's own serial (adb shell getprop ro.s
 # hw_serial = "ZD222RWWGT"                # required: adb shell getprop ro.serialno. Wi-Fi devices must report it, or they are refused.
 # usb_serial = "ZD222RWWGT"               # optional: its serial on the cable, when `adb devices` shows another one than hw_serial
 # wifi_serial = "192.168.1.150:5555"      # optional Wi-Fi fallback; adb_keeper.sh keeps it current
+# noswipe_phone_id = "pi-rack-1-phone-3" # optional: the phone's id in NoSwipe's admin Run panel (default: id above)
 # accounts = ["ig:@tinyloveshows", "tt:@nomoreawkwardness"]   # ig = Instagram, tt = TikTok
-#             also "x:@handle" and "reddit:u/name": listed in the dashboard only (login by hand via Take over, nothing automated)
+#             also "x:@handle" and "threads:@handle" (posts + stats, login checked, never logged into: see flows/x_threads.md)
+#             and "reddit:u/name": listed in the dashboard only (login by hand via Take over, nothing automated)
 # quotas = { posts_per_day = 2 }          # optional: overrides the [accounts.*] limits of this phone's accounts
 #
 # [[phones]]
@@ -23,6 +25,34 @@ hw_serial = "ZD222RWWGT"        # the phone's own serial (adb shell getprop ro.s
 # label = "Pixel, right"
 # hw_serial = "REPLACE-WITH-ITS-SERIAL"
 # accounts = ["ig:@secondaccount"]
+
+# NoSwipe: run the dating accounts NoSwipe creates for its clients (README "NoSwipe"). OFF unless enabled = true.
+# The API key is NEVER written here: export it in the engine's environment (systemd EnvironmentFile), see api_key_env.
+# [noswipe]
+# enabled = true
+# base_url = "https://www.noswipe.app/api/automation/v1"
+# api_key_env = "NOSWIPE_AUTOMATION_KEY"   # name of the environment variable that holds the key
+# poll_every_min = 2                       # GET /runs per phone; at least 1
+# stale_after_min = 10                     # no good answer this long: no new sessions, running ones stop
+# session_every_min = 180                  # per account: pause between sessions
+# session_minutes = 20                     # time budget of one session
+# default_timezone = "America/Los_Angeles" # for runs that carry no timezone
+# quiet_hours = "23:00-08:00"              # client-local; "off" disables
+# swipe_caps = { tinder = 100, hinge = 25, bumble = 60 }   # per account per client-local day (these are the defaults)
+# pace_s = [4, 14]                         # random pause between swipe batches
+# batch_size = [4, 12]                     # swipes per batch
+
+# Hub (michaelsxan/hub) posting queue via this rig: Hub rows of models set to "via rig" for Instagram / Threads / X are posted here.
+# OFF unless enabled = true. The bearer token is NEVER written here: export it in the engine's environment
+# (systemd EnvironmentFile, same as NOSWIPE_AUTOMATION_KEY). Each phone is asked for its own items (phone id = [[phones]] id in Hub's rig.json).
+# [hub]
+# enabled = true
+# base_url = "https://hub.codenrap.com"
+# token_env = "HUB_RIG_TOKEN"     # name of the environment variable that holds the token
+# poll_every_min = 3              # GET /api/rig/plan per phone (Hub hands an item over the first time it lists it)
+# horizon_min = 180               # ask for items due within this long
+# dry_run = false                 # true = rehearse: media downloaded, compose screen filled, screenshot, cancelled, nothing posted or reported
+# The accounts Hub names must exist under [[phones]] accounts and [accounts.<app>.<handle>] (use = "hub" or "practice" is fine for hub plans).
 
 [dashboard]
 host = "127.0.0.1"                 # local only; remote access goes through [access] below
@@ -74,6 +104,14 @@ posts_per_day = 4
 likes_per_day = 20
 comments_per_day = 5
 research_minutes_per_day = 60
+
+# X and Threads (log in by hand once with Take over; the engine only checks the login, never types credentials)
+# [accounts.x.yourhandle]
+# use = "practice"           # "noswipe" once the flow has been run live; never in nightly plans while "practice"
+# posts_per_day = 3
+# [accounts.threads.yourhandle]
+# use = "practice"
+# posts_per_day = 3
 
 # Engine-queued keyword research (off unless accounts is set). See README "Stats, research and trend export".
 # [research_seeds]

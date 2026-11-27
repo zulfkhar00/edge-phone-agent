@@ -34,6 +34,7 @@ Python 3.12, asyncio, `adb` + scrcpy. Everything is driven through the phone's U
 | `preflight.py` | Daily morning checks: phone, battery, accounts logged in, disks, render server, today's plan |
 | `phone.py` | Shared phone helpers: read the screen as labelled nodes, wait for an expected screen, tap by label/id, type. Anything unexpected aborts with a screenshot |
 | `instagram_upload.py`, `tiktok_upload.py` | Post one video, checking every screen before tapping |
+| `social.py`, `x_post.py`, `threads_post.py` | X and Threads: login gate, text post (+ image/video), verify on profile, per-post counts (see `flows/x_threads.md`) |
 | `stats.py` | Read one post's insights (OCR with macOS Vision, tesseract on Linux) |
 | `research.py` | Research sessions: search a keyword, watch, like and comment within limits; results in `research.db` |
 | `explore.py` | Dev tool: maps an app's screens and how they connect (for writing new flows) |
@@ -48,6 +49,7 @@ Python 3.12, asyncio, `adb` + scrcpy. Everything is driven through the phone's U
 | `research_seeds.py` | Seed keywords for the engine's own daily research sessions (opt-in, `[research_seeds]`) |
 | `web/dashboard.html` | The dashboard (single page) |
 | `web/mock_server.py`, `web/fixtures/` | Serves the dashboard with sample data and no phone: `python3 web/mock_server.py multi 8099` (the insights tabs run the real `insights.py` over `fixtures/insights.json`) |
+| `docs/how-flows-work.md` | The pattern every flow follows: job model, plan, phone helpers, verification, stats, preflight, tests with fakes |
 | `flows/*.md` | How each app flow works and what broke before. Read the relevant one before changing an uploader or reader |
 | `tests/` | pytest: plan validation, self-update, access gate, outliers, multi-phone (fake adb, no phones needed) |
 | `*_chain.sh`, `build_viewer.py`, `publish_viewer.sh` | Old one-off tools from the Mac era; not used by the service |
@@ -57,7 +59,7 @@ Local only (gitignored): `config.toml` (secrets), `engine.db` (jobs, alerts, sta
 
 ## Data
 
-- `engine.db` `jobs`: `kind` = post | stats | research | delete | preflight | outliers, `status` = waiting | not_found | running |
+- `engine.db` `jobs`: `kind` = post | stats | research | delete | preflight | outliers (X / Threads posts are `kind='post'` with `app` x / threads), `status` = waiting | not_found | running |
   done | failed | unverified | skipped, `run_at` / `not_after` (unix time), `args` JSON, `result` JSON,
   `post_key` (`<plan>/<post id>/<app>`). Also `alerts`, `plans` (imported names) and `state` (k/v JSON: `paused`,
   `touched`, ...).
@@ -150,19 +152,31 @@ a video's engagement is `likes + 3 x comments + 5 x shares`. A theme needs 2+ vi
 same videos under another spelling are merged. `trending` is `rising` when more of its videos were seen in the last half of
 the window than the half before. An empty research database gives `"trends": []`.
 
-## X and Reddit accounts
+## X and Threads (automated), Reddit (listed only)
 
-An X (Twitter) or Reddit account can be listed on a phone so it shows in the dashboard:
+X and Threads post text (+ an optional image or video), read per-post stats and are login-checked each morning. Pattern:
+`docs/how-flows-work.md`; screens, status and the live-verification checklist: `flows/x_threads.md`.
 
 ```toml
 [[phones]]
 id = "phone-1"
-accounts = ["ig:@tinyloveshows", "x:@noswipe_app", "reddit:u/noswipe_team"]
+accounts = ["ig:@tinyloveshows", "x:@noswipe_app", "threads:@noswipe_app", "reddit:u/noswipe_team"]
+
+[accounts.x.noswipe_app]          # limits and `use`, like Instagram / TikTok
+use = "noswipe"
+posts_per_day = 3
+[accounts.threads.noswipe_app]
+use = "noswipe"
+posts_per_day = 3
 ```
-They need no `[accounts.*]` section. **Nothing runs for them**: there are no X/Reddit posting, research or stats flows
-(those need live screen mapping first), plans naming them are rejected by `plan_check.py`, and the preflight skips them.
-The owner logs in by hand with **Take over** on that phone. The dashboard shows them as "Login: unknown", because no flow
-verifies the login.
+Plan post: `{"id": "t1", "at": "13:00", "text": "<= 280 chars (X) / 500 (Threads), plain ASCII", "media": "videos/p.jpg", "targets": [{"app": "x", "account": "noswipe_app"}, {"app": "threads", "account": "noswipe_app"}]}`
+(`media` optional; no media needed when every target is X / Threads). The engine never logs in: a logged-out app or another account
+fails the job at once with a `login` alert and a red "Needs login" pill; the owner logs in with **Take over**, then retries the job.
+No research or delete flow for them. **The post / compose / media / profile steps have not been run on a logged-in phone yet**
+(`LIVE-VERIFY` in `social.py`).
+
+Reddit accounts can still be listed on a phone so they show in the dashboard. **Nothing runs for them** (no flow, plans naming
+them are rejected, the preflight skips them); the owner logs in by hand with Take over and the dashboard shows "Login: unknown".
 
 ## Several phones
 
@@ -210,6 +224,76 @@ Plug in a second phone and check it:
 4. Open the dashboard: both phones are listed. `curl 127.0.0.1:8080/api/phones` shows each phone's `serial`,
    `transport` (usb / wifi) and `alive`; `tail logs/adb_keeper.log` lines are tagged `[phone-1]`, `[phone-2]`.
 5. Run each phone's morning check: the 09:30 preflight queues one per phone (see `jobs` where `kind='preflight'`).
+
+## NoSwipe (dating accounts)
+
+The rig can run the dating profiles [noswipe.app](https://www.noswipe.app) creates for its clients. Contract:
+`docs/automation.md` in `zulfkhar00/date-finder`. **Off by default**: nothing below happens unless `[noswipe] enabled = true`.
+
+```toml
+[[phones]]
+id = "phone-3"
+hw_serial = "..."
+noswipe_phone_id = "pi-rack-1-phone-3"   # optional: the id NoSwipe's admin Run panel assigned (default: id)
+
+[noswipe]
+enabled = true
+base_url = "https://www.noswipe.app/api/automation/v1"
+api_key_env = "NOSWIPE_AUTOMATION_KEY"   # the key itself lives only in the engine's environment, never in config.toml
+```
+All options (poll interval, session length, caps, quiet hours, pacing) are in `config.example.toml`.
+
+What is **real** (and tested against a fake NoSwipe server, `tests/test_noswipe.py`):
+- `noswipe.py` polls `GET /runs?phoneId=<noswipe_phone_id>` for every phone each `poll_every_min` and acts only on
+  `shouldRun = true`. Each wanted run becomes a `dating_session` job (`jobs.kind`) on that phone, one open at a time per
+  account, spaced by `session_every_min`. The runner fits it in the gap before the next fixed job, like research.
+- A run turning `shouldRun = false` (client paused, unassigned, held): its waiting session is skipped at once and a running one
+  gets SIGTERM and ends at its next step. If NoSwipe cannot be reached for `stale_after_min`, no new session starts and running
+  ones stop (a stale list must never keep an account swiping). Take over stops sessions too.
+- Reporting goes through an on-disk outbox (`noswipe_outbox.db`, shared by the engine and session processes). `POST /activity`
+  is retried with exponential backoff (30 s up to 1 h); every event has a deterministic idempotency key (hash of client, app, kind
+  and the real event's id), so a replay (lost answer, restart) is a `duplicate` and never a second count. `invalid` / `no_account`
+  are dropped; `bad_time` is retried a few times with the server clock correction (read from the `Date` header), `occurredAt` is
+  kept inside the accepted window (never ahead of the server clock, events older than 7 days are dropped).
+- Session lifecycle in `dating.py`: quiet hours in the client's timezone (`timezone` on the run if NoSwipe sends one, else
+  `default_timezone`), a time budget, a daily swipe cap per account (client-local day, counted in the outbox so it spans
+  sessions), jittered pacing, graceful stop. Not logged in: one `needs_you` ("Sign-in needed for your Hinge account") per
+  account per day, nothing else.
+- Dashboard: each phone's page has a NoSwipe panel (enabled, API key present, last poll, runs assigned to this phone, outbox
+  size, last errors); the phones overview shows a tag. `/api/state` -> `phones[].noswipe`.
+
+What is **skeleton**: the phone steps. Opening Tinder / Hinge / Bumble, checking the login, swiping, reading new matches
+sit behind the `DatingUI` interface (`dating.py`); the only implementation, `UnmappedUI`, raises `NotMapped` because the
+screens have not been mapped on a real phone yet. A session therefore ends with outcome `not_mapped` and reports **nothing**:
+no swipes, matches or chats are ever invented, and the UI's counts are never trusted beyond what was asked. Chat replies, date
+booking and `PUT /clients/{id}/apps/{app}` status moves are not built (they need the mapped UI). To finish an app: implement
+`DatingUI` for it (screen mapping like the other flows) and return it from `make_ui`.
+
+Turn it on at the Pi: add the `[noswipe]` section (and `noswipe_phone_id` per phone), put
+`NOSWIPE_AUTOMATION_KEY=<key>` in the systemd unit's environment (`sudo systemctl edit content-engine`, then
+`[Service]` / `Environment=...` or an `EnvironmentFile=`), `sudo systemctl restart content-engine`, and watch the phone's NoSwipe
+panel. Until the UI is mapped the sessions will show up as done with `not_mapped` and the outbox stays empty.
+
+## Hub bridge (Hub's posting queue through the rig)
+
+`hub_rig.py` + `[hub]` in config.toml (off by default). Hub cannot reach the Pi, so the rig pulls: every `poll_every_min` it asks
+`GET {base_url}/api/rig/plan?phone=<id>` for each phone (items of models set to "via rig" in Hub's `data/rig.json`), downloads the
+signed media URL into `mailbox/inbox/hub-<queue id>-a<attempt>/`, validates the item with `plan_check` (plan `source: "hub"`: accounts
+with `use = "hub"` or `"practice"` are allowed, quotas and caption rules still apply) and writes a normal `plan.json`. From there it is
+an ordinary post job on the phone that owns the account. Each finished job is reported with `POST /api/rig/result`
+(`posted` / `unverified` / `failed`, from the job status) through a retry outbox (`hub_rig.db`); a replay is harmless on Hub's side.
+Nothing is posted twice: an attempt number (Hub raises it when its Retry button hands a failed item over again) is imported once.
+Captions are flattened to one line of ASCII (emoji dropped, `%` spelled out) because they are typed with `adb input text`.
+
+Put the token in the engine's environment (never in config.toml): `HUB_RIG_TOKEN=<token>` in an `EnvironmentFile=` of the unit.
+
+**Dry run** (`dry_run = true`, or an item Hub marks `dry`): the whole path runs (poll, download, plan, job) but the flow stops before
+Post / Share, takes `runs/preview-*.png`, cancels the compose screen (Delete / Start over, never a draft) and the job ends `skipped`
+("preview"): it does not count against the daily limit, schedules no stats and nothing is reported to Hub.
+`python instagram_upload.py v.mp4 --caption "..." --account handle --preview` and `x_post.py` / `threads_post.py ... --preview` do the same by hand.
+
+To add another account to rig mode: log it in on a phone (Take over), add it to that phone's `accounts` and an `[accounts.<app>.<handle>]`
+section here, then in Hub's `data/rig.json` give its model the platform (`"instagram": true` or `{"phone": "phone-2", "handle": "x"}`).
 
 ## Setup (Raspberry Pi OS Lite 64-bit, Debian 13)
 

@@ -153,6 +153,10 @@ def snap_metrics(app: str, data: dict) -> dict:
                 "shares": live.get("shares"), "saves": live.get("saves"),
                 "avg_watch_s": det.get("average_watch_time_s"), "skip_pct": None,
                 "follows": det.get("new_followers"), "full_watch_pct": det.get("watched_full_video_pct")}
+    if app in ("x", "threads"):  # social.read_stats: counts off the post's row (replies = comments, reposts = shares)
+        return {"views": data.get("views"), "likes": data.get("likes"), "comments": data.get("replies"),
+                "shares": data.get("reposts"), "saves": data.get("bookmarks"), "avg_watch_s": None, "skip_pct": None,
+                "follows": None, "full_watch_pct": None}
     return {"views": data.get("views"), "likes": None, "comments": None, "shares": None, "saves": None,
             "avg_watch_s": data.get("average_watch_time_s"), "skip_pct": data.get("skip_rate_pct"),
             "follows": data.get("follows"), "full_watch_pct": None}
