@@ -93,3 +93,15 @@ Delete flow, research, permalink, Threads views, replies/threads (multi-part pos
 5. Run `stats.py x "test post" --account <practice>`: do the numbers match the screen?
 6. Check the notification / photo-access permission prompts: answer them once by hand.
 7. Then flip `use = "noswipe"` and let the preflight and a plan run.
+
+## Threads: verified on phone-2 (2026-11-28, real dumps in `tests/fixtures/`)
+
+- Bottom tabs are plain Views (not clickable in the dump, no id) labelled Feed / Messages / Create / Activity / Profile. Tap by label.
+- Compose ("New thread"): EditText `new_thread_screen_composer` (bare resource id, no package prefix), Post is a plain TextView "Post".
+  Closing with text asks "Save to drafts?": discard with "Don’t save" (never "Save").
+- Login detection needs two consecutive log-in reads, runs after permission / notification sheets are dismissed ("Don’t allow"),
+  and another app in the foreground (a system notification-settings page) brings Threads back instead of reading as logged out.
+
+## Instagram post verification (instagram_upload.py)
+After Share: wait for the share screen to close (notices printed), reach the Profile tab through sheets / viewers, then poll the
+Reels grid up to 6 min (pull to refresh) and open the newest 3 tiles, matching the caption. Any view count matches (was: only 0).
