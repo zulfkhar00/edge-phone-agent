@@ -70,6 +70,8 @@ class Spec:
     # --- navigation
     profile_labels: tuple[str, ...]  # regexes
     profile_ids: tuple[str, ...]
+    compose_open_labels: tuple[str, ...] = ()  # regexes: the compose screen's title, for apps whose empty field is not an EditText node
+    placeholder_labels: tuple[str, ...] = ()  # regexes: the empty field's hint node (tapped to focus before typing)
     drawer_labels: tuple[str, ...] = ()  # X: the side drawer that shows "@handle" and "Profile"
     drawer_ids: tuple[str, ...] = ()
     switch_labels: tuple[str, ...] = ()  # regexes: the account-switcher control
@@ -102,13 +104,18 @@ X = Spec(
 
 THREADS = Spec(
     key="threads", name="Threads", pkg="com.instagram.barcelona", limit=500,
-    home_labels=("Home", "Search", "Activity", "Profile"), home_ids=("tab_bar", "bottom_tab_bar"), home_min=3,
+    home_labels=("Home", "Search", "Activity", "Profile", "Feed", "Messages", "Create"), home_ids=("tab_bar", "bottom_tab_bar"), home_min=3,
     login_labels=(r"^Log in with Instagram$", r"^Log in$", r"^Create Instagram account$", r"^Switch accounts$", r"^Continue with Instagram"),
     login_ids=("login_screen_login_with_ig_button", "login_screen_create_ig_account_button"),  # seen on the real logged-out phone
-    popups=("Not now", "Not Now", "Skip", "Maybe later", "No thanks", "Dismiss", "Got it", "Later"),
+    popups=("Not now", "Not Now", "Skip", "Maybe later", "No thanks", "Dismiss", "Got it", "Later", "Don’t allow", "Don't allow", "Deny"),
     promo=(r"Meta Verified", r"Subscribe", r"Get verified", r"Verified badge", r"Upgrade"),
-    compose_ids=("create_tab", "composer_entry"), compose_labels=(r"^Create$", r"^New thread$", r"^Start a thread", r"^Post$"),
-    field_ids=("text_input", "composer_text_input", "thread_text"),
+    # Verified on phone-2 (Threads, 2026-11-28): bottom tabs are plain Views labelled Feed / Messages / Create / Activity / Profile (NOT
+    # clickable in the dump, no resource id); the home feed starts with a "What's new?" row. The compose screen's field is an
+    # EditText only once something is typed (id new_thread_screen_composer); empty, it is a "What's new?" TextView under a
+    # "New thread" title. Post is a plain TextView "Post" (not clickable). Closing with text opens "Save to drafts?" -> "Don't save".
+    compose_ids=("create_tab", "composer_entry"), compose_labels=(r"^Create$", r"^New thread$", r"^Start a thread", r"^What.s new\?$"),
+    compose_open_labels=(r"^New thread$",), placeholder_labels=(r"^What.s new\?$",),
+    field_ids=("new_thread_screen_composer", "text_input", "composer_text_input", "thread_text"),
     post_ids=("post_button", "composer_post_button"), post_labels=("Post",),
     media_labels=(r"(?i)^(attach|add) (a )?(media|photo|image|video)", r"(?i)^add (a )?photo or video", r"(?i)^gallery$", r"(?i)^photos?$"),
     media_ids=("media_button", "gallery_button", "composer_gallery"),
@@ -135,7 +142,8 @@ def labels_of(ns: list[dict]) -> list[str]:
 def find_id(ns: list[dict], ids: tuple[str, ...]) -> dict | None:
     for want in ids:
         for n in ns:
-            if n.get("resource-id", "").endswith(":id/" + want):
+            rid = n.get("resource-id", "")
+            if rid == want or rid.endswith(":id/" + want):  # Threads' Compose UI reports bare ids ("new_thread_screen_composer")
                 return n
     return None
 
@@ -173,6 +181,22 @@ def is_logged_out(spec: Spec, ns: list[dict]) -> bool:
 
 def edit_field(spec: Spec, ns: list[dict]) -> dict | None:
     return find_id(ns, spec.field_ids) or next((n for n in ns if n.get("class") == "android.widget.EditText"), None)
+
+
+def compose_is_open(spec: Spec, ns: list[dict]) -> bool:
+    return edit_field(spec, ns) is not None or find_label(ns, spec.compose_open_labels) is not None
+
+
+def post_button(spec: Spec, ns: list[dict]) -> dict | None:
+    """The Post button. Threads' is a plain TextView (not clickable in the dump), X's a real button."""
+    return find_id(ns, spec.post_ids) or exact(ns, spec.post_labels) or exact(ns, spec.post_labels, clickable=None)
+
+
+def foreground_pkg(p: Phone) -> str:
+    try:
+        return p.d.app_current().get("package", "") or ""
+    except Exception:
+        return ""
 
 
 def needs_login(p: Phone, spec: Spec, handle: str, why: str) -> None:
@@ -219,23 +243,32 @@ def dismiss_popups(p: Phone, spec: Spec) -> None:
 
 
 def open_app(p: Phone, spec: Spec, handle: str) -> list[dict]:
-    """Start the app fresh. Returns the nodes of the logged-in home screen, or raises NeedsLogin."""
+    """Start the app fresh. Returns the nodes of the logged-in home screen, or raises NeedsLogin.
+    Permission / notification sheets are dismissed first and never count as a log-in screen; another app in the foreground
+    (a system settings page, say) brings the app back instead of being read as logged out."""
     p.wake()
     p.d.app_start(spec.pkg, stop=True)
     end = time.time() + 40
     ns: list[dict] = []
+    out_strikes = 0
     while time.time() < end:
         p.wake()
+        fg = foreground_pkg(p)
+        if fg and fg != spec.pkg and "permissioncontroller" not in fg and "packageinstaller" not in fg:
+            print(f"  {fg} is in the foreground, bringing {spec.name} back", flush=True)
+            p.d.app_start(spec.pkg)
+            time.sleep(3)
+            continue
+        dismiss_popups(p, spec)
         ns = p.nodes()
-        if is_logged_out(spec, ns):
-            needs_login(p, spec, handle, "the app shows its log-in screen")
         if is_home(spec, ns):
-            dismiss_popups(p, spec)
-            ns = p.nodes()
-            if is_home(spec, ns):
-                return ns
+            return ns
+        if is_logged_out(spec, ns):
+            out_strikes += 1  # twice in a row, so a half-drawn sheet or a transition frame cannot cause it
+            if out_strikes >= 2:
+                needs_login(p, spec, handle, "the app shows its log-in screen")
         else:
-            dismiss_popups(p, spec)
+            out_strikes = 0
         time.sleep(2)
     p.fail(f"{spec.name} home screen not recognised after 40 s (labels seen: {labels_of(ns)[:12]})")
     return ns
@@ -335,27 +368,27 @@ def ensure_account(p: Phone, spec: Spec, handle: str) -> None:
 
 
 # ---------------------------------------------------------------- posting
-def open_compose(p: Phone, spec: Spec) -> dict:  # LIVE-VERIFY
+def open_compose(p: Phone, spec: Spec) -> None:
     ns = p.nodes()
-    btn = find_any(ns, spec.compose_ids, spec.compose_labels, clickable=True)
+    # bottom-bar entries can be plain Views (Threads): try real buttons first, then anything with the label
+    btn = find_any(ns, spec.compose_ids, spec.compose_labels, clickable=True) or find_any(ns, spec.compose_ids, spec.compose_labels)
     p.tap_node(btn, "compose (new post)")
     end = time.time() + 15
     while time.time() < end:
         ns = p.nodes()
-        f = edit_field(spec, ns)
-        if f is not None:
-            return f
+        if compose_is_open(spec, ns):
+            return
         # X may open a small menu first (Post / Go Live / Spaces): take its plain "Post" entry
         entry = find_label(ns, (r"^Post$", r"^New post$"), clickable=True)
         if entry is not None and find_id(ns, spec.compose_ids) is None:
             p.tap_node(entry, "Post (compose menu entry; this does not publish)")
         time.sleep(1.5)
     p.fail("the compose screen with a text field did not open")
-    raise AssertionError  # unreachable
 
 
 def type_text(p: Phone, spec: Spec, text: str) -> None:
-    f = edit_field(spec, p.nodes())
+    ns = p.nodes()
+    f = edit_field(spec, ns) or find_label(ns, spec.placeholder_labels)  # an empty Threads field is only its hint text
     p.tap_node(f, "text field")
     try:
         p.d.clear_text()
@@ -403,7 +436,7 @@ def attach_media(p: Phone, spec: Spec, path: Path) -> None:  # LIVE-VERIFY
 
 def tap_post(p: Phone, spec: Spec) -> None:
     ns = p.nodes()
-    btn = find_id(ns, spec.post_ids) or exact(ns, spec.post_labels)
+    btn = post_button(spec, ns)
     if btn is None:
         p.fail("the Post button was not found")
     if btn.get("enabled") == "false":
@@ -418,7 +451,7 @@ def wait_sent(p: Phone, spec: Spec) -> None:
         bad = find_label(ns, spec.error_labels)
         if bad is not None:
             p.fail(f"{spec.name} refused the post: {bad['label'][:80]!r}")
-        if edit_field(spec, ns) is None:
+        if not compose_is_open(spec, ns):
             return
         time.sleep(1.5)
     p.fail("the compose screen is still open 40 s after Post")
@@ -428,11 +461,11 @@ def discard_compose(p: Phone, spec: Spec) -> None:
     """Back out of an unfinished compose screen and Delete / Discard it. Never 'Save draft'."""
     for _ in range(4):
         ns = p.nodes()
-        d = exact(ns, ("Delete", "Discard", "Discard post", "Discard thread"))
+        d = exact(ns, ("Delete", "Discard", "Discard post", "Discard thread", "Don’t save", "Don't save"))
         if d is not None:
             p.tap_node(d, f"{d['label']} (discard the unfinished post)")
             return
-        if edit_field(spec, ns) is None:
+        if not compose_is_open(spec, ns):
             return
         p.d.press("back")
         time.sleep(1.5)
@@ -495,7 +528,7 @@ def post(p: Phone, spec: Spec, handle: str, text: str, media: Path | None = None
             shot = preview_shot(p, spec.key)
             print(f"4. PREVIEW  (@{handle}, {len(text)} chars{', with media' if media else ''}): compose screen is filled, NOT posting; "
                   f"screenshot {shot}", flush=True)
-            btn = find_id(p.nodes(), spec.post_ids) or exact(p.nodes(), spec.post_labels)
+            btn = post_button(spec, p.nodes())
             if btn is None:
                 p.fail("the Post button was not found on the filled compose screen")
             discard_compose(p, spec)

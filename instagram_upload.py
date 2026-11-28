@@ -155,6 +155,82 @@ def finish_share_sheets(p: Phone) -> None:
         time.sleep(1)
 
 
+REEL_TILE = re.compile(r"^Reel by .+\. View Count \d[\d.,KMkm]*\.")
+
+
+def share_screen_open(ns: list[dict]) -> bool:
+    return any(n.get("resource-id", "").endswith(":id/share_button") or n["label"] == "Save draft" for n in ns)
+
+
+def progress_labels(ns: list[dict]) -> list[str]:
+    return [n["label"] for n in ns if re.match(r"(?i)^(sharing|posting|uploading|your reel (is|was|has)|reel shared|shared)\b", n["label"])]
+
+
+def wait_share_done(p: Phone, wait_s: int = 90) -> None:
+    """After Share: wait for the share screen to close (the upload then runs in the background). Prints the posting / shared
+    notices it sees. Never taps Back on the share screen (that asks about saving a draft)."""
+    end = time.time() + wait_s
+    seen: set[str] = set()
+    while time.time() < end:
+        p.wake()
+        ns = p.nodes()
+        for lab in progress_labels(ns):
+            if lab not in seen:
+                seen.add(lab)
+                print(f"  notice: {lab}", flush=True)
+        if not share_screen_open(ns):
+            return
+        time.sleep(3)
+    p.fail(f"the share screen is still open {wait_s} s after Share: the reel was not sent (nothing was published)")
+
+
+def go_profile_tab(p: Phone, wait_s: int = 60) -> None:
+    """Reach the profile tab even when a sheet, the Reels feed or an upload overlay covers the tab bar."""
+    end = time.time() + wait_s
+    backs = 0
+    while time.time() < end:
+        p.wake()
+        dismiss_popups(p)
+        ns = p.nodes()
+        tab = p.by_id("profile_tab", ns) or next((n for n in ns if n["label"] == "Profile" and n.get("clickable") == "true"), None)
+        if tab is not None:
+            p.tap_node(tab, "Profile tab")
+            return
+        if not share_screen_open(ns) and backs < 3:  # a full-screen viewer without the tab bar: Back out of it
+            backs += 1
+            p.d.press("back")
+        time.sleep(2)
+    p.fail("could not find Profile tab")
+
+
+def reel_tiles(ns: list[dict]) -> list[dict]:
+    """The reel tiles of the profile's Reels tab, newest first (reading order). Any view count, not just 0."""
+    return sorted((n for n in ns if REEL_TILE.match(n.get("content-desc") or n["label"])), key=lambda n: (n["box"][1], n["box"][0]))
+
+
+def find_new_reel(p: Phone, caption: str, wait_s: int = 360) -> dict | None:
+    """Poll the Reels grid (pull to refresh) until one of the newest 3 reels carries our caption. Opens it and returns the tile,
+    leaving the reel viewer open."""
+    end = time.time() + wait_s
+    rx = re.compile(re.escape(caption[:25]))
+    while time.time() < end:
+        p.wake()
+        if p.find("Most viewed"):  # the sort menu got opened; close it
+            p.d.press("back")
+            time.sleep(1)
+        for tile in reel_tiles(p.nodes())[:3]:
+            p.tap_node(tile, "reel tile")
+            ns = p.wait("reel viewer", "More", timeout=20)
+            if p.find(rx, ns):
+                return tile
+            p.d.press("back")  # not ours (an older reel): back to the grid, next tile
+            time.sleep(2)
+        time.sleep(10)
+        p.adb("shell", "input", "swipe", "360", "900", "360", "1500", "300")  # pull to refresh
+        time.sleep(4)
+    return None
+
+
 def upload(video: Path, caption: str, audience: str, delete_after: bool, preview: bool = False) -> None:
     p = Phone(SERIAL)
     today = f"{date.today():%B} {date.today().day}, {date.today().year}"  # e.g. "November 2, 2026"
@@ -292,28 +368,14 @@ def _upload(p: Phone, remote: str, caption: str, audience: str, delete_after: bo
     finish_share_sheets(p)
 
     print("7. confirm it on the profile's Reels tab", flush=True)
-    time.sleep(20)  # let the upload finish; never restart the app here, it could cut the upload off
+    wait_share_done(p)
+    go_profile_tab(p)
     open_profile_reels(p)
-    tile = None
-    end = time.time() + 180
-    while time.time() < end:
-        tile = p.find(re.compile(r"^Reel by .+\. View Count 0\."))
-        if tile is not None:
-            break
-        time.sleep(10)
-        p.wake()
-        if p.find("Most viewed"):  # sort menu got opened; close it
-            p.d.press("back")
-            time.sleep(1)
-        p.adb("shell", "input", "swipe", "360", "400", "360", "1200", "300")  # pull to refresh
-        time.sleep(4)
+    tile = find_new_reel(p, caption, wait_s=360)
     if tile is None:
-        p.fail("no new (0-view) reel on the profile after 3 minutes")
-    p.tap_node(tile, "newest reel")
-    ns = p.wait("reel viewer", "More", timeout=20)
-    if not p.find(re.compile(re.escape(caption[:25])), ns):
-        p.fail("the newest reel's caption does not match")
+        p.fail(f"no reel with the caption {caption[:25]!r} among the newest reels on the profile after 6 minutes")
     print("  OK: reel found with the right caption", flush=True)
+    ns = p.nodes()  # the reel viewer is open on the new reel
 
     if delete_after:
         print("8. delete the test reel", flush=True)
